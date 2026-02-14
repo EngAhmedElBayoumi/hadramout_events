@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}ملف الطبيب - {{ doctor.name }}{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
+    <div class="card" style="text-align: center; margin-bottom: 20px;">
+        <h2>د. {{ doctor.name }}</h2>
+        <p style="color: #666; font-size: 1.2rem;">{{ doctor.specialty }}</p>
+    </div>
+
+    <div style="margin-bottom: 30px;">
+        <h3>القسائم (Vouchers)</h3>
+        {% for voucher in vouchers %}
+        <div class="card" style="border-right: 5px solid {% if voucher.is_active %}green{% else %}red{% endif %}; display: flex; justify-content: space-between;">
+            <div>
+                <strong>الفعالية: {{ voucher.event.name }}</strong>
+                <br>
+                <small>ينتهي في: {{ voucher.expiry_date }}</small>
+            </div>
+            <div style="text-align: left;">
+                <span style="font-size: 1.2rem; font-weight: bold;">{{ voucher.current_balance }} ج.م</span>
+                <br>
+                <small>من أصل {{ voucher.initial_value }}</small>
+            </div>
+        </div>
+        {% empty %}
+        <p>لا توجد قسائم.</p>
+        {% endfor %}
+    </div>
+
+    <div>
+        <h3>سجل المعاملات</h3>
+        <div class="card" style="padding: 0; overflow: hidden;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+                        <th style="padding: 12px; text-align: right;">التاجر</th>
+                        <th style="padding: 12px; text-align: right;">المبلغ</th>
+                        <th style="padding: 12px; text-align: right;">التاريخ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trx in transactions %}
+                    <tr style="border-bottom: 1px solid #dee2e6;">
+                        <td style="padding: 12px;">{{ trx.vendor.name }}</td>
+                        <td style="padding: 12px;">{{ trx.amount_spent }}</td>
+                        <td style="padding: 12px;">{{ trx.transaction_date|date:"Y-m-d H:i" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" style="padding: 20px; text-align: center;">لا توجد معاملات.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

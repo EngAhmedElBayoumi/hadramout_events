@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}تسجيل الدخول - قرية حضرموت{% endblock %}
+
+{% block content %}
+<div style="max-width: 400px; margin: 50px auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+    <h2 style="text-align: center; color: var(--primary-color);">تسجيل الدخول</h2>
+    <form method="post">
+        {% csrf_token %}
+        {% if form.errors %}
+            <div class="alert alert-danger">اسم المستخدم أو كلمة المرور غير صحيحة.</div>
+        {% endif %}
+        
+        <div style="margin-bottom: 15px;">
+            <label for="id_username" style="display: block; margin-bottom: 5px;">اسم المستخدم</label>
+            <input type="text" name="username" id="id_username" class="form-control" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <label for="id_password" style="display: block; margin-bottom: 5px;">كلمة المرور</label>
+            <input type="password" name="password" id="id_password" class="form-control" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+        </div>
+
+        <button type="submit" class="btn" style="width: 100%;">دخول</button>
+    </form>
+</div>
+{% endblock %}

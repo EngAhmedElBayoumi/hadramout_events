@@ -1,0 +1,2609 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-12 04:31+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#: .\accounts\models.py:7
+msgid "Admin"
+msgstr ""
+
+#: .\accounts\models.py:8 .\accounts\models.py:29 .\core\models.py:36
+#: .\events\models.py:24
+msgid "Doctor"
+msgstr ""
+
+#: .\accounts\models.py:9 .\accounts\models.py:47 .\core\models.py:21
+#: .\core\models.py:35
+msgid "Vendor"
+msgstr ""
+
+#: .\accounts\models.py:12
+msgid "Type"
+msgstr ""
+
+#: .\accounts\models.py:19 .\accounts\models.py:36
+#: .\env\Lib\site-packages\unfold\contrib\guardian\templates\admin\guardian\model\obj_perms_manage_user.html:17
+#: .\env\Lib\site-packages\unfold\contrib\guardian\templates\unfold\guardian\group_form.html:33
+#: .\env\Lib\site-packages\unfold\contrib\guardian\templates\unfold\guardian\user_form.html:15
+#: .\env\Lib\site-packages\unfold\contrib\guardian\templates\unfold\guardian\user_form.html:33
+#: .\env\Lib\site-packages\unfold\templates\admin\object_history.html:14
+#: .\env\Lib\site-packages\unfold\templates\admin\object_history.html:30
+msgid "User"
+msgstr ""
+
+#: .\accounts\models.py:20 .\accounts\models.py:37 .\core\models.py:5
+#: .\env\Lib\site-packages\unfold\contrib\constance\templates\admin\constance\includes\results_list.html:19
+#: .\events\models.py:7
+msgid "Name"
+msgstr ""
+
+#: .\accounts\models.py:21 .\accounts\models.py:39 .\core\models.py:7
+msgid "Phone"
+msgstr ""
+
+#: .\accounts\models.py:22 .\accounts\models.py:40 .\core\models.py:8
+msgid "Email"
+msgstr ""
+
+#: .\accounts\models.py:23
+msgid "Specialty"
+msgstr ""
+
+#: .\accounts\models.py:24
+msgid "QR Code"
+msgstr ""
+
+#: .\accounts\models.py:25 .\accounts\models.py:43 .\core\models.py:10
+#: .\core\models.py:24 .\events\models.py:13 .\events\models.py:31
+msgid "Created At"
+msgstr ""
+
+#: .\accounts\models.py:26 .\accounts\models.py:44 .\core\models.py:11
+#: .\events\models.py:14 .\events\models.py:32
+msgid "Updated At"
+msgstr ""
+
+#: .\accounts\models.py:30 .\events\models.py:12 .\project\settings.py:212
+#: .\templates\admin\index.html:71
+msgid "Doctors"
+msgstr ""
+
+#: .\accounts\models.py:38 .\core\models.py:6
+msgid "Contact Person"
+msgstr ""
+
+#: .\accounts\models.py:41 .\core\models.py:9
+msgid "Address"
+msgstr ""
+
+#: .\accounts\models.py:42
+msgid "Category"
+msgstr ""
+
+#: .\accounts\models.py:48 .\project\settings.py:217
+msgid "Vendors"
+msgstr ""
+
+#: .\core\admin_site.py:9
+msgid "Hadramout Village Administration"
+msgstr ""
+
+#: .\core\admin_site.py:10
+msgid "Hadramout Admin"
+msgstr ""
+
+#: .\core\admin_site.py:11 .\example\project\settings.py:219
+#: .\example\project\settings.py:222 .\project\settings.py:192
+#: .\project\settings.py:195
+msgid "Dashboard"
+msgstr ""
+
+#: .\core\models.py:14
+msgid "Pharmaceutical Company"
+msgstr ""
+
+#: .\core\models.py:15
+msgid "Pharmaceutical Companies"
+msgstr ""
+
+#: .\core\models.py:22
+msgid "Amount Settled"
+msgstr ""
+
+#: .\core\models.py:23
+msgid "Settlement Date"
+msgstr ""
+
+#: .\core\models.py:27
+msgid "Vendor Settlement"
+msgstr ""
+
+#: .\core\models.py:28 .\project\settings.py:251
+msgid "Vendor Settlements"
+msgstr ""
+
+#: .\core\models.py:34 .\events\models.py:35
+msgid "Voucher"
+msgstr ""
+
+#: .\core\models.py:37
+msgid "Amount Spent"
+msgstr ""
+
+#: .\core\models.py:38
+msgid "Management Fee Percentage"
+msgstr ""
+
+#: .\core\models.py:39
+msgid "Management Fee Amount"
+msgstr ""
+
+#: .\core\models.py:40
+msgid "Total Deducted"
+msgstr ""
+
+#: .\core\models.py:41
+msgid "Transaction Date"
+msgstr ""
+
+#: .\core\models.py:42
+msgid "Items Description"
+msgstr ""
+
+#: .\core\models.py:43
+msgid "Invoice Number"
+msgstr ""
+
+#: .\core\models.py:52
+msgid "Settlement"
+msgstr ""
+
+#: .\core\models.py:56
+msgid "Transaction"
+msgstr ""
+
+#: .\core\models.py:57 .\project\settings.py:246
+#: .\templates\admin\index.html:35
+msgid "Transactions"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\contrib\messages\apps.py:16
+msgid "Messages"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\contrib\sitemaps\apps.py:8
+msgid "Site Maps"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\contrib\staticfiles\apps.py:9
+msgid "Static Files"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\contrib\syndication\apps.py:7
+msgid "Syndication"
+msgstr ""
+
+#. Translators: String used to replace omitted page numbers in elided page
+#. range generated by paginators, e.g. [1, 2, '…', 5, 6, 7, '…', 9, 10].
+#: .\env\Lib\site-packages\django\core\paginator.py:30
+msgid "…"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\paginator.py:32
+msgid "That page number is not an integer"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\paginator.py:33
+msgid "That page number is less than 1"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\paginator.py:34
+msgid "That page contains no results"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:22
+msgid "Enter a valid value."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:70
+msgid "Enter a valid domain name."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:153
+#: .\env\Lib\site-packages\django\forms\fields.py:775
+msgid "Enter a valid URL."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:200
+msgid "Enter a valid integer."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:211
+msgid "Enter a valid email address."
+msgstr ""
+
+#. Translators: "letters" means latin letters: a-z and A-Z.
+#: .\env\Lib\site-packages\django\core\validators.py:289
+msgid ""
+"Enter a valid “slug” consisting of letters, numbers, underscores or hyphens."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:297
+msgid ""
+"Enter a valid “slug” consisting of Unicode letters, numbers, underscores, or "
+"hyphens."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:309
+#: .\env\Lib\site-packages\django\core\validators.py:318
+#: .\env\Lib\site-packages\django\core\validators.py:332
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2220
+#, python-format
+msgid "Enter a valid %(protocol)s address."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:311
+msgid "IPv4"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:320
+#: .\env\Lib\site-packages\django\utils\ipv6.py:43
+msgid "IPv6"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:334
+msgid "IPv4 or IPv6"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:375
+msgid "Enter only digits separated by commas."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:381
+#, python-format
+msgid "Ensure this value is %(limit_value)s (it is %(show_value)s)."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:416
+#, python-format
+msgid "Ensure this value is less than or equal to %(limit_value)s."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:425
+#, python-format
+msgid "Ensure this value is greater than or equal to %(limit_value)s."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:434
+#, python-format
+msgid "Ensure this value is a multiple of step size %(limit_value)s."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:441
+#, python-format
+msgid ""
+"Ensure this value is a multiple of step size %(limit_value)s, starting from "
+"%(offset)s, e.g. %(offset)s, %(valid_value1)s, %(valid_value2)s, and so on."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:473
+#, python-format
+msgid ""
+"Ensure this value has at least %(limit_value)d character (it has "
+"%(show_value)d)."
+msgid_plural ""
+"Ensure this value has at least %(limit_value)d characters (it has "
+"%(show_value)d)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:491
+#, python-format
+msgid ""
+"Ensure this value has at most %(limit_value)d character (it has "
+"%(show_value)d)."
+msgid_plural ""
+"Ensure this value has at most %(limit_value)d characters (it has "
+"%(show_value)d)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:514
+#: .\env\Lib\site-packages\django\forms\fields.py:366
+#: .\env\Lib\site-packages\django\forms\fields.py:405
+msgid "Enter a number."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:516
+#, python-format
+msgid "Ensure that there are no more than %(max)s digit in total."
+msgid_plural "Ensure that there are no more than %(max)s digits in total."
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:521
+#, python-format
+msgid "Ensure that there are no more than %(max)s decimal place."
+msgid_plural "Ensure that there are no more than %(max)s decimal places."
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:526
+#, python-format
+msgid ""
+"Ensure that there are no more than %(max)s digit before the decimal point."
+msgid_plural ""
+"Ensure that there are no more than %(max)s digits before the decimal point."
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:597
+#, python-format
+msgid ""
+"File extension “%(extension)s” is not allowed. Allowed extensions are: "
+"%(allowed_extensions)s."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:659
+msgid "Null characters are not allowed."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\base.py:1600
+#: .\env\Lib\site-packages\django\forms\models.py:908
+#: .\env\Lib\site-packages\unfold\contrib\inlines\admin.py:108
+msgid "and"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\base.py:1602
+#, python-format
+msgid "%(model_name)s with this %(field_labels)s already exists."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\constraints.py:22
+#, python-format
+msgid "Constraint “%(name)s” is violated."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:134
+#, python-format
+msgid "Value %(value)r is not a valid choice."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:135
+msgid "This field cannot be null."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:136
+msgid "This field cannot be blank."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:137
+#, python-format
+msgid "%(model_name)s with this %(field_label)s already exists."
+msgstr ""
+
+#. Translators: The 'lookup_type' is one of 'date', 'year' or
+#. 'month'. Eg: "Title must be unique for pub_date year"
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:141
+#, python-format
+msgid ""
+"%(field_label)s must be unique for %(date_field_label)s %(lookup_type)s."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:180
+#, python-format
+msgid "Field of type: %(field_type)s"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1162
+#, python-format
+msgid "“%(value)s” value must be either True or False."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1163
+#, python-format
+msgid "“%(value)s” value must be either True, False, or None."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1165
+msgid "Boolean (Either True or False)"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1215
+#, python-format
+msgid "String (up to %(max_length)s)"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1217
+msgid "String (unlimited)"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1326
+msgid "Comma-separated integers"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1427
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid date format. It must be in YYYY-MM-DD "
+"format."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1431
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1566
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (YYYY-MM-DD) but it is an invalid "
+"date."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1435
+msgid "Date (without time)"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1562
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in YYYY-MM-DD "
+"HH:MM[:ss[.uuuuuu]][TZ] format."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1570
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (YYYY-MM-DD HH:MM[:ss[.uuuuuu]]"
+"[TZ]) but it is an invalid date/time."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1575
+msgid "Date (with time)"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1702
+#, python-format
+msgid "“%(value)s” value must be a decimal number."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1704
+msgid "Decimal number"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1864
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in [DD] "
+"[[HH:]MM:]ss[.uuuuuu] format."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1868
+msgid "Duration"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1920
+msgid "Email address"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1945
+msgid "File path"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2023
+#, python-format
+msgid "“%(value)s” value must be a float."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2025
+msgid "Floating point number"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2065
+#, python-format
+msgid "“%(value)s” value must be an integer."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2067
+msgid "Integer"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2163
+msgid "Big (8 byte) integer"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2180
+msgid "Small integer"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2188
+msgid "IPv4 address"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2219
+msgid "IP address"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2310
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2311
+#, python-format
+msgid "“%(value)s” value must be either None, True or False."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2313
+msgid "Boolean (Either True, False or None)"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2364
+msgid "Positive big integer"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2379
+msgid "Positive integer"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2394
+msgid "Positive small integer"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2410
+#, python-format
+msgid "Slug (up to %(max_length)s)"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2446
+msgid "Text"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2526
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in HH:MM[:ss[.uuuuuu]] "
+"format."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2530
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (HH:MM[:ss[.uuuuuu]]) but it is an "
+"invalid time."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2534
+#: .\env\Lib\site-packages\unfold\contrib\filters\forms.py:291
+#: .\env\Lib\site-packages\unfold\contrib\filters\forms.py:307
+#: .\env\Lib\site-packages\unfold\widgets.py:607
+#: .\env\Lib\site-packages\unfold\widgets.py:652
+msgid "Time"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2642
+msgid "URL"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2666
+msgid "Raw binary data"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2731
+#, python-format
+msgid "“%(value)s” is not a valid UUID."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2733
+msgid "Universally unique identifier"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\files.py:244
+msgid "File"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\files.py:420
+msgid "Image"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\json.py:24
+msgid "A JSON object"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\json.py:26
+msgid "Value must be valid JSON."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\related.py:979
+#, python-format
+msgid "%(model)s instance with %(field)s %(value)r is not a valid choice."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\related.py:982
+msgid "Foreign Key (type determined by related field)"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\related.py:1276
+msgid "One-to-one relationship"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\related.py:1333
+#, python-format
+msgid "%(from)s-%(to)s relationship"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\related.py:1335
+#, python-format
+msgid "%(from)s-%(to)s relationships"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\related.py:1383
+msgid "Many-to-many relationship"
+msgstr ""
+
+#. Translators: If found as last label character, these punctuation
+#. characters will prevent the default label_suffix to be appended to the label
+#: .\env\Lib\site-packages\django\forms\boundfield.py:185
+msgid ":?.!"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\fields.py:95
+msgid "This field is required."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\fields.py:315
+msgid "Enter a whole number."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\fields.py:486
+#: .\env\Lib\site-packages\django\forms\fields.py:1267
+msgid "Enter a valid date."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\fields.py:509
+#: .\env\Lib\site-packages\django\forms\fields.py:1268
+msgid "Enter a valid time."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\fields.py:536
+msgid "Enter a valid date/time."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\fields.py:570
+msgid "Enter a valid duration."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\fields.py:571
+#, python-brace-format
+msgid "The number of days must be between {min_days} and {max_days}."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\fields.py:640
+msgid "No file was submitted. Check the encoding type on the form."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\fields.py:641
+msgid "No file was submitted."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\fields.py:642
+msgid "The submitted file is empty."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\fields.py:644
+#, python-format
+msgid "Ensure this filename has at most %(max)d character (it has %(length)d)."
+msgid_plural ""
+"Ensure this filename has at most %(max)d characters (it has %(length)d)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\env\Lib\site-packages\django\forms\fields.py:649
+msgid "Please either submit a file or check the clear checkbox, not both."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\fields.py:717
+msgid ""
+"Upload a valid image. The file you uploaded was either not an image or a "
+"corrupted image."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\fields.py:889
+#: .\env\Lib\site-packages\django\forms\fields.py:975
+#: .\env\Lib\site-packages\django\forms\models.py:1592
+#, python-format
+msgid "Select a valid choice. %(value)s is not one of the available choices."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\fields.py:977
+#: .\env\Lib\site-packages\django\forms\fields.py:1096
+#: .\env\Lib\site-packages\django\forms\models.py:1590
+msgid "Enter a list of values."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\fields.py:1097
+msgid "Enter a complete value."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\fields.py:1339
+msgid "Enter a valid UUID."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\fields.py:1369
+msgid "Enter a valid JSON."
+msgstr ""
+
+#. Translators: This is the default suffix added to form field labels
+#: .\env\Lib\site-packages\django\forms\forms.py:97
+msgid ":"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\forms.py:239
+#, python-format
+msgid "(Hidden field %(name)s) %(error)s"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\formsets.py:61
+#, python-format
+msgid ""
+"ManagementForm data is missing or has been tampered with. Missing fields: "
+"%(field_names)s. You may need to file a bug report if the issue persists."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\formsets.py:65
+#, python-format
+msgid "Please submit at most %(num)d form."
+msgid_plural "Please submit at most %(num)d forms."
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\env\Lib\site-packages\django\forms\formsets.py:70
+#, python-format
+msgid "Please submit at least %(num)d form."
+msgid_plural "Please submit at least %(num)d forms."
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\env\Lib\site-packages\django\forms\formsets.py:484
+#: .\env\Lib\site-packages\django\forms\formsets.py:491
+msgid "Order"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\formsets.py:499
+#: .\env\Lib\site-packages\unfold\contrib\import_export\templates\admin\import_export\import_preview.html:26
+#: .\env\Lib\site-packages\unfold\templates\admin\submit_line.html:60
+msgid "Delete"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\models.py:901
+#, python-format
+msgid "Please correct the duplicate data for %(field)s."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\models.py:906
+#, python-format
+msgid "Please correct the duplicate data for %(field)s, which must be unique."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\models.py:913
+#, python-format
+msgid ""
+"Please correct the duplicate data for %(field_name)s which must be unique "
+"for the %(lookup)s in %(date_field)s."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\models.py:922
+msgid "Please correct the duplicate values below."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\models.py:1359
+msgid "The inline value did not match the parent instance."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\models.py:1450
+msgid "Select a valid choice. That choice is not one of the available choices."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\models.py:1594
+#, python-format
+msgid "“%(pk)s” is not a valid value."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\utils.py:229
+#, python-format
+msgid ""
+"%(datetime)s couldn’t be interpreted in time zone %(current_timezone)s; it "
+"may be ambiguous or it may not exist."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\widgets.py:527
+msgid "Clear"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\widgets.py:528
+msgid "Currently"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\widgets.py:529
+#: .\env\Lib\site-packages\unfold\templates\admin\edit_inline\stacked.html:57
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\app_list_default.html:42
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\edit_inline\tabular_title.html:23
+msgid "Change"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\widgets.py:866
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\boolean.html:4
+msgid "Unknown"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\widgets.py:867
+#: .\env\Lib\site-packages\unfold\contrib\filters\admin\choice_filters.py:95
+#: .\env\Lib\site-packages\unfold\contrib\filters\admin\choice_filters.py:103
+msgid "Yes"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\widgets.py:868
+#: .\env\Lib\site-packages\unfold\contrib\filters\admin\choice_filters.py:96
+#: .\env\Lib\site-packages\unfold\contrib\filters\admin\choice_filters.py:104
+msgid "No"
+msgstr ""
+
+#. Translators: Please do not add spaces around commas.
+#: .\env\Lib\site-packages\django\template\defaultfilters.py:873
+msgid "yes,no,maybe"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\template\defaultfilters.py:903
+#: .\env\Lib\site-packages\django\template\defaultfilters.py:920
+#, python-format
+msgid "%(size)d byte"
+msgid_plural "%(size)d bytes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\env\Lib\site-packages\django\template\defaultfilters.py:922
+#, python-format
+msgid "%s KB"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\template\defaultfilters.py:924
+#, python-format
+msgid "%s MB"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\template\defaultfilters.py:926
+#, python-format
+msgid "%s GB"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\template\defaultfilters.py:928
+#, python-format
+msgid "%s TB"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\template\defaultfilters.py:930
+#, python-format
+msgid "%s PB"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dateformat.py:74
+msgid "p.m."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dateformat.py:75
+msgid "a.m."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dateformat.py:80
+msgid "PM"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dateformat.py:81
+msgid "AM"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dateformat.py:153
+msgid "midnight"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dateformat.py:155
+msgid "noon"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:7
+msgid "Monday"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:8
+msgid "Tuesday"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:9
+msgid "Wednesday"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:10
+msgid "Thursday"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:11
+msgid "Friday"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:12
+msgid "Saturday"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:13
+msgid "Sunday"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:16
+msgid "Mon"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:17
+msgid "Tue"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:18
+msgid "Wed"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:19
+msgid "Thu"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:20
+msgid "Fri"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:21
+msgid "Sat"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:22
+msgid "Sun"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:25
+msgid "January"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:26
+msgid "February"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:27
+msgid "March"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:28
+msgid "April"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:29
+msgid "May"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:30
+msgid "June"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:31
+msgid "July"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:32
+msgid "August"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:33
+msgid "September"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:34
+msgid "October"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:35
+msgid "November"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:36
+msgid "December"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:39
+msgid "jan"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:40
+msgid "feb"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:41
+msgid "mar"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:42
+msgid "apr"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:43
+msgid "may"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:44
+msgid "jun"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:45
+msgid "jul"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:46
+msgid "aug"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:47
+msgid "sep"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:48
+msgid "oct"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:49
+msgid "nov"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:50
+msgid "dec"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:53
+msgctxt "abbrev. month"
+msgid "Jan."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:54
+msgctxt "abbrev. month"
+msgid "Feb."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:55
+msgctxt "abbrev. month"
+msgid "March"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:56
+msgctxt "abbrev. month"
+msgid "April"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:57
+msgctxt "abbrev. month"
+msgid "May"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:58
+msgctxt "abbrev. month"
+msgid "June"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:59
+msgctxt "abbrev. month"
+msgid "July"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:60
+msgctxt "abbrev. month"
+msgid "Aug."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:61
+msgctxt "abbrev. month"
+msgid "Sept."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:62
+msgctxt "abbrev. month"
+msgid "Oct."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:63
+msgctxt "abbrev. month"
+msgid "Nov."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:64
+msgctxt "abbrev. month"
+msgid "Dec."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:67
+msgctxt "alt. month"
+msgid "January"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:68
+msgctxt "alt. month"
+msgid "February"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:69
+msgctxt "alt. month"
+msgid "March"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:70
+msgctxt "alt. month"
+msgid "April"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:71
+msgctxt "alt. month"
+msgid "May"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:72
+msgctxt "alt. month"
+msgid "June"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:73
+msgctxt "alt. month"
+msgid "July"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:74
+msgctxt "alt. month"
+msgid "August"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:75
+msgctxt "alt. month"
+msgid "September"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:76
+msgctxt "alt. month"
+msgid "October"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:77
+msgctxt "alt. month"
+msgid "November"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:78
+msgctxt "alt. month"
+msgid "December"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\ipv6.py:20
+msgid "This is not a valid IPv6 address."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\text.py:76
+#, python-format
+msgctxt "String to return when truncating text"
+msgid "%(truncated_text)s…"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\text.py:288
+msgid "or"
+msgstr ""
+
+#. Translators: This string is used as a separator between list elements
+#: .\env\Lib\site-packages\django\utils\text.py:307
+#: .\env\Lib\site-packages\django\utils\timesince.py:135
+msgid ", "
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\timesince.py:8
+#, python-format
+msgid "%(num)d year"
+msgid_plural "%(num)d years"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\env\Lib\site-packages\django\utils\timesince.py:9
+#, python-format
+msgid "%(num)d month"
+msgid_plural "%(num)d months"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\env\Lib\site-packages\django\utils\timesince.py:10
+#, python-format
+msgid "%(num)d week"
+msgid_plural "%(num)d weeks"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\env\Lib\site-packages\django\utils\timesince.py:11
+#, python-format
+msgid "%(num)d day"
+msgid_plural "%(num)d days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\env\Lib\site-packages\django\utils\timesince.py:12
+#, python-format
+msgid "%(num)d hour"
+msgid_plural "%(num)d hours"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\env\Lib\site-packages\django\utils\timesince.py:13
+#, python-format
+msgid "%(num)d minute"
+msgid_plural "%(num)d minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\env\Lib\site-packages\django\views\csrf.py:29
+msgid "Forbidden"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\csrf.py:30
+msgid "CSRF verification failed. Request aborted."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\csrf.py:34
+msgid ""
+"You are seeing this message because this HTTPS site requires a “Referer "
+"header” to be sent by your web browser, but none was sent. This header is "
+"required for security reasons, to ensure that your browser is not being "
+"hijacked by third parties."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\csrf.py:40
+msgid ""
+"If you have configured your browser to disable “Referer” headers, please re-"
+"enable them, at least for this site, or for HTTPS connections, or for “same-"
+"origin” requests."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\csrf.py:45
+msgid ""
+"If you are using the <meta name=\"referrer\" content=\"no-referrer\"> tag or "
+"including the “Referrer-Policy: no-referrer” header, please remove them. The "
+"CSRF protection requires the “Referer” header to do strict referer checking. "
+"If you’re concerned about privacy, use alternatives like <a "
+"rel=\"noreferrer\" …> for links to third-party sites."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\csrf.py:54
+msgid ""
+"You are seeing this message because this site requires a CSRF cookie when "
+"submitting forms. This cookie is required for security reasons, to ensure "
+"that your browser is not being hijacked by third parties."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\csrf.py:60
+msgid ""
+"If you have configured your browser to disable cookies, please re-enable "
+"them, at least for this site, or for “same-origin” requests."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\csrf.py:66
+msgid "More information is available with DEBUG=True."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\generic\dates.py:44
+msgid "No year specified"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\generic\dates.py:64
+#: .\env\Lib\site-packages\django\views\generic\dates.py:115
+#: .\env\Lib\site-packages\django\views\generic\dates.py:214
+msgid "Date out of range"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\generic\dates.py:94
+msgid "No month specified"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\generic\dates.py:147
+msgid "No day specified"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\generic\dates.py:194
+msgid "No week specified"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\generic\dates.py:353
+#: .\env\Lib\site-packages\django\views\generic\dates.py:384
+#, python-format
+msgid "No %(verbose_name_plural)s available"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\generic\dates.py:680
+#, python-format
+msgid ""
+"Future %(verbose_name_plural)s not available because "
+"%(class_name)s.allow_future is False."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\generic\dates.py:720
+#, python-format
+msgid "Invalid date string “%(datestr)s” given format “%(format)s”"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\generic\detail.py:56
+#, python-format
+msgid "No %(verbose_name)s found matching the query"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\generic\list.py:70
+msgid "Page is not “last”, nor can it be converted to an int."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\generic\list.py:77
+#, python-format
+msgid "Invalid page (%(page_number)s): %(message)s"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\generic\list.py:173
+#, python-format
+msgid "Empty list and “%(class_name)s.allow_empty” is False."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\static.py:49
+msgid "Directory indexes are not allowed here."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\static.py:51
+#, python-format
+msgid "“%(path)s” does not exist"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\static.py:68
+#: .\env\Lib\site-packages\django\views\templates\directory_index.html:8
+#: .\env\Lib\site-packages\django\views\templates\directory_index.html:11
+#, python-format
+msgid "Index of %(directory)s"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\templates\default_urlconf.html:7
+#: .\env\Lib\site-packages\django\views\templates\default_urlconf.html:204
+msgid "The install worked successfully! Congratulations!"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\templates\default_urlconf.html:206
+#, python-format
+msgid ""
+"View <a href=\"https://docs.djangoproject.com/en/%(version)s/releases/\" "
+"target=\"_blank\" rel=\"noopener\">release notes</a> for Django %(version)s"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\templates\default_urlconf.html:208
+#, python-format
+msgid ""
+"You are seeing this page because <a href=\"https://docs.djangoproject.com/en/"
+"%(version)s/ref/settings/#debug\" target=\"_blank\" "
+"rel=\"noopener\">DEBUG=True</a> is in your settings file and you have not "
+"configured any URLs."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\templates\default_urlconf.html:217
+msgid "Django Documentation"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\templates\default_urlconf.html:218
+msgid "Topics, references, &amp; how-to’s"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\templates\default_urlconf.html:226
+msgid "Tutorial: A Polling App"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\templates\default_urlconf.html:227
+msgid "Get started with Django"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\templates\default_urlconf.html:235
+msgid "Django Community"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\templates\default_urlconf.html:236
+msgid "Connect, get help, or contribute"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\admin.py:45
+#: .\env\Lib\site-packages\unfold\templatetags\unfold_list.py:355
+msgid "Select record"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\admin.py:198
+msgid "Select action"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\constance\templates\admin\constance\change_list.html:41
+#: .\env\Lib\site-packages\unfold\contrib\guardian\templates\admin\guardian\model\obj_perms_manage_group.html:23
+#: .\env\Lib\site-packages\unfold\contrib\guardian\templates\admin\guardian\model\obj_perms_manage_user.html:24
+#: .\env\Lib\site-packages\unfold\templates\admin\pagination.html:19
+#: .\env\Lib\site-packages\unfold\templates\admin\submit_line.html:9
+msgid "Save"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\constance\templates\admin\constance\includes\results_list.html:10
+msgid "Collapse"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\constance\templates\admin\constance\includes\results_list.html:20
+#: .\env\Lib\site-packages\unfold\contrib\filters\forms.py:178
+msgid "Value"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\constance\templates\admin\constance\includes\results_list.html:21
+msgid "Default"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\constance\templates\admin\constance\includes\results_list.html:22
+#: .\env\Lib\site-packages\unfold\contrib\forms\templates\unfold\forms\helpers\toolbar.html:59
+msgid "Code"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\constance\templates\admin\constance\includes\results_list.html:65
+msgid "Reset to default"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\filters\admin\choice_filters.py:22
+#: .\env\Lib\site-packages\unfold\contrib\filters\admin\choice_filters.py:72
+#: .\env\Lib\site-packages\unfold\contrib\filters\admin\choice_filters.py:85
+#: .\env\Lib\site-packages\unfold\contrib\filters\admin\dropdown_filters.py:23
+#: .\env\Lib\site-packages\unfold\contrib\filters\admin\mixins.py:47
+msgid "All"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\filters\admin\choice_filters.py:42
+#: .\env\Lib\site-packages\unfold\contrib\filters\admin\choice_filters.py:110
+#: .\env\Lib\site-packages\unfold\contrib\filters\admin\choice_filters.py:138
+#: .\env\Lib\site-packages\unfold\contrib\filters\admin\choice_filters.py:166
+#: .\env\Lib\site-packages\unfold\contrib\filters\admin\dropdown_filters.py:39
+#: .\env\Lib\site-packages\unfold\contrib\filters\admin\dropdown_filters.py:93
+#: .\env\Lib\site-packages\unfold\contrib\filters\admin\dropdown_filters.py:142
+#: .\env\Lib\site-packages\unfold\contrib\filters\admin\mixins.py:70
+#: .\env\Lib\site-packages\unfold\contrib\filters\admin\mixins.py:171
+#: .\env\Lib\site-packages\unfold\contrib\filters\admin\text_filters.py:28
+#: .\env\Lib\site-packages\unfold\contrib\filters\admin\text_filters.py:57
+#: .\env\Lib\site-packages\unfold\contrib\filters\templates\unfold\filters\filters_date_range.html:5
+#: .\env\Lib\site-packages\unfold\contrib\filters\templates\unfold\filters\filters_datetime_range.html:5
+#: .\env\Lib\site-packages\unfold\contrib\filters\templates\unfold\filters\filters_numeric_range.html:5
+#: .\env\Lib\site-packages\unfold\contrib\filters\templates\unfold\filters\filters_numeric_single.html:5
+#: .\env\Lib\site-packages\unfold\contrib\filters\templates\unfold\filters\filters_numeric_slider.html:7
+#: .\env\Lib\site-packages\unfold\templates\admin\filter.html:5
+#, python-format
+msgid " By %(filter_title)s "
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\filters\forms.py:207
+#: .\env\Lib\site-packages\unfold\contrib\filters\forms.py:252
+msgid "From"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\filters\forms.py:218
+#: .\env\Lib\site-packages\unfold\contrib\filters\forms.py:262
+msgid "To"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\filters\forms.py:286
+msgid "Date from"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\filters\forms.py:302
+msgid "Date to"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\filters\templates\unfold\filters\filters_numeric_slider.html:21
+msgid "Not enough data."
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\forms\templates\unfold\forms\array.html:30
+msgid "Add new item"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\forms\templates\unfold\forms\helpers\toolbar.html:7
+msgid "Paragraph"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\forms\templates\unfold\forms\helpers\toolbar.html:11
+msgid "Underlined"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\forms\templates\unfold\forms\helpers\toolbar.html:15
+msgid "Bold"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\forms\templates\unfold\forms\helpers\toolbar.html:19
+msgid "Italic"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\forms\templates\unfold\forms\helpers\toolbar.html:23
+msgid "Strike"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\forms\templates\unfold\forms\helpers\toolbar.html:27
+#: .\env\Lib\site-packages\unfold\contrib\forms\templates\unfold\forms\helpers\toolbar.html:98
+msgid "Link"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\forms\templates\unfold\forms\helpers\toolbar.html:35
+#: .\env\Lib\site-packages\unfold\contrib\forms\templates\unfold\forms\helpers\toolbar.html:39
+#: .\env\Lib\site-packages\unfold\contrib\forms\templates\unfold\forms\helpers\toolbar.html:43
+#: .\env\Lib\site-packages\unfold\contrib\forms\templates\unfold\forms\helpers\toolbar.html:47
+msgid "Heading"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\forms\templates\unfold\forms\helpers\toolbar.html:55
+msgid "Quote"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\forms\templates\unfold\forms\helpers\toolbar.html:63
+msgid "Unordered list"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\forms\templates\unfold\forms\helpers\toolbar.html:67
+msgid "Ordered list"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\forms\templates\unfold\forms\helpers\toolbar.html:71
+msgid "Indent increase"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\forms\templates\unfold\forms\helpers\toolbar.html:75
+msgid "Indent decrease"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\forms\templates\unfold\forms\helpers\toolbar.html:83
+msgid "Undo"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\forms\templates\unfold\forms\helpers\toolbar.html:87
+msgid "Redo"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\forms\templates\unfold\forms\helpers\toolbar.html:95
+msgid "Enter an URL"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\forms\templates\unfold\forms\helpers\toolbar.html:102
+msgid "Unlink"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\guardian\templates\admin\guardian\model\change_form.html:8
+msgid "Object permissions"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\guardian\templates\admin\guardian\model\obj_perms_manage_group.html:13
+#: .\env\Lib\site-packages\unfold\contrib\guardian\templates\admin\guardian\model\obj_perms_manage_user.html:14
+#: .\env\Lib\site-packages\unfold\contrib\simple_history\templates\simple_history\object_history_list.html:9
+#: .\env\Lib\site-packages\unfold\contrib\simple_history\templates\simple_history\object_history_list.html:43
+msgid "Object"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\guardian\templates\admin\guardian\model\obj_perms_manage_group.html:16
+#: .\env\Lib\site-packages\unfold\contrib\guardian\templates\unfold\guardian\group_form.html:15
+msgid "Group"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\guardian\templates\unfold\guardian\group_form.html:7
+msgid "Group permissions"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\guardian\templates\unfold\guardian\group_form.html:25
+#: .\env\Lib\site-packages\unfold\contrib\guardian\templates\unfold\guardian\group_form.html:49
+#: .\env\Lib\site-packages\unfold\contrib\guardian\templates\unfold\guardian\user_form.html:25
+#: .\env\Lib\site-packages\unfold\contrib\guardian\templates\unfold\guardian\user_form.html:49
+#: .\env\Lib\site-packages\unfold\templates\admin\object_history.html:18
+#: .\env\Lib\site-packages\unfold\templates\admin\object_history.html:34
+msgid "Action"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\guardian\templates\unfold\guardian\group_form.html:51
+#: .\env\Lib\site-packages\unfold\contrib\guardian\templates\unfold\guardian\user_form.html:51
+msgid "Edit"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\guardian\templates\unfold\guardian\group_form.html:67
+msgid "Manage group"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\guardian\templates\unfold\guardian\user_form.html:7
+msgid "User permissions"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\guardian\templates\unfold\guardian\user_form.html:67
+msgid "Manage user"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\import_export\templates\admin\import_export\change_form.html:8
+#: .\env\Lib\site-packages\unfold\contrib\import_export\templates\admin\import_export\change_list_export_item.html:4
+msgid "Export"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\import_export\templates\admin\import_export\change_list_import_item.html:4
+msgid "Import"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\import_export\templates\admin\import_export\export.html:18
+#, python-format
+msgid ""
+"\n"
+"                    Export %(len)s selected item.\n"
+"                "
+msgid_plural ""
+"\n"
+"                    Export %(len)s selected items.\n"
+"                "
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\env\Lib\site-packages\unfold\contrib\import_export\templates\admin\import_export\export.html:36
+msgid "This exporter will export the following fields"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\import_export\templates\admin\import_export\export.html:77
+#: .\env\Lib\site-packages\unfold\contrib\import_export\templates\admin\import_export\import_form.html:21
+msgid "Submit"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\import_export\templates\admin\import_export\import_confirm.html:10
+msgid ""
+"Below is a preview of data to be imported. If you are satisfied with the "
+"results, click 'Confirm import'"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\import_export\templates\admin\import_export\import_confirm.html:15
+msgid "Confirm import"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\import_export\templates\admin\import_export\import_errors.html:20
+msgid "Line number"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\import_export\templates\admin\import_export\import_preview.html:22
+msgid "New"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\import_export\templates\admin\import_export\import_preview.html:24
+msgid "Skipped"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\import_export\templates\admin\import_export\import_preview.html:28
+msgid "Update"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\import_export\templates\admin\import_export\import_validation.html:6
+msgid "Some rows failed to validate"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\import_export\templates\admin\import_export\import_validation.html:10
+msgid ""
+"Please correct these errors in your data where possible, then reupload it "
+"using the form above."
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\import_export\templates\admin\import_export\import_validation.html:22
+#: .\env\Lib\site-packages\unfold\contrib\import_export\templates\admin\import_export\import_validation.html:40
+msgid "Row"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\import_export\templates\admin\import_export\import_validation.html:26
+#: .\env\Lib\site-packages\unfold\contrib\import_export\templates\admin\import_export\import_validation.html:44
+msgid "Errors"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\import_export\templates\admin\import_export\import_validation.html:70
+msgid "Non field specific"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\import_export\templates\admin\import_export\resource_fields_list.html:6
+msgid "This exporter will export the following fields: "
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\import_export\templates\admin\import_export\resource_fields_list.html:8
+msgid "This importer will import the following fields: "
+msgstr ""
+
+#. Translators: Model verbose name and instance representation,
+#. suitable to be an item in a list.
+#: .\env\Lib\site-packages\unfold\contrib\inlines\admin.py:99
+#, python-format
+msgid "%(class_name)s %(instance)s"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\inlines\admin.py:111
+#, python-format
+msgid ""
+"Deleting %(class_name)s %(instance)s would require deleting the following "
+"protected related objects: %(related_objects)s"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\simple_history\templates\simple_history\object_history.html:7
+msgid ""
+"Choose a date from the list below to revert to a previous version of this "
+"object"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\simple_history\templates\simple_history\object_history.html:27
+#: .\env\Lib\site-packages\unfold\templates\admin\object_history.html:57
+msgid "entry"
+msgid_plural "entries"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\env\Lib\site-packages\unfold\contrib\simple_history\templates\simple_history\object_history.html:30
+msgid "This object doesn't have a change history."
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\simple_history\templates\simple_history\object_history_form.html:16
+msgid ""
+"Press the 'Revert' button below to revert to this version of the object."
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\simple_history\templates\simple_history\object_history_form.html:20
+msgid "Press the 'Change History' button below to edit the history."
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\simple_history\templates\simple_history\object_history_list.html:19
+#: .\env\Lib\site-packages\unfold\contrib\simple_history\templates\simple_history\object_history_list.html:55
+#: .\env\Lib\site-packages\unfold\templates\admin\object_history.html:10
+#: .\env\Lib\site-packages\unfold\templates\admin\object_history.html:26
+msgid "Date/time"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\simple_history\templates\simple_history\object_history_list.html:23
+#: .\env\Lib\site-packages\unfold\contrib\simple_history\templates\simple_history\object_history_list.html:59
+msgid "Comment"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\simple_history\templates\simple_history\object_history_list.html:27
+#: .\env\Lib\site-packages\unfold\contrib\simple_history\templates\simple_history\object_history_list.html:63
+msgid "Changed by"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\simple_history\templates\simple_history\object_history_list.html:31
+#: .\env\Lib\site-packages\unfold\contrib\simple_history\templates\simple_history\object_history_list.html:77
+msgid "Change reason"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\simple_history\templates\simple_history\object_history_list.html:35
+#: .\env\Lib\site-packages\unfold\contrib\simple_history\templates\simple_history\object_history_list.html:81
+msgid "Changes"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\simple_history\templates\simple_history\object_history_list.html:73
+msgid "None"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\simple_history\templates\simple_history\submit_line.html:8
+msgid "Revert"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\simple_history\templates\simple_history\submit_line.html:14
+msgid "Change History"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\contrib\simple_history\templates\simple_history\submit_line.html:19
+#: .\env\Lib\site-packages\unfold\templates\admin\submit_line.html:52
+msgid "Close"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\forms.py:72
+msgid "Select action to run"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\forms.py:133
+msgid ""
+"Raw passwords are not stored, so there is no way to see this user’s "
+"password, but you can change the password using <a href=\"{}\" class=\"text-"
+"primary-600 dark:text-primary-500\">this form</a>."
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\mixins\base_model_admin.py:57
+#: .\env\Lib\site-packages\unfold\mixins\base_model_admin.py:78
+msgid "Select value"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\mixins\dataset_model_admin.py:53
+msgid ""
+"Items must be selected in order to perform actions on them. No items have "
+"been changed."
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\mixins\dataset_model_admin.py:66
+msgid "Dataset not found. No action performed."
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\admin\actions.html:23
+#: .\env\Lib\site-packages\unfold\templates\admin\dataset_actions.html:46
+msgid "Run the selected action"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\admin\actions.html:24
+#: .\env\Lib\site-packages\unfold\templates\admin\dataset_actions.html:47
+msgid "Run"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\admin\actions.html:44
+#: .\env\Lib\site-packages\unfold\templates\admin\dataset_actions.html:17
+msgid "Click here to select the objects across all pages"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\admin\actions.html:45
+#: .\env\Lib\site-packages\unfold\templates\admin\dataset_actions.html:18
+#, python-format
+msgid "Select all %(total_count)s %(module_name)s"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\admin\actions.html:51
+#: .\env\Lib\site-packages\unfold\templates\admin\dataset_actions.html:24
+msgid "Clear selection"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\admin\app_index.html:5
+#: .\env\Lib\site-packages\unfold\templates\admin\base_site.html:3
+#: .\env\Lib\site-packages\unfold\templates\admin\index.html:5
+#: .\env\Lib\site-packages\unfold\templates\admin\login.html:15
+#: .\env\Lib\site-packages\unfold\templates\unfold\layouts\base.html:7
+msgid "Django site admin"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\admin\app_list.html:12
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\app_list_default.html:9
+#, python-format
+msgid "Models in the %(name)s application"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\admin\app_list.html:48
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\app_list.html:91
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\app_list_default.html:59
+msgid "You don’t have permission to view or edit anything."
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\admin\auth\user\add_form.html:5
+msgid "After you've created a user, you’ll be able to edit more user options."
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\admin\auth\user\change_password.html:19
+#, python-format
+msgid "Enter a new password for the user <strong>%(username)s</strong>."
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\admin\auth\user\change_password.html:29
+#: .\env\Lib\site-packages\unfold\templates\registration\password_change_form.html:32
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\account_links.html:19
+msgid "Change password"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\admin\change_form_object_tools.html:6
+msgid "History"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\admin\change_form_object_tools.html:12
+#: .\env\Lib\site-packages\unfold\templates\admin\edit_inline\stacked.html:71
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\edit_inline\tabular_title.html:33
+msgid "View on site"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\admin\change_list.html:65
+msgid "Filters"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\admin\change_list_results.html:33
+msgid "Expand row"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\admin\delete_confirmation.html:16
+#, python-format
+msgid ""
+"Deleting the %(object_name)s '%(escaped_object)s' would result in deleting "
+"related objects, but your account doesn't have permission to delete the "
+"following types of objects:"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\admin\delete_confirmation.html:32
+#, python-format
+msgid ""
+"Deleting the %(object_name)s '%(escaped_object)s' would require deleting the "
+"following protected related objects:"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\admin\delete_confirmation.html:48
+#, python-format
+msgid ""
+"Are you sure you want to delete the %(object_name)s \"%(escaped_object)s\"? "
+"All of the following related items will be deleted:"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\admin\delete_confirmation.html:55
+#: .\env\Lib\site-packages\unfold\templates\admin\delete_selected_confirmation.html:49
+msgid "Objects"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\admin\delete_selected_confirmation.html:15
+#, python-format
+msgid ""
+"Deleting the selected %(objects_name)s would result in deleting related "
+"objects, but your account doesn't have permission to delete the following "
+"types of objects:"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\admin\delete_selected_confirmation.html:28
+#, python-format
+msgid ""
+"Deleting the selected %(objects_name)s would require deleting the following "
+"protected related objects:"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\admin\delete_selected_confirmation.html:42
+#, python-format
+msgid ""
+"Are you sure you want to delete the selected %(objects_name)s? All of the "
+"following objects and their related items will be deleted:"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\admin\edit_inline\stacked.html:59
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\app_list_default.html:38
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\edit_inline\tabular_title.html:25
+msgid "View"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\admin\includes\object_delete_summary.html:5
+msgid "Summary"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\admin\login.html:15
+msgid "Welcome back to"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\admin\login.html:26
+#, python-format
+msgid ""
+"You are authenticated as %(username)s, but are not authorized to access this "
+"page. Would you like to login to a different account?"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\admin\login.html:47
+msgid "Log in"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\admin\login.html:55
+msgid "Forgotten your password or username?"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\admin\object_history.html:60
+msgid ""
+"This object doesn’t have a change history. It probably wasn’t added via this "
+"admin site."
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\admin\pagination.html:12
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\welcomemsg.html:25
+msgid "Show all"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\admin\search_form.html:18
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\command.html:24
+msgid "Type to search"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\admin\submit_line.html:28
+msgid "Save and continue editing"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\admin\submit_line.html:30
+msgid "Save and view"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\admin\submit_line.html:37
+msgid "Save and add another"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\admin\submit_line.html:43
+msgid "Save as new"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\registration\logged_out.html:14
+msgid "You have been successfully logged out from the administration"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\registration\logged_out.html:18
+msgid "Thanks for spending some quality time with the web site today."
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\registration\logged_out.html:23
+msgid "Log in again"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\registration\password_change_done.html:8
+msgid "Your password was changed."
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\registration\password_change_form.html:18
+msgid ""
+"Please enter your old password, for security’s sake, and then enter your new "
+"password twice so we can verify you typed it in correctly."
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\components\table.html:93
+msgid "No data"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\account_links.html:6
+msgid "View site"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\account_links.html:29
+msgid "Log out"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\actions_row.html:4
+msgid "More actions"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\add_link.html:5
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\add_link.html:8
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\empty_results.html:4
+#, python-format
+msgid "Add %(name)s"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\app_list.html:60
+msgid "All applications"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\app_list_default.html:31
+msgid "Add"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\boolean.html:4
+msgid "True"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\boolean.html:4
+msgid "False"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\change_list_filter_actions.html:7
+msgid "Apply Filters"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\change_list_filter_actions.html:16
+msgid "Hide counts"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\change_list_filter_actions.html:20
+msgid "Show counts"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\change_list_filter_actions.html:27
+msgid "Clear all filters"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\change_list_headers.html:27
+msgid "Select all rows"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\change_list_headers.html:41
+msgid "Toggle sorting"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\change_list_headers.html:49
+msgid "Remove from sorting"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\change_list_headers.html:55
+#, python-format
+msgid "Sorting priority: %(priority_number)s"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\command_history.html:7
+msgid "Recent searches"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\command_history.html:49
+msgid "No recent searches"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\command_results.html:44
+msgid "No results matching your query"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\command_results.html:57
+msgid "Loading more results..."
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\command_results.html:62
+#, python-format
+msgid ""
+"\n"
+"                Found %(counter)s result in %(time)s seconds\n"
+"            "
+msgid_plural ""
+"\n"
+"                Found %(counter)s results in %(time)s seconds\n"
+"            "
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\delete_submit_line.html:5
+msgid "No, take me back"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\delete_submit_line.html:9
+msgid "Yes, I’m sure"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\display_header.html:10
+msgid "Record picture"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\edit_inline\tabular_delete.html:4
+msgid "Remove"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\edit_inline\tabular_heading.html:21
+msgid "Delete?"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\empty_results.html:14
+msgid "No results found"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\empty_results.html:18
+msgid ""
+"This page yielded into no results. Create a new item or reset your filters."
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\empty_results.html:32
+msgid "Reset filters"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\field_readonly_value_file.html:8
+#: .\env\Lib\site-packages\unfold\templates\unfold\widgets\clearable_file_input.html:6
+msgid "Image preview"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\field_readonly_value_file.html:13
+msgid "Click to download"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\header_back_button.html:7
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\header_back_button.html:15
+msgid "Go back"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\history.html:9
+msgid "Recent actions"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\history.html:28
+msgid "Unknown content"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\messages\errornote.html:5
+msgid "Please correct the error below."
+msgid_plural "Please correct the errors below."
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\pagination_infinite.html:5
+msgid "Previous"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\pagination_infinite.html:9
+msgid "Next"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\search.html:10
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\search.html:40
+msgid "Search apps and models..."
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\search.html:41
+msgid "Filter navigation items"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\site_branding.html:3
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\site_branding.html:6
+msgid "Django administration"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\site_icon.html:7
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\site_icon.html:9
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\site_icon.html:11
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\site_logo.html:5
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\site_logo.html:7
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\site_logo.html:9
+msgid "Home"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\tab_items.html:16
+msgid "General"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\theme_switch.html:9
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\theme_switch_dropdown.html:16
+msgid "Light"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\theme_switch.html:16
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\theme_switch_dropdown.html:23
+msgid "Dark"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\theme_switch.html:23
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\theme_switch_dropdown.html:30
+#: .\example\project\settings.py:381
+msgid "System"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\unauthenticated_header.html:6
+msgid "Return to site"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\welcomemsg.html:25
+#, python-format
+msgid "%(counter)s result"
+msgid_plural "%(counter)s results"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\helpers\welcomemsg.html:25
+#, python-format
+msgid "%(full_result_count)s total"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\widgets\clearable_file_input.html:25
+#: .\env\Lib\site-packages\unfold\templates\unfold\widgets\clearable_file_input_small.html:18
+msgid "Choose file to upload"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\widgets\password_toggle.html:5
+msgid "Toggle password visibility"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\widgets\related_widget_wrapper.html:16
+#, python-format
+msgid "Change selected %(model)s"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\widgets\related_widget_wrapper.html:26
+#, python-format
+msgid "Add another %(model)s"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\widgets\related_widget_wrapper.html:35
+#, python-format
+msgid "View selected %(model)s"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold\widgets\related_widget_wrapper.html:45
+#, python-format
+msgid "Delete selected %(model)s"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templates\unfold_crispy\layout\table_inline_formset.html:65
+msgid "Add row"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templatetags\unfold.py:776
+msgid "Welcome"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\templatetags\unfold_list.py:127
+msgid "Select all objects on this page for an action"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\widgets.py:606
+#: .\env\Lib\site-packages\unfold\widgets.py:647 .\events\models.py:8
+msgid "Date"
+msgstr ""
+
+#: .\env\Lib\site-packages\unfold\widgets.py:997
+msgid "Select currency"
+msgstr ""
+
+#: .\events\models.py:9
+msgid "Company"
+msgstr ""
+
+#: .\events\models.py:10
+msgid "Voucher Value"
+msgstr ""
+
+#: .\events\models.py:11
+msgid "Voucher Expiry Days"
+msgstr ""
+
+#: .\events\models.py:17 .\events\models.py:25
+msgid "Event"
+msgstr ""
+
+#: .\events\models.py:18 .\project\settings.py:229
+msgid "Events"
+msgstr ""
+
+#: .\events\models.py:26
+msgid "Initial Value"
+msgstr ""
+
+#: .\events\models.py:27
+msgid "Current Balance"
+msgstr ""
+
+#: .\events\models.py:28
+msgid "Issue Date"
+msgstr ""
+
+#: .\events\models.py:29
+msgid "Expiry Date"
+msgstr ""
+
+#: .\events\models.py:30
+msgid "Is Active"
+msgstr ""
+
+#: .\events\models.py:36 .\project\settings.py:234
+msgid "Vouchers"
+msgstr ""
+
+#: .\example\project\settings.py:125
+msgid "English"
+msgstr ""
+
+#: .\example\project\settings.py:126
+msgid "Arabic"
+msgstr ""
+
+#: .\example\project\settings.py:229
+msgid "Menu Management"
+msgstr ""
+
+#: .\example\project\settings.py:234
+msgid "Branches"
+msgstr ""
+
+#: .\example\project\settings.py:239
+msgid "Categories"
+msgstr ""
+
+#: .\example\project\settings.py:244
+msgid "Meals"
+msgstr ""
+
+#: .\example\project\settings.py:251 .\example\project\settings.py:256
+msgid "Orders"
+msgstr ""
+
+#: .\example\project\settings.py:263 .\example\project\settings.py:273
+msgid "Reservations"
+msgstr ""
+
+#: .\example\project\settings.py:268
+msgid "Staff Dashboard"
+msgstr ""
+
+#: .\example\project\settings.py:278
+msgid "Tables"
+msgstr ""
+
+#: .\example\project\settings.py:283
+msgid "Waiting List"
+msgstr ""
+
+#: .\example\project\settings.py:288
+msgid "Time Slots"
+msgstr ""
+
+#: .\example\project\settings.py:295
+msgid "Customer Messages"
+msgstr ""
+
+#: .\example\project\settings.py:300
+msgid "Contacts"
+msgstr ""
+
+#: .\example\project\settings.py:307
+msgid "Page Content"
+msgstr ""
+
+#: .\example\project\settings.py:312
+msgid "Home Banner"
+msgstr ""
+
+#: .\example\project\settings.py:317
+msgid "Home Story"
+msgstr ""
+
+#: .\example\project\settings.py:322
+msgid "About Banner"
+msgstr ""
+
+#: .\example\project\settings.py:327
+msgid "About Story"
+msgstr ""
+
+#: .\example\project\settings.py:332
+msgid "Intro Video"
+msgstr ""
+
+#: .\example\project\settings.py:337
+msgid "Why Us Items"
+msgstr ""
+
+#: .\example\project\settings.py:342
+msgid "Statistics"
+msgstr ""
+
+#: .\example\project\settings.py:347
+msgid "Services"
+msgstr ""
+
+#: .\example\project\settings.py:352
+msgid "Gallery"
+msgstr ""
+
+#: .\example\project\settings.py:359
+msgid "Site Settings"
+msgstr ""
+
+#: .\example\project\settings.py:364
+msgid "SEO Settings"
+msgstr ""
+
+#: .\example\project\settings.py:369
+msgid "Theme Customization"
+msgstr ""
+
+#: .\example\project\settings.py:374
+msgid "Instagram Images"
+msgstr ""
+
+#: .\example\project\settings.py:386 .\project\settings.py:207
+msgid "Users"
+msgstr ""
+
+#: .\example\project\settings.py:391
+msgid "Groups"
+msgstr ""
+
+#: .\example\templates\admin\index.html:14
+msgid "Revenue (7d)"
+msgstr ""
+
+#: .\example\templates\admin\index.html:20
+msgid "payments"
+msgstr ""
+
+#: .\example\templates\admin\index.html:28
+#: .\example\templates\admin\index.html:50
+msgid "vs previous 7 days"
+msgstr ""
+
+#: .\example\templates\admin\index.html:36
+msgid "Orders (7d)"
+msgstr ""
+
+#: .\example\templates\admin\index.html:42
+msgid "shopping_cart"
+msgstr ""
+
+#: .\example\templates\admin\index.html:58
+msgid "Avg. Order Value"
+msgstr ""
+
+#: .\example\templates\admin\index.html:64
+msgid "receipt_long"
+msgstr ""
+
+#: .\example\templates\admin\index.html:68
+msgid "Performance metric"
+msgstr ""
+
+#: .\example\templates\admin\index.html:76
+msgid "Active Branches"
+msgstr ""
+
+#: .\example\templates\admin\index.html:82
+msgid "store"
+msgstr ""
+
+#: .\example\templates\admin\index.html:86
+msgid "Operating locations"
+msgstr ""
+
+#: .\example\templates\admin\index.html:95 .\templates\admin\index.html:90
+msgid "Revenue Trend (30 Days)"
+msgstr ""
+
+#: .\example\templates\admin\index.html:103
+msgid "Top 5 Selling Items"
+msgstr ""
+
+#: .\example\templates\admin\index.html:113
+msgid "Branch Performance Overview"
+msgstr ""
+
+#: .\example\templates\admin\index.html:114
+msgid "Last 7 Days Activity"
+msgstr ""
+
+#: .\example\templates\admin\index.html:120
+msgid "Branch Name"
+msgstr ""
+
+#: .\example\templates\admin\index.html:121
+msgid "Menu Items"
+msgstr ""
+
+#: .\example\templates\admin\index.html:122
+msgid "Delivery Orders"
+msgstr ""
+
+#: .\example\templates\admin\index.html:123
+msgid "Dine-in Orders"
+msgstr ""
+
+#: .\example\templates\admin\index.html:124
+msgid "Revenue (30d)"
+msgstr ""
+
+#: .\project\settings.py:202
+msgid "Accounts"
+msgstr ""
+
+#: .\project\settings.py:224
+msgid "Events Management"
+msgstr ""
+
+#: .\project\settings.py:241
+msgid "Transactions & Finance"
+msgstr ""
+
+#: .\project\settings.py:256
+msgid "Pharma Companies"
+msgstr ""
+
+#: .\templates\admin\index.html:14
+msgid "Total Revenue"
+msgstr ""
+
+#: .\templates\admin\index.html:27
+msgid "vs last 7 days"
+msgstr ""
+
+#: .\templates\admin\index.html:45
+msgid "in last 7 days"
+msgstr ""
+
+#: .\templates\admin\index.html:53
+msgid "Active Vouchers"
+msgstr ""
+
+#: .\templates\admin\index.html:63
+msgid "Currently valid"
+msgstr ""
+
+#: .\templates\admin\index.html:81
+msgid "Vendors Participated"
+msgstr ""
+
+#: .\templates\admin\index.html:98
+msgid "Top Vendors"
+msgstr ""

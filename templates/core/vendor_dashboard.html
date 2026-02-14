@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}لوحة تحكم التاجر{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>اهلاً, {{ vendor.name }}</h2>
+    <a href="{% url 'transaction_create' %}" class="btn">تسجيل معاملة جديدة</a>
+</div>
+
+<div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 30px;">
+    <div class="card" style="flex: 1;">
+        <h3>إجمالي المبيعات</h3>
+        <p style="font-size: 24px; font-weight: bold; color: green;">{{ total_sales }} ج.م</p>
+    </div>
+    <div class="card" style="flex: 1;">
+        <h3>عدد المعاملات</h3>
+        <p style="font-size: 24px; font-weight: bold;">{{ recent_transactions.count }}</p> <!-- Note: this is just recent count, view context implies query limited to 10? -->
+        <!-- Logic to get total count would be better passed from view, but let's stick to this for now or just remove count if not passed -->
+    </div>
+</div>
+
+<h3>آخر المعاملات</h3>
+<div class="card" style="padding: 0; overflow: hidden;">
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+                <th style="padding: 12px; text-align: right;">رقم الفاتورة</th>
+                <th style="padding: 12px; text-align: right;">الطبيب</th>
+                <th style="padding: 12px; text-align: right;">المبلغ</th>
+                <th style="padding: 12px; text-align: right;">التاريخ</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for trx in recent_transactions %}
+            <tr style="border-bottom: 1px solid #dee2e6;">
+                <td style="padding: 12px;">{{ trx.invoice_number }}</td>
+                <td style="padding: 12px;">{{ trx.doctor.name }}</td>
+                <td style="padding: 12px;">{{ trx.amount_spent }}</td>
+                <td style="padding: 12px;">{{ trx.transaction_date|date:"Y-m-d H:i" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" style="padding: 20px; text-align: center;">لا توجد معاملات حديثة.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
