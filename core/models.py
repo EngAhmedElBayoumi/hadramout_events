@@ -21,6 +21,7 @@ class VendorSettlement(models.Model):
     vendor = models.ForeignKey('accounts.Vendor', on_delete=models.CASCADE, verbose_name=_('Vendor'))
     amount_settled = models.DecimalField(_('Amount Settled'), max_digits=12, decimal_places=2)
     settlement_date = models.DateField(_('Settlement Date'))
+    notes = models.TextField(_('Notes'), blank=True)
     created_at = models.DateTimeField(_('Created At'), auto_now_add=True)
 
     class Meta:

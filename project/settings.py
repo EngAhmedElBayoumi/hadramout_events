@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from django.templatetags.static import static
+from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -56,6 +59,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware', # Add LocaleMiddleware
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -75,6 +79,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                
             ],
         },
     },
@@ -116,7 +121,19 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'ar' # Change default to Arabic
+LANGUAGE_CODE = 'ar'
+
+#default language
+DEFAULT_LANGUAGE = 'ar'
+
+LANGUAGES = [
+    ('ar', _('Arabic')),
+    ('en', _('English')),
+]
+
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',
+]
 
 TIME_ZONE = 'UTC'
 
@@ -138,9 +155,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Custom User Model
 AUTH_USER_MODEL = 'accounts.User'
 
-from django.templatetags.static import static
-from django.urls import reverse_lazy
-from django.utils.translation import gettext_lazy as _
+
 
 UNFOLD = {
     "STYLES": [
@@ -153,37 +168,37 @@ UNFOLD = {
     "SITE_TITLE": "Hadramout Admin",
     "SITE_HEADER": "Hadramout Admin",
     "INDEX_TITLE": "Dashboard",
+    "THEME": "light", 
 
-    "COLORS": {
-        "base": {
-            "50":  "rgb(248,250,252)",              # Slate 50
-            "100": "rgb(241,245,249)",              # Slate 100
-            "200": "rgb(226,232,240)",              # Slate 200
-            "300": "rgb(203,213,225)",              # Slate 300
-            "400": "rgb(148,163,184)",              # Slate 400
-            "500": "rgb(100,116,139)",              # Slate 500
-            "600": "rgb(71,85,105)",                # Slate 600
-            "700": "rgb(51,65,85)",                 # Slate 700
-            "800": "rgb(30,41,59)",                 # Slate 800
-            "900": "rgb(15,23,42)",                 # Slate 900
-            "950": "rgb(2,6,23)",                   # Slate 950
-        },
+    # "COLORS": {
+    #     "base": {
+    #         "50":  "rgb(248,250,252)",              # Slate 50
+    #         "100": "rgb(241,245,249)",              # Slate 100
+    #         "200": "rgb(226,232,240)",              # Slate 200
+    #         "300": "rgb(203,213,225)",              # Slate 300
+    #         "400": "rgb(148,163,184)",              # Slate 400
+    #         "500": "rgb(100,116,139)",              # Slate 500
+    #         "600": "rgb(71,85,105)",                # Slate 600
+    #         "700": "rgb(51,65,85)",                 # Slate 700
+    #         "800": "rgb(30,41,59)",                 # Slate 800
+    #         "900": "rgb(15,23,42)",                 # Slate 900
+    #         "950": "rgb(2,6,23)",                   # Slate 950
+    #     },
 
-        "primary": {
-            "50":  "rgba(128, 0, 0, 0.10)", # Maroon tint
-            "100": "rgba(128, 0, 0, 0.20)",
-            "200": "rgba(128, 0, 0, 0.30)",
-            "300": "rgba(128, 0, 0, 0.45)",
-            "400": "rgba(128, 0, 0, 0.65)",
-            "500": "rgb(128, 0, 0)",        # Maroon Main
-            "600": "rgb(100, 0, 0)",
-            "700": "rgb(80, 0, 0)",
-            "800": "rgb(60, 0, 0)",
-            "900": "rgb(40, 0, 0)",
-            "950": "rgb(20, 0, 0)",
-        },
-    },
-    "THEME": "dark", 
+    #     "primary": {
+    #         "50":  "rgba(128, 0, 0, 0.10)", # Maroon tint
+    #         "100": "rgba(128, 0, 0, 0.20)",
+    #         "200": "rgba(128, 0, 0, 0.30)",
+    #         "300": "rgba(128, 0, 0, 0.45)",
+    #         "400": "rgba(128, 0, 0, 0.65)",
+    #         "500": "rgb(128, 0, 0)",        # Maroon Main
+    #         "600": "rgb(100, 0, 0)",
+    #         "700": "rgb(80, 0, 0)",
+    #         "800": "rgb(60, 0, 0)",
+    #         "900": "rgb(40, 0, 0)",
+    #         "950": "rgb(20, 0, 0)",
+    #     },
+    # },
     "SIDEBAR": {
         "show_search": True,
         "show_all_applications": False,
@@ -269,6 +284,22 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 # Static files
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+
+# Email Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'hadramoutrestaurant2010@gmail.com'
+EMAIL_HOST_PASSWORD = 'doacelvyiwaylxoh'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
+
+# Auth Redirects
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'login'

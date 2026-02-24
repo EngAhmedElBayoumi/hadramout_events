@@ -108,7 +108,10 @@
                 {% if user.type == 'VENDOR' %}
                     <a href="{% url 'vendor_dashboard' %}">لوحة التحكم</a>
                 {% endif %}
-                <a href="{% url 'logout' %}">تسجيل الخروج</a>
+                <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" style="background: none; border: none; color: white; font-weight: bold; font-family: 'Cairo', sans-serif; cursor: pointer; padding: 0; margin-right: 15px;">تسجيل الخروج</button>
+                </form>
             {% else %}
                 <a href="{% url 'login' %}">تسجيل الدخول</a>
             {% endif %}

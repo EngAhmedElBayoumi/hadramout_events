@@ -4,39 +4,78 @@
 
 {% block content %}
 <div style="max-width: 800px; margin: 0 auto;">
-    <div class="card" style="text-align: center; margin-bottom: 20px;">
-        <h2>د. {{ doctor.name }}</h2>
-        <p style="color: #666; font-size: 1.2rem;">{{ doctor.specialty }}</p>
+    <!-- Doctor Header Card with QR Code -->
+    <div class="card" style="text-align: center; margin-bottom: 20px; position: relative;">
+        <h2 style="margin-bottom: 5px;">{{ doctor.name }}</h2>
+        <p style="color: #666; font-size: 1.1rem; margin-bottom: 15px;">{{ doctor.specialty }}</p>
+        <p style="color: #888; font-size: 0.9rem;">📞 {{ doctor.phone }} | ✉️ {{ doctor.email }}</p>
+        
+        <!-- QR Code -->
+        <div style="margin: 20px auto; padding: 15px; background: #fff; border: 2px dashed #800000; border-radius: 12px; display: inline-block;">
+            <div id="qrcode" style="margin: 0 auto;"></div>
+            <p style="margin-top: 10px; font-size: 0.8rem; color: #888;">امسح هذا الكود للوصول لملف الطبيب</p>
+        </div>
     </div>
 
+    <!-- Balance Summary Cards -->
+    <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 25px;">
+        <div class="card" style="flex: 1; min-width: 150px; text-align: center; border-top: 4px solid #28a745;">
+            <h4 style="color: #666; margin-bottom: 5px; font-size: 0.9rem;">الرصيد الحالي</h4>
+            <p style="font-size: 1.8rem; font-weight: bold; color: #28a745; margin: 0;">{{ total_balance|floatformat:2 }} ج.م</p>
+        </div>
+        <div class="card" style="flex: 1; min-width: 150px; text-align: center; border-top: 4px solid #007bff;">
+            <h4 style="color: #666; margin-bottom: 5px; font-size: 0.9rem;">قسائم نشطة</h4>
+            <p style="font-size: 1.8rem; font-weight: bold; color: #007bff; margin: 0;">{{ active_vouchers_count }}</p>
+        </div>
+        <div class="card" style="flex: 1; min-width: 150px; text-align: center; border-top: 4px solid #dc3545;">
+            <h4 style="color: #666; margin-bottom: 5px; font-size: 0.9rem;">إجمالي المصروف</h4>
+            <p style="font-size: 1.8rem; font-weight: bold; color: #dc3545; margin: 0;">{{ total_spent|floatformat:2 }} ج.م</p>
+        </div>
+    </div>
+
+    <!-- Vouchers Section -->
     <div style="margin-bottom: 30px;">
-        <h3>القسائم (Vouchers)</h3>
+        <h3 style="border-bottom: 2px solid #800000; padding-bottom: 10px;">🎟️ القسائم (Vouchers)</h3>
         {% for voucher in vouchers %}
-        <div class="card" style="border-right: 5px solid {% if voucher.is_active %}green{% else %}red{% endif %}; display: flex; justify-content: space-between;">
+        <div class="card" style="border-right: 5px solid {% if voucher.is_active %}#28a745{% else %}#dc3545{% endif %}; display: flex; justify-content: space-between; align-items: center;">
             <div>
-                <strong>الفعالية: {{ voucher.event.name }}</strong>
+                <strong>{{ voucher.event.name }}</strong>
                 <br>
-                <small>ينتهي في: {{ voucher.expiry_date }}</small>
+                <small style="color: #888;">ينتهي في: {{ voucher.expiry_date }}</small>
+                <br>
+                {% if voucher.is_active %}
+                    <span style="background: #d4edda; color: #155724; padding: 2px 8px; border-radius: 10px; font-size: 0.75rem;">نشطة</span>
+                {% else %}
+                    <span style="background: #f8d7da; color: #721c24; padding: 2px 8px; border-radius: 10px; font-size: 0.75rem;">منتهية</span>
+                {% endif %}
             </div>
             <div style="text-align: left;">
-                <span style="font-size: 1.2rem; font-weight: bold;">{{ voucher.current_balance }} ج.م</span>
+                <span style="font-size: 1.2rem; font-weight: bold;">{{ voucher.current_balance|floatformat:2 }} ج.م</span>
                 <br>
-                <small>من أصل {{ voucher.initial_value }}</small>
+                <small style="color: #888;">من أصل {{ voucher.initial_value|floatformat:2 }}</small>
+                <!-- Progress bar -->
+                <div style="width: 120px; height: 6px; background: #eee; border-radius: 3px; margin-top: 5px;">
+                    {% widthratio voucher.current_balance voucher.initial_value 100 as pct %}
+                    <div style="width: {% widthratio voucher.current_balance voucher.initial_value 100 %}%; height: 100%; background: {% if voucher.is_active %}#28a745{% else %}#dc3545{% endif %}; border-radius: 3px;"></div>
+                </div>
             </div>
         </div>
         {% empty %}
-        <p>لا توجد قسائم.</p>
+        <p style="text-align: center; color: #888; padding: 20px;">لا توجد قسائم.</p>
         {% endfor %}
     </div>
 
+    <!-- Transactions Section -->
     <div>
-        <h3>سجل المعاملات</h3>
+        <h3 style="border-bottom: 2px solid #800000; padding-bottom: 10px;">📄 سجل المعاملات</h3>
         <div class="card" style="padding: 0; overflow: hidden;">
             <table style="width: 100%; border-collapse: collapse;">
                 <thead>
                     <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
                         <th style="padding: 12px; text-align: right;">التاجر</th>
                         <th style="padding: 12px; text-align: right;">المبلغ</th>
+                        <th style="padding: 12px; text-align: right;">العمولة</th>
+                        <th style="padding: 12px; text-align: right;">الإجمالي</th>
                         <th style="padding: 12px; text-align: right;">التاريخ</th>
                     </tr>
                 </thead>
@@ -44,12 +83,14 @@
                     {% for trx in transactions %}
                     <tr style="border-bottom: 1px solid #dee2e6;">
                         <td style="padding: 12px;">{{ trx.vendor.name }}</td>
-                        <td style="padding: 12px;">{{ trx.amount_spent }}</td>
-                        <td style="padding: 12px;">{{ trx.transaction_date|date:"Y-m-d H:i" }}</td>
+                        <td style="padding: 12px;">{{ trx.amount_spent|floatformat:2 }} ج.م</td>
+                        <td style="padding: 12px; color: #dc3545;">{{ trx.management_fee_amount|floatformat:2 }} ج.م</td>
+                        <td style="padding: 12px; font-weight: bold;">{{ trx.total_deducted|floatformat:2 }} ج.م</td>
+                        <td style="padding: 12px; font-size: 0.85rem; color: #666;">{{ trx.transaction_date|date:"Y-m-d H:i" }}</td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="3" style="padding: 20px; text-align: center;">لا توجد معاملات.</td>
+                        <td colspan="5" style="padding: 20px; text-align: center; color: #888;">لا توجد معاملات.</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -57,4 +98,22 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<!-- QR Code Generator Library -->
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Generate QR Code pointing to this doctor's profile
+    const profileUrl = window.location.origin + '/vendor/transaction/new/?doctor_id={{ doctor.id }}';
+    new QRCode(document.getElementById("qrcode"), {
+        text: profileUrl,
+        width: 180,
+        height: 180,
+        colorDark: "#800000",
+        colorLight: "#ffffff",
+    });
+});
+</script>
 {% endblock %}

@@ -3,47 +3,235 @@
 {% block title %}تسجيل معاملة جديدة{% endblock %}
 
 {% block content %}
-<div style="max-width: 600px; margin: 0 auto;">
-    <h2>تسجيل معاملة جديدة</h2>
+<div style="max-width: 700px; margin: 0 auto;">
+    <h2 style="margin-bottom: 20px;">تسجيل معاملة جديدة</h2>
     
     <div class="card">
-        <div style="margin-bottom: 20px;">
-            <label>بحث عن الطبيب</label>
-            <div style="display: flex; gap: 10px;">
-                <input type="text" id="doctor-search" class="form-control" placeholder="ادخل اسم الطبيب أو رقم الهاتف">
-                <button type="button" class="btn" onclick="searchDoctor()">بحث</button>
+        <!-- Search / QR Scan Section -->
+        <div id="search-section">
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <!-- QR Scan Button -->
+                <button type="button" class="btn" onclick="startQRScan()" style="background: #28a745; display: flex; align-items: center; gap: 5px; white-space: nowrap;">
+                    📷 مسح QR Code
+                </button>
             </div>
-            <div id="search-results" style="margin-top: 10px; border: 1px solid #ddd; display: none;"></div>
+
+            <!-- QR Scanner Container (hidden by default) -->
+            <div id="qr-scanner-container" style="display: none; margin-bottom: 20px;">
+                <div style="background: #000; border-radius: 12px; overflow: hidden; position: relative; border: 2px solid #28a745;">
+                    <!-- The div where html5-qrcode will render -->
+                    <div id="qr-reader" style="width: 100%;"></div>
+                </div>
+                <button type="button" onclick="stopQRScan()" class="btn" style="width: 100%; margin-top: 10px; background: #dc3545;">إيقاف الكاميرا</button>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: bold; display: block; margin-bottom: 8px;">أو ابحث عن الطبيب</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="doctor-search" class="form-control" placeholder="ادخل اسم الطبيب أو رقم الهاتف" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px;" onkeyup="if(event.key==='Enter') searchDoctor()">
+                    <button type="button" class="btn" onclick="searchDoctor()">بحث</button>
+                </div>
+            </div>
+            <div id="search-results" style="margin-top: 10px; border: 1px solid #ddd; border-radius: 5px; display: none; max-height: 250px; overflow-y: auto;"></div>
         </div>
 
+        <!-- Transaction Form (shown after selecting doctor) -->
         <form method="post" id="transaction-form" style="display: none;">
             {% csrf_token %}
             <input type="hidden" name="doctor_id" id="doctor_id">
             
-            <div class="alert alert-success" id="doctor-info">
-                <strong>الطبيب:</strong> <span id="doc-name"></span><br>
-                <strong>الرصيد المتاح:</strong> <span id="doc-balance"></span> ج.م
+            <!-- Doctor Info -->
+            <div id="doctor-info" style="background: #d4edda; border: 1px solid #c3e6cb; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <strong style="font-size: 1.1rem;" id="doc-name"></strong>
+                        <br><span style="color: #666;" id="doc-phone"></span>
+                        <br><small style="color: #888;" id="doc-specialty"></small>
+                    </div>
+                    <div style="text-align: left;">
+                        <small style="color: #666;">الرصيد المتاح</small>
+                        <br><span style="font-size: 1.5rem; font-weight: bold; color: #28a745;" id="doc-balance"></span>
+                        <span style="color: #28a745;"> ج.م</span>
+                    </div>
+                </div>
+                <button type="button" onclick="changeDoctor()" style="margin-top: 10px; background: none; border: 1px solid #800000; color: #800000; padding: 5px 15px; border-radius: 5px; cursor: pointer; font-size: 0.85rem;">تغيير الطبيب</button>
             </div>
 
             <div style="margin-bottom: 15px;">
-                <label>مبلغ المعاملة (ج.م)</label>
-                <input type="number" name="amount" class="form-control" required min="1" step="0.01">
+                <label style="font-weight: bold; display: block; margin-bottom: 5px;">مبلغ المعاملة (ج.م)</label>
+                <input type="number" name="amount" id="amount-input" class="form-control" required min="1" step="0.01" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 1.1rem;" oninput="updateDeductionPreview()">
+                <!-- Deduction Preview -->
+                <div id="deduction-preview" style="margin-top: 8px; padding: 10px; background: #f8f9fa; border-radius: 5px; display: none;">
+                    <div style="display: flex; justify-content: space-between; color: #666;">
+                        <span>المبلغ:</span><span id="preview-amount">0</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; color: #dc3545;">
+                        <span>عمولة الإدارة (25%):</span><span id="preview-fee">0</span>
+                    </div>
+                    <hr style="margin: 5px 0; border-color: #ddd;">
+                    <div style="display: flex; justify-content: space-between; font-weight: bold;">
+                        <span>إجمالي الخصم من القسيمة:</span><span id="preview-total">0</span>
+                    </div>
+                </div>
             </div>
 
-            <div style="margin-bottom: 15px;">
-                <label>وصف المشتريات (اختياري)</label>
-                <textarea name="description" class="form-control" rows="3"></textarea>
+            <div style="margin-bottom: 20px;">
+                <label style="font-weight: bold; display: block; margin-bottom: 5px;">وصف المشتريات (اختياري)</label>
+                <textarea name="description" id="description-input" class="form-control" rows="3" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;" placeholder="مثال: مواد غذائية، مشروبات..."></textarea>
             </div>
 
-            <button type="submit" class="btn" style="width: 100%;">إتمام المعاملة</button>
+            <button type="submit" id="submit-btn" class="btn" style="width: 100%; padding: 12px; font-size: 1.1rem;">✅ إتمام المعاملة</button>
         </form>
+    </div>
+</div>
+
+<!-- Invoice Print Modal (Hidden) -->
+<div id="invoice-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 9999; align-items: center; justify-content: center;">
+    <div style="background: white; border-radius: 12px; padding: 30px; max-width: 500px; width: 90%; margin: auto; position: relative; top: 50%; transform: translateY(-50%);">
+        <div id="invoice-content">
+            <div style="text-align: center; border-bottom: 2px dashed #800000; padding-bottom: 15px; margin-bottom: 15px;">
+                <h2 style="color: #800000; margin: 0;">🏛️ قرية حضرموت</h2>
+                <p style="color: #888; margin: 5px 0;">فاتورة مشتريات</p>
+            </div>
+            <div style="margin-bottom: 15px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="color: #666;">رقم الفاتورة:</span>
+                    <span id="inv-number" style="font-weight: bold; font-size: 0.8rem;"></span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="color: #666;">التاريخ:</span>
+                    <span id="inv-date"></span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="color: #666;">الطبيب:</span>
+                    <span id="inv-doctor" style="font-weight: bold;"></span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="color: #666;">التاجر:</span>
+                    <span id="inv-vendor" style="font-weight: bold;"></span>
+                </div>
+            </div>
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span>المبلغ:</span>
+                    <span id="inv-amount"></span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px; color: #dc3545;">
+                    <span>عمولة الإدارة (25%):</span>
+                    <span id="inv-fee"></span>
+                </div>
+                <hr style="border-color: #ddd;">
+                <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 1.1rem;">
+                    <span>إجمالي الخصم:</span>
+                    <span id="inv-total" style="color: #800000;"></span>
+                </div>
+            </div>
+            <div id="inv-desc-section" style="margin-bottom: 15px;">
+                <span style="color: #666;">الأصناف: </span><span id="inv-desc"></span>
+            </div>
+            <div style="text-align: center; border-top: 2px dashed #ddd; padding-top: 15px; color: #888; font-size: 0.85rem;">
+                <p>شكراً لتعاملكم معنا 🙏</p>
+            </div>
+        </div>
+        <div style="display: flex; gap: 10px; margin-top: 20px;" id="invoice-buttons">
+            <button onclick="printInvoice()" class="btn" style="flex: 1; padding: 12px;">🖨️ طباعة الفاتورة</button>
+            <button onclick="closeInvoice()" class="btn" style="flex: 1; padding: 12px; background: #6c757d;">إغلاق</button>
+        </div>
+    </div>
+</div>
+
+<!-- Error Popup Modal -->
+<div id="error-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 10000; align-items: center; justify-content: center;">
+    <div style="background: white; border-radius: 15px; padding: 25px; max-width: 450px; width: 90%; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); transform: scale(0.9); transition: transform 0.2s ease-out;">
+        <div style="font-size: 3.5rem; margin-bottom: 15px;">⚠️</div>
+        <h3 style="color: #800000; margin-bottom: 15px; font-size: 1.4rem;">تنبيه</h3>
+        <p id="error-message" style="color: #333; line-height: 1.6; margin-bottom: 25px; font-size: 1.1rem;"></p>
+        <button onclick="hideError()" class="btn" style="width: 100%; padding: 12px; font-size: 1.1rem; background: #600000;">حسناً</button>
     </div>
 </div>
 
 {% endblock %}
 
 {% block scripts %}
+<!-- QR Scanner Library -->
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script>
+let html5QrCode = null;
+
+// ========== QR SCANNING ==========
+function startQRScan() {
+    const container = document.getElementById('qr-scanner-container');
+    container.style.display = 'block';
+    
+    // Use the container div id, not a video tag
+    html5QrCode = new Html5Qrcode("qr-reader");
+    
+    const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+
+    html5QrCode.start(
+        { facingMode: "environment" },
+        config,
+        (decodedText) => {
+            console.log("QR Decoded:", decodedText);
+            stopQRScan();
+            
+            let doctorId = null;
+            
+            // Try to parse as URL
+            try {
+                if (decodedText.includes('doctor_id=')) {
+                    const url = new URL(decodedText);
+                    doctorId = url.searchParams.get('doctor_id');
+                } else if (!isNaN(decodedText)) {
+                    // It's just a number
+                    doctorId = decodedText;
+                }
+            } catch (e) {
+                // Not a URL, maybe just the ID
+                if (!isNaN(decodedText)) doctorId = decodedText;
+            }
+
+            if (doctorId) {
+                // Show loading state
+                document.getElementById('search-results').style.display = 'block';
+                document.getElementById('search-results').innerHTML = '<div style="padding:15px; text-align:center;">🔍 جاري جلب بيانات الطبيب...</div>';
+                
+                fetch(`/api/doctor-lookup/?q=${doctorId}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.results && data.results.length > 0) {
+                        selectDoctor(data.results[0]);
+                    } else {
+                        showError("لم يتم العثور على الطبيب بهذا الكود");
+                        document.getElementById('search-results').style.display = 'none';
+                    }
+                })
+                .catch(err => {
+                    console.error("Lookup error:", err);
+                    showError("خطأ في الاتصال بالخادم");
+                });
+            } else {
+                showError("كود QR غير صالح");
+            }
+        },
+        (errorMessage) => { /* scanning... */ }
+    ).catch(err => {
+        console.error("Camera error:", err);
+        showError("خطأ في الكاميرا: " + err);
+        container.style.display = 'none';
+    });
+}
+
+function stopQRScan() {
+    if (html5QrCode) {
+        html5QrCode.stop().then(() => {
+            html5QrCode.clear();
+            document.getElementById('qr-scanner-container').style.display = 'none';
+        }).catch(err => console.error(err));
+    }
+}
+
+// ========== DOCTOR SEARCH ==========
 function searchDoctor() {
     const query = document.getElementById('doctor-search').value;
     if (query.length < 2) return;
@@ -56,32 +244,180 @@ function searchDoctor() {
         resultsDiv.style.display = 'block';
         
         if (data.results.length === 0) {
-            resultsDiv.innerHTML = '<div style="padding:10px;">لا توجد نتائج</div>';
+            resultsDiv.innerHTML = '<div style="padding: 15px; text-align: center; color: #888;">لا توجد نتائج</div>';
             return;
         }
 
         data.results.forEach(doc => {
             const div = document.createElement('div');
-            div.style.padding = '10px';
-            div.style.cursor = 'pointer';
-            div.style.borderBottom = '1px solid #eee';
+            div.style.cssText = 'padding: 12px 15px; cursor: pointer; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;';
             div.onmouseover = function() { this.style.backgroundColor = '#f0f0f0'; };
             div.onmouseout = function() { this.style.backgroundColor = 'white'; };
-            div.innerHTML = `<strong>${doc.name}</strong> - ${doc.phone}`;
-            div.onclick = function() {
-                selectDoctor(doc);
-            };
+            div.innerHTML = `
+                <div>
+                    <strong>${doc.name}</strong>
+                    <br><small style="color:#888;">${doc.phone} - ${doc.specialty}</small>
+                </div>
+                <div style="text-align: left;">
+                    <span style="font-weight: bold; color: ${doc.balance > 0 ? '#28a745' : '#dc3545'};">${doc.balance.toFixed(2)} ج.م</span>
+                </div>
+            `;
+            div.onclick = function() { selectDoctor(doc); };
             resultsDiv.appendChild(div);
         });
     });
 }
 
+// ========== SELECT DOCTOR ==========
 function selectDoctor(doc) {
     document.getElementById('search-results').style.display = 'none';
+    document.getElementById('search-section').style.display = 'none';
     document.getElementById('transaction-form').style.display = 'block';
     document.getElementById('doctor_id').value = doc.id;
     document.getElementById('doc-name').innerText = doc.name;
-    document.getElementById('doc-balance').innerText = doc.balance;
+    document.getElementById('doc-phone').innerText = doc.phone || '';
+    document.getElementById('doc-specialty').innerText = doc.specialty || '';
+    document.getElementById('doc-balance').innerText = doc.balance.toFixed(2);
+}
+
+function changeDoctor() {
+    document.getElementById('search-section').style.display = 'block';
+    document.getElementById('transaction-form').style.display = 'none';
+    document.getElementById('doctor-search').value = '';
+    document.getElementById('amount-input').value = '';
+    document.getElementById('description-input').value = '';
+    document.getElementById('deduction-preview').style.display = 'none';
+}
+
+// ========== DEDUCTION PREVIEW ==========
+function updateDeductionPreview() {
+    const amount = parseFloat(document.getElementById('amount-input').value) || 0;
+    const preview = document.getElementById('deduction-preview');
+    
+    if (amount > 0) {
+        preview.style.display = 'block';
+        const fee = amount * 0.25;
+        const total = amount + fee;
+        document.getElementById('preview-amount').innerText = amount.toFixed(2) + ' ج.م';
+        document.getElementById('preview-fee').innerText = fee.toFixed(2) + ' ج.م';
+        document.getElementById('preview-total').innerText = total.toFixed(2) + ' ج.م';
+    } else {
+        preview.style.display = 'none';
+    }
+}
+
+// ========== FORM SUBMISSION (AJAX for invoice) ==========
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('transaction-form');
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const submitBtn = document.getElementById('submit-btn');
+        submitBtn.disabled = true;
+        submitBtn.innerText = '⏳ جاري التنفيذ...';
+
+        const formData = new FormData(form);
+        
+        fetch(form.action || window.location.href, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            }
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                showInvoice(data.invoice);
+            } else {
+                showError(data.error);
+                submitBtn.disabled = false;
+                submitBtn.innerText = '✅ إتمام المعاملة';
+            }
+        })
+        .catch(err => {
+            showError('حدث خطأ في الاتصال بالخادم، يرجى المحاولة مرة أخرى');
+            submitBtn.disabled = false;
+            submitBtn.innerText = '✅ إتمام المعاملة';
+        });
+    });
+
+    // Check for pre-filled doctor (from QR scan redirect)
+    {% if prefill_doctor %}
+    selectDoctor({
+        id: {{ prefill_doctor.id }},
+        name: "{{ prefill_doctor.name }}",
+        phone: "{{ prefill_doctor.phone }}",
+        specialty: "",
+        balance: {{ prefill_doctor.balance }}
+    });
+    {% endif %}
+});
+
+// ========== INVOICE ==========
+function showInvoice(inv) {
+    document.getElementById('inv-number').innerText = inv.invoice_number;
+    document.getElementById('inv-date').innerText = inv.date;
+    document.getElementById('inv-doctor').innerText = inv.doctor_name;
+    document.getElementById('inv-vendor').innerText = inv.vendor_name;
+    document.getElementById('inv-amount').innerText = inv.amount_spent.toFixed(2) + ' ج.م';
+    document.getElementById('inv-fee').innerText = inv.management_fee.toFixed(2) + ' ج.م';
+    document.getElementById('inv-total').innerText = inv.total_deducted.toFixed(2) + ' ج.م';
+    
+    if (inv.description) {
+        document.getElementById('inv-desc').innerText = inv.description;
+        document.getElementById('inv-desc-section').style.display = 'block';
+    } else {
+        document.getElementById('inv-desc-section').style.display = 'none';
+    }
+    
+    document.getElementById('invoice-modal').style.display = 'block';
+}
+
+function printInvoice() {
+    const content = document.getElementById('invoice-content').innerHTML;
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+        <!DOCTYPE html>
+        <html lang="ar" dir="rtl">
+        <head>
+            <meta charset="UTF-8">
+            <title>فاتورة</title>
+            <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+            <style>
+                body { font-family: 'Cairo', sans-serif; padding: 20px; max-width: 400px; margin: 0 auto; }
+                hr { border-color: #ddd; }
+            </style>
+        </head>
+        <body>${content}</body>
+        </html>
+    `);
+    printWindow.document.close();
+    printWindow.focus();
+    setTimeout(() => { printWindow.print(); printWindow.close(); }, 500);
+}
+
+// ========== ERROR MODAL ==========
+function showError(msg) {
+    const modal = document.getElementById('error-modal');
+    document.getElementById('error-message').innerText = msg;
+    modal.style.display = 'flex';
+    setTimeout(() => {
+        modal.querySelector('div').style.transform = 'scale(1)';
+    }, 10);
+}
+
+function hideError() {
+    const modal = document.getElementById('error-modal');
+    modal.querySelector('div').style.transform = 'scale(0.9)';
+    setTimeout(() => {
+        modal.style.display = 'none';
+    }, 200);
+}
+
+function closeInvoice() {
+    document.getElementById('invoice-modal').style.display = 'none';
+    window.location.href = '/vendor/dashboard/';
 }
 </script>
 {% endblock %}

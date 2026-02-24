@@ -3,48 +3,89 @@
 {% block title %}لوحة تحكم التاجر{% endblock %}
 
 {% block content %}
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
     <h2>اهلاً, {{ vendor.name }}</h2>
-    <a href="{% url 'transaction_create' %}" class="btn">تسجيل معاملة جديدة</a>
-</div>
-
-<div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 30px;">
-    <div class="card" style="flex: 1;">
-        <h3>إجمالي المبيعات</h3>
-        <p style="font-size: 24px; font-weight: bold; color: green;">{{ total_sales }} ج.م</p>
-    </div>
-    <div class="card" style="flex: 1;">
-        <h3>عدد المعاملات</h3>
-        <p style="font-size: 24px; font-weight: bold;">{{ recent_transactions.count }}</p> <!-- Note: this is just recent count, view context implies query limited to 10? -->
-        <!-- Logic to get total count would be better passed from view, but let's stick to this for now or just remove count if not passed -->
+    <div style="display: flex; gap: 10px;">
+        <a href="{% url 'transaction_create' %}" class="btn" style="display: flex; align-items: center; gap: 5px;">➕ تسجيل معاملة</a>
     </div>
 </div>
 
-<h3>آخر المعاملات</h3>
-<div class="card" style="padding: 0; overflow: hidden;">
-    <table style="width: 100%; border-collapse: collapse;">
-        <thead>
-            <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
-                <th style="padding: 12px; text-align: right;">رقم الفاتورة</th>
-                <th style="padding: 12px; text-align: right;">الطبيب</th>
-                <th style="padding: 12px; text-align: right;">المبلغ</th>
-                <th style="padding: 12px; text-align: right;">التاريخ</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for trx in recent_transactions %}
-            <tr style="border-bottom: 1px solid #dee2e6;">
-                <td style="padding: 12px;">{{ trx.invoice_number }}</td>
-                <td style="padding: 12px;">{{ trx.doctor.name }}</td>
-                <td style="padding: 12px;">{{ trx.amount_spent }}</td>
-                <td style="padding: 12px;">{{ trx.transaction_date|date:"Y-m-d H:i" }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="4" style="padding: 20px; text-align: center;">لا توجد معاملات حديثة.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<!-- KPI Cards -->
+<div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 30px;">
+    <div class="card" style="flex: 1; min-width: 200px; text-align: center; border-top: 4px solid #007bff;">
+        <h4 style="color: #666; margin-bottom: 5px; font-size: 0.9rem;">إجمالي أرباح المبيعات</h4>
+        <p style="font-size: 1.8rem; font-weight: bold; color: #007bff; margin: 0;">{{ total_sales|floatformat:2 }} ج.م</p>
+        <small style="color: #888;">{{ total_transactions }} معاملة</small>
+    </div>
+    <div class="card" style="flex: 1; min-width: 200px; text-align: center; border-top: 4px solid #28a745;">
+        <h4 style="color: #666; margin-bottom: 5px; font-size: 0.9rem;">إجمالي ما تم استلامه</h4>
+        <p style="font-size: 1.8rem; font-weight: bold; color: #28a745; margin: 0;">{{ total_paid|floatformat:2 }} ج.م</p>
+    </div>
+    <div class="card" style="flex: 1; min-width: 200px; text-align: center; border-top: 4px solid #dc3545;">
+        <h4 style="color: #666; margin-bottom: 5px; font-size: 0.9rem;">الرصيد المتبقي (لدى المنصة)</h4>
+        <p style="font-size: 1.8rem; font-weight: bold; color: #dc3545; margin: 0;">{{ total_pending|floatformat:2 }} ج.م</p>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr; gap: 30px;">
+    <!-- Recent Transactions -->
+    <div>
+        <h3 style="border-bottom: 2px solid #800000; padding-bottom: 10px;">🛒 آخر المبيعات (معاملات الأطباء)</h3>
+        <div class="card" style="padding: 0; overflow: hidden;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+                        <th style="padding: 12px; text-align: right;">رقم الفاتورة</th>
+                        <th style="padding: 12px; text-align: right;">الطبيب</th>
+                        <th style="padding: 12px; text-align: right;">المبلغ</th>
+                        <th style="padding: 12px; text-align: right;">التاريخ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trx in recent_transactions %}
+                    <tr style="border-bottom: 1px solid #dee2e6;">
+                        <td style="padding: 12px; font-size: 0.75rem; color: #666;">{{ trx.invoice_number|truncatechars:12 }}</td>
+                        <td style="padding: 12px; font-weight: bold;">{{ trx.doctor.name }}</td>
+                        <td style="padding: 12px;">{{ trx.amount_spent|floatformat:2 }} ج.م</td>
+                        <td style="padding: 12px; font-size: 0.85rem; color: #666;">{{ trx.transaction_date|date:"Y-m-d" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" style="padding: 20px; text-align: center; color: #888;">لا توجد معاملات حديثة.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Settlement History -->
+    <div>
+        <h3 style="border-bottom: 2px solid #28a745; padding-bottom: 10px;">💰 سجل المدفوعات المستلمة (التسويات)</h3>
+        <div class="card" style="padding: 0; overflow: hidden;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background: #f1f8f1; border-bottom: 2px solid #c3e6cb;">
+                        <th style="padding: 12px; text-align: right;">المبلغ المستلم</th>
+                        <th style="padding: 12px; text-align: right;">تاريخ الاستلام</th>
+                        <th style="padding: 12px; text-align: right;">ملاحظات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for settlement in settlements %}
+                    <tr style="border-bottom: 1px solid #dee2e6;">
+                        <td style="padding: 12px; font-weight: bold; color: #28a745;">{{ settlement.amount_settled|floatformat:2 }} ج.م</td>
+                        <td style="padding: 12px;">{{ settlement.settlement_date }}</td>
+                        <td style="padding: 12px; color: #666; font-size: 0.9rem;">{{ settlement.notes|default:"-" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" style="padding: 20px; text-align: center; color: #888;">لم يتم استلام أي دفعات بعد.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 {% endblock %}

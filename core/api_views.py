@@ -43,19 +43,19 @@ def dashboard_stats_api(request):
         next_day = current + timedelta(days=1)
         day_total = Transaction.objects.filter(transaction_date__gte=current, transaction_date__lt=next_day).aggregate(total=Sum('amount_spent'))['total'] or 0
         chart_labels.append(current.strftime('%d %b'))
-        chart_data.append(float(day_total))
+        chart_data.append(round(float(day_total), 2))
         current = next_day
 
     # 3. Top Vendors (by Revenue)
     top_vendors_qs = Vendor.objects.annotate(total_revenue=Sum('transaction__amount_spent')).order_by('-total_revenue')[:5]
-    top_vendors = [{'name': v.name, 'revenue': float(v.total_revenue or 0)} for v in top_vendors_qs]
+    top_vendors = [{'name': v.name, 'revenue': round(float(v.total_revenue or 0), 2)} for v in top_vendors_qs]
 
 
     data = {
         'kpi': {
-            'total_revenue': float(total_revenue),
-            'revenue_7d': float(revenue_7d),
-            'revenue_growth': round(revenue_growth, 1),
+            'total_revenue': round(float(total_revenue), 2),
+            'revenue_7d': round(float(revenue_7d), 2),
+            'revenue_growth': round(float(revenue_growth), 2),
             'total_orders': total_orders,
             'orders_7d': orders_7d,
             'total_doctors': total_doctors,

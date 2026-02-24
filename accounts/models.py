@@ -15,12 +15,33 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
 
+class Specialty(models.Model):
+    name = models.CharField(_('Name'), max_length=100, unique=True)
+
+    class Meta:
+        verbose_name = _('Specialty')
+        verbose_name_plural = _('Specialties')
+
+    def __str__(self):
+        return self.name
+
+class Delegate(models.Model):
+    name = models.CharField(_('Name'), max_length=255)
+    phone = models.CharField(_('Phone'), max_length=20, unique=True)
+
+    class Meta:
+        verbose_name = _('Delegate')
+        verbose_name_plural = _('Delegates')
+
+    def __str__(self):
+        return self.name
+
 class Doctor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='doctor_profile', verbose_name=_('User'))
     name = models.CharField(_('Name'), max_length=255)
     phone = models.CharField(_('Phone'), max_length=20, unique=True)
     email = models.EmailField(_('Email'), unique=True)
-    specialty = models.CharField(_('Specialty'), max_length=100)
+    specialty = models.ForeignKey(Specialty, on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_('Specialty'))
     qr_code = models.CharField(_('QR Code'), max_length=255, blank=True, null=True) # URL or path
     created_at = models.DateTimeField(_('Created At'), auto_now_add=True)
     updated_at = models.DateTimeField(_('Updated At'), auto_now=True)
@@ -31,6 +52,12 @@ class Doctor(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.qr_code:
+            import uuid
+            self.qr_code = str(uuid.uuid4())[:8].upper()
+        super().save(*args, **kwargs)
 
 class Vendor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='vendor_profile', verbose_name=_('User'))
