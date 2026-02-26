@@ -5,11 +5,18 @@ from accounts.models import Vendor, Doctor
 from events.models import Voucher
 from .models import Transaction
 
-def process_transaction(vendor, doctor, amount_spent, items_description=""):
+def process_transaction(vendor, doctor, amount_spent, items_description="", created_by=None):
     """
     Processes a transaction for a doctor at a vendor.
     Deducts the total amount (spent + fee) from the doctor's active vouchers
     starting with the one expiring soonest (FIFO).
+    
+    Args:
+        vendor: Vendor instance
+        doctor: Doctor instance
+        amount_spent: Amount spent
+        items_description: Description of items purchased
+        created_by: User who created this transaction (for audit trail)
     """
     amount_spent = Decimal(amount_spent)
     management_fee_percentage = Decimal("0.25")
@@ -84,6 +91,7 @@ def process_transaction(vendor, doctor, amount_spent, items_description=""):
             voucher=first_voucher, # Linking the first participating voucher
             vendor=vendor,
             doctor=doctor,
+            created_by=created_by,
             amount_spent=amount_spent,
             management_fee_percentage=management_fee_percentage * 100, # Store as percentage (25.00)
             management_fee_amount=management_fee_amount,

@@ -35,6 +35,20 @@ class VendorRequiredMixin(UserPassesTestMixin):
         user = self.request.user
         return user.is_authenticated and (user.type == 'VENDOR' or user.is_superuser or user.is_staff)
 
+class VendorAdminRequiredMixin(UserPassesTestMixin):
+    """Mixin to ensure only Vendor Admins can access (not Cashiers)"""
+    def test_func(self):
+        user = self.request.user
+        if not user.is_authenticated:
+            return False
+        if user.is_superuser or user.is_staff:
+            return True
+        if user.type == 'VENDOR':
+            vendor = getattr(user, 'vendor_profile', None)
+            if vendor and vendor.role == 'ADMIN':
+                return True
+        return False
+
 from core.models import Transaction, VendorSettlement
 
 class VendorDashboardView(LoginRequiredMixin, VendorRequiredMixin, TemplateView):
@@ -73,6 +87,11 @@ class TransactionCreateView(LoginRequiredMixin, VendorRequiredMixin, View):
 
     def get(self, request):
         context = {}
+        # Check if user is a Vendor Cashier
+        vendor = getattr(request.user, 'vendor_profile', None)
+        is_cashier = vendor and vendor.role == 'CASHIER'
+        context['is_cashier'] = is_cashier
+        
         # Support pre-filling doctor from QR scan (URL param: ?doctor_id=X)
         doctor_id = request.GET.get('doctor_id')
         if doctor_id:
@@ -101,7 +120,7 @@ class TransactionCreateView(LoginRequiredMixin, VendorRequiredMixin, View):
                 vendor = Vendor.objects.first()
             doctor = Doctor.objects.get(id=doctor_id)
             
-            trx = process_transaction(vendor, doctor, amount, description)
+            trx = process_transaction(vendor, doctor, amount, description, created_by=request.user)
             # Return JSON for AJAX-based submission (invoice printing)
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 return JsonResponse({
@@ -147,7 +166,8 @@ class TransactionCreateView(LoginRequiredMixin, VendorRequiredMixin, View):
         
         return render(request, self.template_name)
 
-class DoctorLookupView(LoginRequiredMixin, VendorRequiredMixin, View):
+class DoctorLookupView(LoginRequiredMixin, VendorAdminRequiredMixin, View):
+    """Search for doctors - only available to Vendor Admins, not Cashiers"""
     def get(self, request):
         query = request.GET.get('q', '')
         if query.isdigit():

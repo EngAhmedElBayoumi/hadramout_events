@@ -35,6 +35,7 @@ class Transaction(models.Model):
     voucher = models.ForeignKey('events.Voucher', on_delete=models.PROTECT, verbose_name=_('Voucher'))  # Protect to keep history
     vendor = models.ForeignKey('accounts.Vendor', on_delete=models.PROTECT, verbose_name=_('Vendor'))
     doctor = models.ForeignKey('accounts.Doctor', on_delete=models.PROTECT, verbose_name=_('Doctor'))
+    created_by = models.ForeignKey('accounts.User', on_delete=models.PROTECT, verbose_name=_('Created By'), related_name='transactions_created', null=True, blank=True)
     amount_spent = models.DecimalField(_('Amount Spent'), max_digits=10, decimal_places=2)
     management_fee_percentage = models.DecimalField(_('Management Fee Percentage'), max_digits=5, decimal_places=2, default=25.00)
     management_fee_amount = models.DecimalField(_('Management Fee Amount'), max_digits=10, decimal_places=2)

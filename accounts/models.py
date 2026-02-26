@@ -58,8 +58,16 @@ class Doctor(models.Model):
             import uuid
             self.qr_code = str(uuid.uuid4())[:8].upper()
         super().save(*args, **kwargs)
+    
+    def get_qr_code_url(self):
+        """Generate the full URL for QR code scanning"""
+        return f"/scan/{self.qr_code}/"
 
 class Vendor(models.Model):
+    class VendorRoles(models.TextChoices):
+        ADMIN = 'ADMIN', _('Vendor Admin')
+        CASHIER = 'CASHIER', _('Vendor Cashier')
+
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='vendor_profile', verbose_name=_('User'))
     name = models.CharField(_('Name'), max_length=255, unique=True)
     contact_person = models.CharField(_('Contact Person'), max_length=255)
@@ -67,6 +75,10 @@ class Vendor(models.Model):
     email = models.EmailField(_('Email'))
     address = models.TextField(_('Address'))
     category = models.CharField(_('Category'), max_length=100) # e.g. Supermarket, Restaurant
+    role = models.CharField(
+        _('Role'), max_length=20, choices=VendorRoles.choices, default=VendorRoles.ADMIN,
+        help_text=_('Vendor Admin has full access, Cashier can only process transactions via QR scan')
+    )
     created_at = models.DateTimeField(_('Created At'), auto_now_add=True)
     updated_at = models.DateTimeField(_('Updated At'), auto_now=True)
 

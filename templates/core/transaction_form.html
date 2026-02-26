@@ -3,7 +3,7 @@
 {% block title %}تسجيل معاملة جديدة{% endblock %}
 
 {% block content %}
-<div style="max-width: 700px; margin: 0 auto;">
+<div style="max-width: 700px; margin: 0 auto;" {% if is_cashier %}data-is-cashier="true"{% endif %}>
     <h2 style="margin-bottom: 20px;">تسجيل معاملة جديدة</h2>
     
     <div class="card">
@@ -25,7 +25,7 @@
                 <button type="button" onclick="stopQRScan()" class="btn" style="width: 100%; margin-top: 10px; background: #dc3545;">إيقاف الكاميرا</button>
             </div>
 
-            <div style="margin-bottom: 15px;">
+            <div id="search-section-manual" style="margin-bottom: 15px;">
                 <label style="font-weight: bold; display: block; margin-bottom: 8px;">أو ابحث عن الطبيب</label>
                 <div style="display: flex; gap: 10px;">
                     <input type="text" id="doctor-search" class="form-control" placeholder="ادخل اسم الطبيب أو رقم الهاتف" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px;" onkeyup="if(event.key==='Enter') searchDoctor()">
@@ -421,3 +421,27 @@ function closeInvoice() {
 }
 </script>
 {% endblock %}
+
+// ========== CASHIER MODE ==========
+// Check if user is a Vendor Cashier and disable search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if there's a data attribute indicating cashier mode
+    const isCashier = document.body.getAttribute('data-is-cashier') === 'true';
+    
+    if (isCashier) {
+        // Hide the manual search section
+        const searchManualDiv = document.getElementById('search-section-manual');
+        if (searchManualDiv) {
+            searchManualDiv.style.display = 'none';
+        }
+        
+        // Update the search section to show QR-only mode message
+        const searchSection = document.getElementById('search-section');
+        if (searchSection) {
+            const message = document.createElement('div');
+            message.style.cssText = 'background: #fff3cd; border: 1px solid #ffc107; color: #856404; padding: 12px; border-radius: 5px; margin-bottom: 15px;';
+            message.innerHTML = '📱 <strong>وضع الكاشير:</strong> يمكنك فقط معالجة المعاملات عبر مسح رمز QR للطبيب';
+            searchSection.insertBefore(message, searchSection.firstChild);
+        }
+    }
+});

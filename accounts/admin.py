@@ -41,8 +41,8 @@ class VoucherInline(TabularInline):
 class TransactionInline(TabularInline):
     model = Transaction
     extra = 0
-    readonly_fields = ('transaction_date', 'invoice_number')
-    fields = ('invoice_number', 'vendor', 'amount_spent', 'total_deducted', 'transaction_date')
+    readonly_fields = ('transaction_date', 'invoice_number', 'created_by')
+    fields = ('invoice_number', 'vendor', 'created_by', 'amount_spent', 'total_deducted', 'transaction_date')
     tab = True
 
 class EventInline(TabularInline):
@@ -111,14 +111,23 @@ class DoctorAdmin(ModelAdmin):
 
     @action(description=_("Export Doctor Cards (PDF)"))
     def export_doctor_cards_pdf(self, request, queryset):
-        buffer = generate_doctor_card_pdf(queryset)
+        buffer = generate_doctor_card_pdf(queryset, request=request)
         response = HttpResponse(buffer, content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="doctor_cards.pdf"'
         return response
 
 @admin.register(Vendor)
 class VendorAdmin(ModelAdmin):
-    list_display = ('name', 'contact_person', 'phone', 'category')
-    list_filter = ('category',)
+    list_display = ('name', 'contact_person', 'phone', 'category', 'role')
+    list_filter = ('category', 'role')
     search_fields = ('name', 'contact_person')
     autocomplete_fields = ('user',)
+    fieldsets = (
+        (_('Basic Information'), {
+            'fields': ('user', 'name', 'contact_person', 'phone', 'email', 'address', 'category')
+        }),
+        (_('Access Control'), {
+            'fields': ('role',),
+            'description': _('Vendor Admin has full access to dashboard and search. Vendor Cashier can only process transactions via QR code scan.')
+        }),
+    )
