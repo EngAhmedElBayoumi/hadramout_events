@@ -78,7 +78,7 @@ def reshape_arabic(text):
 def generate_doctor_card_pdf(queryset, request=None):
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=A4)
-    width, height = A4
+    _, height = A4
 
     # Card dimensions: 85mm x 55mm
     card_w = 85 * mm
