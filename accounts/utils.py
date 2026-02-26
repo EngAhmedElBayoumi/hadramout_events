@@ -56,6 +56,18 @@ def _get_logo_path():
 
     return None
 
+
+
+def has_arabic(text):
+    if not text:
+        return False
+    return any("؀" <= ch <= "ۿ" or "ݐ" <= ch <= "ݿ" or "ࢠ" <= ch <= "ࣿ" for ch in str(text))
+
+
+def render_text(text):
+    value = str(text or "")
+    return reshape_arabic(value) if has_arabic(value) else value
+
 def reshape_arabic(text):
     if not text:
         return ""
@@ -66,7 +78,7 @@ def reshape_arabic(text):
 def generate_doctor_card_pdf(queryset, request=None):
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=A4)
-    width, height = A4
+    _, height = A4
 
     # Card dimensions: 85mm x 55mm
     card_w = 85 * mm
@@ -130,22 +142,25 @@ def generate_doctor_card_pdf(queryset, request=None):
         qr_size = 22 * mm
         c.drawImage(ImageReader(qr_io), x + card_w - 30 * mm, y + 23 * mm, width=qr_size, height=qr_size)
 
-        # 5. Doctor Info Text
+        # 5. Doctor Info Text (slightly smaller to better fit card size)
         c.setFillColor(HexColor("#000000"))
-        c.setFont(BOLD_FONT, 13)
-        # Handle Arabic name - Draw Dr. and Name separately to avoid RTL issues with mixed text
+
+        name_text = render_text(doctor.name)
+        c.setFont(BOLD_FONT, 11)
         c.drawString(x + 6 * mm, y + 20 * mm, "Dr. ")
-        name_x = x + 6 * mm + c.stringWidth("Dr. ", BOLD_FONT, 13)
-        c.drawString(name_x, y + 20 * mm, reshape_arabic(doctor.name))
-        
-        c.setFont(DEFAULT_FONT, 10)
+        name_x = x + 6 * mm + c.stringWidth("Dr. ", BOLD_FONT, 11)
+        c.drawString(name_x, y + 20 * mm, name_text)
+
+        c.setFont(DEFAULT_FONT, 8.5)
+        c.drawString(x + 6 * mm, y + 14 * mm, "Specialization:")
+
         specialty_name = doctor.specialty.name if doctor.specialty else "General"
-        c.drawString(x + 6 * mm, y + 14 * mm, "Specialization: ")
-        spec_x = x + 6 * mm + c.stringWidth("Specialization: ", DEFAULT_FONT, 10)
-        c.drawString(spec_x, y + 14 * mm, reshape_arabic(specialty_name))
-        
+        c.setFont(DEFAULT_FONT, 8)
+        c.drawString(x + 6 * mm, y + 10.8 * mm, render_text(specialty_name))
+
+        c.setFont(DEFAULT_FONT, 9.5)
         phone_text = f"Phone: {doctor.phone}"
-        c.drawString(x + 6 * mm, y + 9 * mm, phone_text)
+        c.drawString(x + 6 * mm, y + 7.2 * mm, phone_text)
 
         # 6. Red stripe at bottom
         c.setFillColor(red_color)
