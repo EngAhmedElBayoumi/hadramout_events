@@ -281,6 +281,8 @@ UNFOLD = {
             },
         ],
     },
+
+    "SHOW_LANGUAGES": True,
 }
 
 # Media files

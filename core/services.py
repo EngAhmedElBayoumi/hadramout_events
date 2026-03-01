@@ -19,7 +19,13 @@ def process_transaction(vendor, doctor, amount_spent, items_description="", crea
         created_by: User who created this transaction (for audit trail)
     """
     amount_spent = Decimal(amount_spent)
-    management_fee_percentage = Decimal("0.25")
+    
+    # Check if vendor has management fee enabled
+    if vendor.has_management_fee:
+        management_fee_percentage = Decimal("0.25")
+    else:
+        management_fee_percentage = Decimal("0.00")
+        
     management_fee_amount = amount_spent * management_fee_percentage
     total_deducted = amount_spent + management_fee_amount
 

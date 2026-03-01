@@ -4,14 +4,20 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 class Event(models.Model):
+    class PaymentTypes(models.TextChoices):
+        CASH = 'CASH', _('Cash')
+        DEFERRED = 'DEFERRED', _('Deferred')
+
     name = models.CharField(_('Name'), max_length=255)
     date = models.DateField(_('Date'))
     company = models.ForeignKey('core.PharmaceuticalCompany', on_delete=models.CASCADE, verbose_name=_('Company'))
+    payment_type = models.CharField(_('Payment Type'), max_length=10, choices=PaymentTypes.choices, default=PaymentTypes.DEFERRED)
     voucher_value = models.DecimalField(_('Voucher Value'), max_digits=10, decimal_places=2)
     voucher_expiry_days = models.IntegerField(_('Voucher Expiry Days'), default=90)
     doctors = models.ManyToManyField('accounts.Doctor', related_name='events', blank=True, verbose_name=_('Doctors'))
     delegates = models.ManyToManyField('accounts.Delegate', related_name='events', blank=True, verbose_name=_('Delegates'))
     specialties = models.ManyToManyField('accounts.Specialty', related_name='events', blank=True, verbose_name=_('Specialties'))
+    notes = models.TextField(_('Notes'), blank=True, null=True)
     created_at = models.DateTimeField(_('Created At'), auto_now_add=True)
     updated_at = models.DateTimeField(_('Updated At'), auto_now=True)
 

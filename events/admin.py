@@ -23,13 +23,16 @@ class NextWeekFilter(admin.SimpleListFilter):
 
 @admin.register(Event)
 class EventAdmin(ModelAdmin):
-    list_display = ('name', 'date', 'company', 'voucher_value')
-    list_filter = ('date', 'company', NextWeekFilter)
+    list_display = ('name', 'date', 'company', 'voucher_value', 'payment_type')
+    list_filter = ('date', 'company', 'payment_type', NextWeekFilter)
     search_fields = ('name', 'company__name')
     autocomplete_fields = ('company', 'doctors', 'delegates', 'specialties')
     filter_horizontal = ('doctors', 'delegates', 'specialties')
     change_list_template = 'admin/events/event/change_list.html'
-    fields = ('name', 'date', 'company', 'voucher_value', 'voucher_expiry_days', 'delegates', 'specialties', 'doctors')
+    fields = ('name', 'date', 'company', 'payment_type', 'voucher_value', 'voucher_expiry_days', 'delegates', 'specialties', 'doctors', 'notes')
+
+    class Media:
+        js = ('admin/js/event_filter.js',)
 
     def changelist_view(self, request, extra_context=None):
         response = super().changelist_view(request, extra_context=extra_context)

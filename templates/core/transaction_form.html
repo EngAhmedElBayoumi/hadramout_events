@@ -65,7 +65,7 @@
                     <div style="display: flex; justify-content: space-between; color: #666;">
                         <span>المبلغ:</span><span id="preview-amount">0</span>
                     </div>
-                    <div style="display: flex; justify-content: space-between; color: #dc3545;">
+                    <div id="preview-fee-row" style="display: flex; justify-content: space-between; color: #dc3545;">
                         <span>عمولة الإدارة (25%):</span><span id="preview-fee">0</span>
                     </div>
                     <hr style="margin: 5px 0; border-color: #ddd;">
@@ -116,7 +116,7 @@
                     <span>المبلغ:</span>
                     <span id="inv-amount"></span>
                 </div>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 8px; color: #dc3545;">
+                <div id="inv-fee-row" style="display: flex; justify-content: space-between; margin-bottom: 8px; color: #dc3545;">
                     <span>عمولة الإدارة (25%):</span>
                     <span id="inv-fee"></span>
                 </div>
@@ -176,12 +176,20 @@ function startQRScan() {
             stopQRScan();
             
             let doctorId = null;
+            let qrCode = null;
             
-            // Try to parse as URL
+            // Try to parse the scanned content
             try {
                 if (decodedText.includes('doctor_id=')) {
+                    // URL with doctor_id query param (e.g. /vendor/transaction/new/?doctor_id=5)
                     const url = new URL(decodedText);
                     doctorId = url.searchParams.get('doctor_id');
+                } else if (decodedText.includes('/scan/')) {
+                    // URL with /scan/{qr_code}/ path (e.g. http://domain/scan/A1B2C3D4/)
+                    const match = decodedText.match(/\/scan\/([^\/]+)/);
+                    if (match) {
+                        qrCode = match[1];
+                    }
                 } else if (!isNaN(decodedText)) {
                     // It's just a number
                     doctorId = decodedText;
@@ -191,12 +199,15 @@ function startQRScan() {
                 if (!isNaN(decodedText)) doctorId = decodedText;
             }
 
-            if (doctorId) {
+            // Determine the lookup query
+            const lookupQuery = doctorId || qrCode;
+
+            if (lookupQuery) {
                 // Show loading state
                 document.getElementById('search-results').style.display = 'block';
                 document.getElementById('search-results').innerHTML = '<div style="padding:15px; text-align:center;">🔍 جاري جلب بيانات الطبيب...</div>';
                 
-                fetch(`/api/doctor-lookup/?q=${doctorId}`)
+                fetch(`/api/doctor-lookup/?q=${lookupQuery}`)
                 .then(r => r.json())
                 .then(data => {
                     if (data.results && data.results.length > 0) {
@@ -289,17 +300,28 @@ function changeDoctor() {
     document.getElementById('deduction-preview').style.display = 'none';
 }
 
+const hasManagementFee = {% if has_management_fee %}true{% else %}false{% endif %};
+
 // ========== DEDUCTION PREVIEW ==========
 function updateDeductionPreview() {
     const amount = parseFloat(document.getElementById('amount-input').value) || 0;
     const preview = document.getElementById('deduction-preview');
+    const feeRow = document.getElementById('preview-fee-row');
     
     if (amount > 0) {
         preview.style.display = 'block';
-        const fee = amount * 0.25;
+        const fee = hasManagementFee ? (amount * 0.25) : 0;
         const total = amount + fee;
+        
         document.getElementById('preview-amount').innerText = amount.toFixed(2) + ' ج.م';
-        document.getElementById('preview-fee').innerText = fee.toFixed(2) + ' ج.م';
+        
+        if (hasManagementFee) {
+            feeRow.style.display = 'flex';
+            document.getElementById('preview-fee').innerText = fee.toFixed(2) + ' ج.م';
+        } else {
+            feeRow.style.display = 'none';
+        }
+        
         document.getElementById('preview-total').innerText = total.toFixed(2) + ' ج.م';
     } else {
         preview.style.display = 'none';
@@ -361,7 +383,14 @@ function showInvoice(inv) {
     document.getElementById('inv-doctor').innerText = inv.doctor_name;
     document.getElementById('inv-vendor').innerText = inv.vendor_name;
     document.getElementById('inv-amount').innerText = inv.amount_spent.toFixed(2) + ' ج.م';
-    document.getElementById('inv-fee').innerText = inv.management_fee.toFixed(2) + ' ج.م';
+    
+    if (inv.management_fee > 0) {
+        document.getElementById('inv-fee-row').style.display = 'flex';
+        document.getElementById('inv-fee').innerText = inv.management_fee.toFixed(2) + ' ج.م';
+    } else {
+        document.getElementById('inv-fee-row').style.display = 'none';
+    }
+    
     document.getElementById('inv-total').innerText = inv.total_deducted.toFixed(2) + ' ج.م';
     
     if (inv.description) {

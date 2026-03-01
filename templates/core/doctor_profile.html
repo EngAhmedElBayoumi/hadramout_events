@@ -105,8 +105,8 @@
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Generate QR Code pointing to this doctor's profile
-    const profileUrl = window.location.origin + '/vendor/transaction/new/?doctor_id={{ doctor.id }}';
+    // Generate QR Code pointing to this doctor's scan URL (same as card PDF)
+    const profileUrl = window.location.origin + '/scan/{{ doctor.qr_code }}/';
     new QRCode(document.getElementById("qrcode"), {
         text: profileUrl,
         width: 180,

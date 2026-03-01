@@ -89,8 +89,13 @@ class TransactionCreateView(LoginRequiredMixin, VendorRequiredMixin, View):
         context = {}
         # Check if user is a Vendor Cashier
         vendor = getattr(request.user, 'vendor_profile', None)
+        if not vendor:
+            vendor = Vendor.objects.first()
+        
         is_cashier = vendor and vendor.role == 'CASHIER'
         context['is_cashier'] = is_cashier
+        context['vendor'] = vendor
+        context['has_management_fee'] = vendor.has_management_fee if vendor else True
         
         # Support pre-filling doctor from QR scan (URL param: ?doctor_id=X)
         doctor_id = request.GET.get('doctor_id')
@@ -173,7 +178,7 @@ class DoctorLookupView(LoginRequiredMixin, VendorAdminRequiredMixin, View):
         if query.isdigit():
             doctors = Doctor.objects.filter(id=query)
         else:
-            doctors = Doctor.objects.filter(phone__icontains=query) | Doctor.objects.filter(name__icontains=query)
+            doctors = Doctor.objects.filter(phone__icontains=query) | Doctor.objects.filter(name__icontains=query) | Doctor.objects.filter(qr_code__iexact=query)
         
         results = []
         for doc in doctors[:5]:
@@ -183,7 +188,7 @@ class DoctorLookupView(LoginRequiredMixin, VendorAdminRequiredMixin, View):
                 'id': doc.id,
                 'name': doc.name,
                 'phone': doc.phone,
-                'specialty': doc.specialty,
+                'specialty': doc.specialty.name if doc.specialty else '',
                 'balance': float(balance)
             })
         return JsonResponse({'results': results})
@@ -223,5 +228,5 @@ class DoctorProfileView(LoginRequiredMixin, DetailView):
         context['expired_vouchers_count'] = vouchers.filter(is_active=False).count()
         context['transactions'] = Transaction.objects.filter(doctor=self.object).order_by('-transaction_date')
         context['total_spent'] = Transaction.objects.filter(doctor=self.object).aggregate(
-            total=Sum('amount_spent'))['total'] or 0
+            total=Sum('total_deducted'))['total'] or 0
         return context

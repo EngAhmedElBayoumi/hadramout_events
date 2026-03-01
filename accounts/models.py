@@ -11,6 +11,7 @@ class User(AbstractUser):
     type = models.CharField(
         _('Type'), max_length=50, choices=Types.choices, default=Types.ADMIN
     )
+    phone = models.CharField(_('Phone Number'), max_length=20, blank=True, null=True)
 
     def __str__(self):
         return self.username
@@ -79,6 +80,7 @@ class Vendor(models.Model):
         _('Role'), max_length=20, choices=VendorRoles.choices, default=VendorRoles.ADMIN,
         help_text=_('Vendor Admin has full access, Cashier can only process transactions via QR scan')
     )
+    has_management_fee = models.BooleanField(_('Has Management Fee'), default=True)
     created_at = models.DateTimeField(_('Created At'), auto_now_add=True)
     updated_at = models.DateTimeField(_('Updated At'), auto_now=True)
 
