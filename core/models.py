@@ -1,5 +1,7 @@
+import uuid
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
 
 class PharmaceuticalCompany(models.Model):
     name = models.CharField(_('Name'), max_length=255, unique=True)
@@ -60,3 +62,37 @@ class Transaction(models.Model):
 
     def __str__(self):
         return f"{self.invoice_number} - {self.doctor} at {self.vendor}"
+
+
+class TransactionOTP(models.Model):
+    """Stores OTP for pending transaction verification."""
+    transaction_token = models.UUIDField(_('Transaction Token'), default=uuid.uuid4, unique=True, editable=False)
+    doctor = models.ForeignKey('accounts.Doctor', on_delete=models.CASCADE, verbose_name=_('Doctor'))
+    vendor = models.ForeignKey('accounts.Vendor', on_delete=models.CASCADE, verbose_name=_('Vendor'))
+    created_by = models.ForeignKey('accounts.User', on_delete=models.CASCADE, verbose_name=_('Created By'), null=True, blank=True)
+    otp_code = models.CharField(_('OTP Code'), max_length=6)
+    amount = models.DecimalField(_('Amount'), max_digits=10, decimal_places=2)
+    description = models.TextField(_('Description'), blank=True)
+    is_used = models.BooleanField(_('Is Used'), default=False)
+    created_at = models.DateTimeField(_('Created At'), auto_now_add=True)
+    expires_at = models.DateTimeField(_('Expires At'))
+
+    class Meta:
+        verbose_name = _('Transaction OTP')
+        verbose_name_plural = _('Transaction OTPs')
+
+    def __str__(self):
+        return f"OTP {self.otp_code} for {self.doctor}"
+
+    @property
+    def is_expired(self):
+        return timezone.now() > self.expires_at
+
+    @property
+    def is_valid(self):
+        return not self.is_used and not self.is_expired
+
+    def save(self, *args, **kwargs):
+        if not self.expires_at:
+            self.expires_at = timezone.now() + timezone.timedelta(minutes=5)
+        super().save(*args, **kwargs)

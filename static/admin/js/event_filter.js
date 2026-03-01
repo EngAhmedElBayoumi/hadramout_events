@@ -4,6 +4,7 @@
  */
 (function () {
     'use strict';
+    console.log('Event Filter: Initialized');
 
     function getSelectedSpecialtyIds(selectEl) {
         if (!selectEl) return [];

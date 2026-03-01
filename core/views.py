@@ -4,12 +4,17 @@ from django.views.generic import TemplateView, CreateView, View, DetailView
 from django.contrib import messages
 from django.http import JsonResponse
 from django.db.models import Sum
+from django.core.mail import send_mail
+from django.conf import settings
+from django.utils import timezone
 from accounts.models import Doctor, Vendor
-from core.models import Transaction
+from core.models import Transaction, TransactionOTP
 from core.services import process_transaction
 from events.models import Voucher
 from django.core.exceptions import ValidationError
 from decimal import Decimal
+import random
+import string
 
 class HomeView(View):
     def get(self, request):
@@ -125,24 +130,77 @@ class TransactionCreateView(LoginRequiredMixin, VendorRequiredMixin, View):
                 vendor = Vendor.objects.first()
             doctor = Doctor.objects.get(id=doctor_id)
             
-            trx = process_transaction(vendor, doctor, amount, description, created_by=request.user)
-            # Return JSON for AJAX-based submission (invoice printing)
+            # Validate amount
+            amount_decimal = Decimal(amount)
+            if amount_decimal <= 0:
+                raise ValidationError("المبلغ يجب أن يكون أكبر من صفر")
+
+            # Pre-validate balance before generating OTP
+            if vendor.has_management_fee:
+                fee = amount_decimal * Decimal("0.25")
+            else:
+                fee = Decimal("0.00")
+            total_needed = amount_decimal + fee
+            
+            active_vouchers = Voucher.objects.filter(doctor=doctor, is_active=True, current_balance__gt=0)
+            total_balance = sum(v.current_balance for v in active_vouchers)
+            
+            if total_balance < total_needed:
+                avail = f"{total_balance:.2f}"
+                req = f"{total_needed:.2f}"
+                raise ValidationError(f"عذراً، الرصيد المتاح غير كافٍ. المتاح: {avail} ج.م، المطلوب: {req} ج.م")
+
+            # Check if doctor has an email
+            if not doctor.user.email:
+                raise ValidationError("لا يوجد بريد إلكتروني مسجل لهذا الطبيب. لا يمكن إرسال رمز التحقق.")
+
+            # Generate 6-digit OTP
+            otp_code = ''.join(random.choices(string.digits, k=6))
+            
+            # Create OTP record
+            otp = TransactionOTP.objects.create(
+                doctor=doctor,
+                vendor=vendor,
+                created_by=request.user,
+                otp_code=otp_code,
+                amount=amount_decimal,
+                description=description,
+                expires_at=timezone.now() + timezone.timedelta(minutes=5),
+            )
+
+            # Send OTP via email
+            try:
+                send_mail(
+                    'رمز التحقق من عملية الشراء - حضرموت',
+                    f'مرحباً د. {doctor.name}،\n\n'
+                    f'رمز التحقق من عملية الشراء الخاصة بك هو:\n\n'
+                    f'🔑  {otp_code}\n\n'
+                    f'المبلغ: {amount_decimal:.2f} ج.م\n'
+                    f'التاجر: {vendor.name}\n\n'
+                    f'هذا الرمز صالح لمدة 5 دقائق فقط.\n\n'
+                    f'إذا لم تقم بهذه العملية، يرجى تجاهل هذه الرسالة.',
+                    settings.DEFAULT_FROM_EMAIL,
+                    [doctor.user.email],
+                    fail_silently=False,
+                )
+                print("OTP sent successfully to", doctor.user.email)
+            except Exception as e:
+                # If email fails, still allow the transaction but log the error
+                import logging
+                logger = logging.getLogger(__name__)
+                logger.error(f"Failed to send OTP email to {doctor.user.email}: {e}")
+
+            # Return OTP required response
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 return JsonResponse({
                     'success': True,
-                    'invoice': {
-                        'invoice_number': trx.invoice_number,
-                        'doctor_name': doctor.name,
-                        'vendor_name': vendor.name,
-                        'amount_spent': float(trx.amount_spent),
-                        'management_fee': float(trx.management_fee_amount),
-                        'total_deducted': float(trx.total_deducted),
-                        'date': trx.transaction_date.strftime('%Y-%m-%d %H:%M'),
-                        'description': trx.items_description,
-                    }
+                    'otp_required': True,
+                    'transaction_token': str(otp.transaction_token),
+                    'doctor_email': doctor.user.email[:3] + '***' + doctor.user.email[doctor.user.email.index('@'):],  # Masked email
                 })
-            messages.success(request, f"تمت العملية بنجاح! رقم الفاتورة: {trx.invoice_number}")
-            return redirect('vendor_dashboard')
+            
+            messages.info(request, "تم إرسال رمز التحقق إلى بريد الطبيب الإلكتروني")
+            return redirect('transaction_create')
             
         except Doctor.DoesNotExist:
             error = "طبيب غير موجود."
@@ -150,16 +208,7 @@ class TransactionCreateView(LoginRequiredMixin, VendorRequiredMixin, View):
                 return JsonResponse({'success': False, 'error': error}, status=400)
             messages.error(request, error)
         except ValidationError as e:
-            # Handle Django ValidationError to pull message out of list
             error = e.messages[0] if hasattr(e, 'messages') else str(e)
-            if "Insufficient balance" in error:
-                # Custom Arabic message for balance errors
-                import re
-                match = re.search(r"Available: ([\d\.]+), Required: ([\d\.]+)", error)
-                if match:
-                    avail, req = match.groups()
-                    error = f"عذراً، الرصيد المتاح غير كافٍ. المتاح: {avail} ج.م، المطلوب: {req} ج.م"
-            
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 return JsonResponse({'success': False, 'error': error}, status=400)
             messages.error(request, error)
@@ -170,6 +219,114 @@ class TransactionCreateView(LoginRequiredMixin, VendorRequiredMixin, View):
             messages.error(request, f"خطأ غير متوقع: {e}")
         
         return render(request, self.template_name)
+
+
+class VerifyOTPView(LoginRequiredMixin, VendorRequiredMixin, View):
+    """Verify OTP and process the transaction."""
+
+    def post(self, request):
+        transaction_token = request.POST.get('transaction_token')
+        otp_code = request.POST.get('otp_code')
+
+        try:
+            otp = TransactionOTP.objects.get(transaction_token=transaction_token)
+        except (TransactionOTP.DoesNotExist, ValueError):
+            return JsonResponse({'success': False, 'error': 'رمز المعاملة غير صالح.'}, status=400)
+
+        # Validate OTP
+        if otp.is_used:
+            return JsonResponse({'success': False, 'error': 'تم استخدام رمز التحقق هذا بالفعل.'}, status=400)
+
+        if otp.is_expired:
+            return JsonResponse({'success': False, 'error': 'انتهت صلاحية رمز التحقق. يرجى إعادة المحاولة.'}, status=400)
+
+        if otp.otp_code != otp_code:
+            return JsonResponse({'success': False, 'error': 'رمز التحقق غير صحيح.'}, status=400)
+
+        # OTP is valid - process the transaction
+        try:
+            trx = process_transaction(
+                otp.vendor,
+                otp.doctor,
+                str(otp.amount),
+                otp.description,
+                created_by=otp.created_by,
+            )
+
+            # Mark OTP as used
+            otp.is_used = True
+            otp.save()
+
+            return JsonResponse({
+                'success': True,
+                'invoice': {
+                    'invoice_number': trx.invoice_number,
+                    'doctor_name': otp.doctor.name,
+                    'vendor_name': otp.vendor.name,
+                    'amount_spent': float(trx.amount_spent),
+                    'management_fee': float(trx.management_fee_amount),
+                    'total_deducted': float(trx.total_deducted),
+                    'date': trx.transaction_date.strftime('%Y-%m-%d %H:%M'),
+                    'description': trx.items_description,
+                }
+            })
+
+        except ValidationError as e:
+            error = e.messages[0] if hasattr(e, 'messages') else str(e)
+            if "Insufficient balance" in error:
+                import re
+                match = re.search(r"Available: ([\d\.]+), Required: ([\d\.]+)", error)
+                if match:
+                    avail, req = match.groups()
+                    error = f"عذراً، الرصيد المتاح غير كافٍ. المتاح: {avail} ج.م، المطلوب: {req} ج.م"
+            return JsonResponse({'success': False, 'error': error}, status=400)
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+
+class ResendOTPView(LoginRequiredMixin, VendorRequiredMixin, View):
+    """Resend OTP for a pending transaction."""
+
+    def post(self, request):
+        transaction_token = request.POST.get('transaction_token')
+
+        try:
+            otp = TransactionOTP.objects.get(transaction_token=transaction_token)
+        except (TransactionOTP.DoesNotExist, ValueError):
+            return JsonResponse({'success': False, 'error': 'رمز المعاملة غير صالح.'}, status=400)
+
+        if otp.is_used:
+            return JsonResponse({'success': False, 'error': 'تم استخدام هذا الرمز بالفعل.'}, status=400)
+
+        # Generate new OTP and extend expiry
+        new_otp_code = ''.join(random.choices(string.digits, k=6))
+        otp.otp_code = new_otp_code
+        otp.expires_at = timezone.now() + timezone.timedelta(minutes=5)
+        otp.save()
+
+        # Send new OTP email
+        try:
+            send_mail(
+                'رمز التحقق الجديد - حضرموت',
+                f'مرحباً د. {otp.doctor.name}،\n\n'
+                f'رمز التحقق الجديد من عملية الشراء الخاصة بك هو:\n\n'
+                f'🔑  {new_otp_code}\n\n'
+                f'المبلغ: {otp.amount:.2f} ج.م\n'
+                f'التاجر: {otp.vendor.name}\n\n'
+                f'هذا الرمز صالح لمدة 5 دقائق فقط.',
+                settings.DEFAULT_FROM_EMAIL,
+                [otp.doctor.user.email],
+                fail_silently=False,
+            )
+        except Exception:
+            pass
+
+        masked_email = otp.doctor.user.email[:3] + '***' + otp.doctor.user.email[otp.doctor.user.email.index('@'):]
+        return JsonResponse({
+            'success': True,
+            'message': f'تم إرسال رمز تحقق جديد إلى {masked_email}',
+        })
+
 
 class DoctorLookupView(LoginRequiredMixin, VendorAdminRequiredMixin, View):
     """Search for doctors - only available to Vendor Admins, not Cashiers"""
