@@ -1,68 +1,132 @@
 /**
- * Event Doctor Filtering (Native JS)
- * Intercepts Fetch API calls to append specialties_ids to the doctors autocomplete request.
+ * Event Doctor Filtering
+ * Adds selected specialties to doctors autocomplete requests in Django Admin.
  */
 (function () {
     'use strict';
 
+    function getSelectedSpecialtyIds(selectEl) {
+        if (!selectEl) return [];
+        return Array.from(selectEl.selectedOptions)
+            .map(function (opt) { return opt.value; })
+            .filter(Boolean);
+    }
+
+    function shouldFilterDoctorsUrl(url) {
+        if (!url) return false;
+
+        try {
+            var parsedUrl = new URL(url, window.location.origin);
+            var isAutocomplete = parsedUrl.pathname.indexOf('/admin/autocomplete/') !== -1;
+
+            if (!isAutocomplete) return false;
+
+            var appLabel = parsedUrl.searchParams.get('app_label');
+            var modelName = parsedUrl.searchParams.get('model_name');
+            var fieldName = parsedUrl.searchParams.get('field_name');
+
+            // Django Admin autocomplete for Event.doctors usually sends:
+            // app_label=events&model_name=event&field_name=doctors
+            var isEventDoctorsField = (
+                appLabel === 'events' &&
+                modelName === 'event' &&
+                fieldName === 'doctors'
+            );
+
+            // Backward-compatible fallback for older/custom request signatures.
+            var isLegacyDoctorSignature = (
+                appLabel === 'accounts' &&
+                modelName === 'doctor'
+            );
+
+            return isEventDoctorsField || isLegacyDoctorSignature;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    function buildUrlWithSpecialties(url, specialtyIds) {
+        var urlObj = new URL(url, window.location.origin);
+
+        if (specialtyIds.length) {
+            urlObj.searchParams.set('specialties_ids', specialtyIds.join(','));
+        } else {
+            // No specialty selected => backend should return all doctors.
+            urlObj.searchParams.delete('specialties_ids');
+        }
+
+        return urlObj.toString();
+    }
+
     function initDoctorFilter() {
-        const specialtiesSelect = document.getElementById('id_specialties');
-        const doctorsSelect = document.getElementById('id_doctors');
+        var specialtiesSelect = document.getElementById('id_specialties');
+        var doctorsSelect = document.getElementById('id_doctors');
 
         if (!specialtiesSelect || !doctorsSelect) return;
 
-        // Reset doctors selection when specialties change
         specialtiesSelect.addEventListener('change', function () {
-            // Trigger a change to clear the Select2 internal state
-            // Native way for Select2 to notice:
+            // Clear currently selected doctors whenever specialties change.
             doctorsSelect.value = '';
-            const event = new Event('change', { bubbles: true });
-            doctorsSelect.dispatchEvent(event);
-            console.log('Event Filter: Specialties changed, cleared doctors');
+            doctorsSelect.dispatchEvent(new Event('change', { bubbles: true }));
         });
 
-        // Intercept Fetch API
-        const originalFetch = window.fetch;
-        window.fetch = function (input, init) {
-            let url = (typeof input === 'string') ? input : (input instanceof Request ? input.url : null);
-
-            if (url && url.includes('/admin/autocomplete/') && url.includes('model_name=doctor') && url.includes('app_label=accounts')) {
+        // 1) Fetch interception (for modern admin integrations).
+        var originalFetch = window.fetch;
+        if (typeof originalFetch === 'function') {
+            window.fetch = function (input, init) {
                 try {
-                    const urlObj = new URL(url, window.location.origin);
-                    const selectedOptions = Array.from(specialtiesSelect.selectedOptions).map(opt => opt.value);
+                    var rawUrl = (typeof input === 'string')
+                        ? input
+                        : (input instanceof Request ? input.url : '');
 
-                    if (selectedOptions.length > 0) {
-                        urlObj.searchParams.set('specialties_ids', selectedOptions.join(','));
-                        const newUrl = urlObj.toString();
-                        console.log('Event Filter: Appending specialties_ids to:', newUrl);
+                    if (shouldFilterDoctorsUrl(rawUrl)) {
+                        var ids = getSelectedSpecialtyIds(specialtiesSelect);
+                        var nextUrl = buildUrlWithSpecialties(rawUrl, ids);
 
-                        // Handle the different types of input to fetch
                         if (typeof input === 'string') {
-                            input = newUrl;
+                            input = nextUrl;
                         } else if (input instanceof Request) {
-                            // Request objects are immutable in some contexts, so we create a new one
-                            input = new Request(newUrl, input);
-                        }
-                    } else {
-                        // Clear param if no specialties selected
-                        urlObj.searchParams.delete('specialties_ids');
-                        if (typeof input === 'string') {
-                            input = urlObj.toString();
-                        } else if (input instanceof Request) {
-                            input = new Request(urlObj.toString(), input);
+                            input = new Request(nextUrl, input);
                         }
                     }
-                } catch (e) {
-                    console.error('Event Filter: Error modifying fetch URL', e);
+                } catch (error) {
+                    console.error('Event Filter (fetch):', error);
                 }
-            }
-            return originalFetch.call(this, input, init);
-        };
 
-        console.log('Event Filter: Fetch API Interception Initialized');
+                return originalFetch.call(this, input, init);
+            };
+        }
+
+        // 2) jQuery ajax interception (used by Django Admin Select2).
+        if (window.django && window.django.jQuery && window.django.jQuery.ajaxPrefilter) {
+            window.django.jQuery.ajaxPrefilter(function (options) {
+                try {
+                    if (shouldFilterDoctorsUrl(options.url)) {
+                        var ids = getSelectedSpecialtyIds(specialtiesSelect);
+                        options.url = buildUrlWithSpecialties(options.url, ids);
+                    }
+                } catch (error) {
+                    console.error('Event Filter (ajax):', error);
+                }
+            });
+        }
+
+        // 3) XHR fallback interception.
+        var originalOpen = XMLHttpRequest.prototype.open;
+        XMLHttpRequest.prototype.open = function (method, url) {
+            try {
+                if (shouldFilterDoctorsUrl(url)) {
+                    var ids = getSelectedSpecialtyIds(specialtiesSelect);
+                    url = buildUrlWithSpecialties(url, ids);
+                }
+            } catch (error) {
+                console.error('Event Filter (xhr):', error);
+            }
+
+            return originalOpen.call(this, method, url);
+        };
     }
 
-    // Wait for the document to be ready and for Django Admin's potential late-init
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initDoctorFilter);
     } else {
