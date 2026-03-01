@@ -13,12 +13,36 @@
     }
 
     function shouldFilterDoctorsUrl(url) {
-        return Boolean(
-            url &&
-            url.indexOf('/admin/autocomplete/') !== -1 &&
-            url.indexOf('app_label=accounts') !== -1 &&
-            url.indexOf('model_name=doctor') !== -1
-        );
+        if (!url) return false;
+
+        try {
+            var parsedUrl = new URL(url, window.location.origin);
+            var isAutocomplete = parsedUrl.pathname.indexOf('/admin/autocomplete/') !== -1;
+
+            if (!isAutocomplete) return false;
+
+            var appLabel = parsedUrl.searchParams.get('app_label');
+            var modelName = parsedUrl.searchParams.get('model_name');
+            var fieldName = parsedUrl.searchParams.get('field_name');
+
+            // Django Admin autocomplete for Event.doctors usually sends:
+            // app_label=events&model_name=event&field_name=doctors
+            var isEventDoctorsField = (
+                appLabel === 'events' &&
+                modelName === 'event' &&
+                fieldName === 'doctors'
+            );
+
+            // Backward-compatible fallback for older/custom request signatures.
+            var isLegacyDoctorSignature = (
+                appLabel === 'accounts' &&
+                modelName === 'doctor'
+            );
+
+            return isEventDoctorsField || isLegacyDoctorSignature;
+        } catch (error) {
+            return false;
+        }
     }
 
     function buildUrlWithSpecialties(url, specialtyIds) {
