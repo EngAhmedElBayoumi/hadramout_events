@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}رمز QR لتسجيل الأطباء{% endblock %}
+
+{% block extra_head %}
+<style>
+    .qr-page {
+        max-width: 600px;
+        margin: 30px auto;
+        text-align: center;
+    }
+    .qr-card {
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .qr-card h2 {
+        color: #800000;
+        margin-bottom: 10px;
+    }
+    .qr-card p {
+        color: #666;
+        margin-bottom: 25px;
+    }
+    #qr-canvas {
+        margin: 0 auto 20px;
+        display: block;
+    }
+    .qr-url {
+        background: #f8f9fa;
+        padding: 10px 15px;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        color: #333;
+        word-break: break-all;
+        direction: ltr;
+        margin-bottom: 20px;
+        border: 1px dashed #ccc;
+    }
+    .qr-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    .qr-btn {
+        padding: 12px 25px;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-family: 'Cairo', sans-serif;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    .qr-btn-primary {
+        background: #800000;
+        color: white;
+    }
+    .qr-btn-primary:hover {
+        background: #600000;
+    }
+    .qr-btn-secondary {
+        background: #28a745;
+        color: white;
+    }
+    .qr-btn-secondary:hover {
+        background: #1e7e34;
+    }
+    .qr-btn-outline {
+        background: white;
+        color: #800000;
+        border: 2px solid #800000;
+    }
+    .qr-btn-outline:hover {
+        background: #f5f0f0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="qr-page">
+    <div class="qr-card">
+        <h2>📱 رمز QR لتسجيل الأطباء</h2>
+        <p>امسح هذا الرمز أو شاركه مع الأطباء لتسجيل حساباتهم</p>
+
+        <div style="background: white; padding: 15px; display: inline-block; border-radius: 10px; border: 1px solid #eee; margin-bottom: 20px;">
+            <img id="qr-image" src="data:image/png;base64,{{ qr_base64 }}" style="display: block; width: 250px; height: 250px;">
+        </div>
+
+        <div class="qr-url" id="reg-url">{{ registration_url }}</div>
+
+        <div class="qr-actions">
+            <button onclick="downloadQRImage()" class="qr-btn qr-btn-primary">📥 تحميل صورة QR</button>
+            <button onclick="downloadQRPDF()" class="qr-btn qr-btn-secondary">📄 تحميل PDF</button>
+            <button onclick="copyLink()" class="qr-btn qr-btn-outline">📋 نسخ الرابط</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const registrationUrl = "{{ registration_url }}";
+
+function downloadQRImage() {
+    const qrImage = document.getElementById('qr-image');
+    if (!qrImage || !qrImage.src) return;
+    const link = document.createElement('a');
+    link.download = 'hadramout-doctor-registration-qr.png';
+    link.href = qrImage.src;
+    link.click();
+}
+
+function downloadQRPDF() {
+    const qrImage = document.getElementById('qr-image');
+    if (!qrImage || !qrImage.src) return;
+    const imgData = qrImage.src;
+    
+    // Open a print-friendly page with the QR code
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+        <!DOCTYPE html>
+        <html lang="ar" dir="rtl">
+        <head>
+            <meta charset="UTF-8">
+            <title>رمز QR - تسجيل الأطباء</title>
+            <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+            <style>
+                body {
+                    font-family: 'Cairo', sans-serif;
+                    text-align: center;
+                    padding: 40px;
+                }
+                h1 { color: #800000; margin-bottom: 10px; }
+                p { color: #666; margin-bottom: 30px; }
+                img { margin: 0 auto 20px; display: block; }
+                .url { 
+                    background: #f8f9fa; 
+                    padding: 10px; 
+                    border-radius: 5px; 
+                    font-size: 0.85rem; 
+                    direction: ltr;
+                    word-break: break-all;
+                    border: 1px dashed #ccc;
+                }
+            </style>
+        </head>
+        <body onload="window.print()">
+            <h1>🏛️ قرية حضرموت</h1>
+            <p>امسح رمز QR أدناه لتسجيل حسابك كطبيب</p>
+            <img src="${imgData}" width="300" height="300">
+            <div class="url">{{ registration_url }}</div>
+        </body>
+        </html>
+    `);
+    printWindow.document.close();
+}
+
+function copyLink() {
+    navigator.clipboard.writeText("{{ registration_url }}").then(() => {
+        const btn = event.target;
+        const originalText = btn.innerText;
+        btn.innerText = '✅ تم النسخ!';
+        setTimeout(() => btn.innerText = originalText, 2000);
+    });
+}
+</script>
+{% endblock %}

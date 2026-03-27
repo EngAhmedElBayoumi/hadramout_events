@@ -12,8 +12,8 @@
         {% endif %}
         
         <div style="margin-bottom: 15px;">
-            <label for="id_username" style="display: block; margin-bottom: 5px;">اسم المستخدم</label>
-            <input type="text" name="username" id="id_username" class="form-control" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+            <label for="id_username" style="display: block; margin-bottom: 5px;">اسم المستخدم أو البريد الإلكتروني</label>
+            <input type="text" name="username" id="id_username" class="form-control" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;" placeholder="username أو email@example.com">
         </div>
 
         <div style="margin-bottom: 20px;">
@@ -23,5 +23,8 @@
 
         <button type="submit" class="btn" style="width: 100%;">دخول</button>
     </form>
+    <div style="text-align: center; margin-top: 20px; color: #666;">
+        طبيب جديد؟ <a href="{% url 'doctor_register' %}" style="color: #800000; font-weight: bold; text-decoration: none;">إنشاء حساب</a>
+    </div>
 </div>
 {% endblock %}

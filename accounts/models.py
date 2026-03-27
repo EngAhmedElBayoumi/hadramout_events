@@ -41,7 +41,7 @@ class Doctor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='doctor_profile', verbose_name=_('User'))
     name = models.CharField(_('Name'), max_length=255)
     phone = models.CharField(_('Phone'), max_length=20, unique=True)
-    email = models.EmailField(_('Email'), unique=True)
+    email = models.EmailField(_('Email'), unique=True, blank=True, null=True)
     specialty = models.ForeignKey(Specialty, on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_('Specialty'))
     qr_code = models.CharField(_('QR Code'), max_length=255, blank=True, null=True) # URL or path
     created_at = models.DateTimeField(_('Created At'), auto_now_add=True)

@@ -1,0 +1,309 @@
+{% extends "base.html" %}
+
+{% block title %}تسجيل طبيب جديد - قرية حضرموت{% endblock %}
+
+{% block extra_head %}
+<style>
+    .register-container {
+        max-width: 550px;
+        margin: 30px auto;
+        background: white;
+        padding: 35px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .register-container h2 {
+        text-align: center;
+        color: #800000;
+        margin-bottom: 5px;
+    }
+    .register-subtitle {
+        text-align: center;
+        color: #888;
+        margin-bottom: 25px;
+        font-size: 0.95rem;
+    }
+    .form-group {
+        margin-bottom: 18px;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: bold;
+        color: #333;
+    }
+    .form-group label .required {
+        color: #dc3545;
+    }
+    .form-input {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-family: 'Cairo', sans-serif;
+        transition: border-color 0.2s;
+        box-sizing: border-box;
+    }
+    .form-input:focus {
+        outline: none;
+        border-color: #800000;
+    }
+    .error-list {
+        background: #f8d7da;
+        border: 1px solid #f5c6cb;
+        color: #721c24;
+        padding: 12px 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .error-list ul {
+        margin: 0;
+        padding-right: 20px;
+    }
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: #800000;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-family: 'Cairo', sans-serif;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    .submit-btn:hover {
+        background: #600000;
+    }
+    .login-link {
+        text-align: center;
+        margin-top: 20px;
+        color: #666;
+    }
+    .login-link a {
+        color: #800000;
+        font-weight: bold;
+        text-decoration: none;
+    }
+    .password-row {
+        display: flex;
+        gap: 12px;
+    }
+    .password-row .form-group {
+        flex: 1;
+    }
+    /* Searchable select styling */
+    .specialty-search-container {
+        position: relative;
+    }
+    .specialty-search-input {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-family: 'Cairo', sans-serif;
+        box-sizing: border-box;
+        transition: border-color 0.2s;
+    }
+    .specialty-search-input:focus {
+        outline: none;
+        border-color: #800000;
+    }
+    .specialty-dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-top: none;
+        border-radius: 0 0 8px 8px;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 100;
+        display: none;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .specialty-option {
+        padding: 10px 12px;
+        cursor: pointer;
+        transition: background 0.15s;
+    }
+    .specialty-option:hover {
+        background: #f5f0f0;
+    }
+    .specialty-option.selected {
+        background: #800000;
+        color: white;
+    }
+    .selected-specialty-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: #f5f0f0;
+        border: 1px solid #800000;
+        color: #800000;
+        padding: 4px 10px;
+        border-radius: 15px;
+        font-size: 0.9rem;
+        margin-top: 8px;
+    }
+    .selected-specialty-tag button {
+        background: none;
+        border: none;
+        color: #800000;
+        font-size: 1.1rem;
+        cursor: pointer;
+        padding: 0;
+        line-height: 1;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="register-container">
+    <h2>👨‍⚕️ تسجيل طبيب جديد</h2>
+    <p class="register-subtitle">أنشئ حسابك للاستفادة من خدمات قسائم حضرموت</p>
+
+    {% if errors %}
+    <div class="error-list">
+        <ul>
+        {% for error in errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <form method="post" id="register-form">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label>الاسم الكامل <span class="required">*</span></label>
+            <input type="text" name="name" class="form-input" placeholder="مثال: د. أحمد محمد" required value="{{ form_data.name|default:'' }}">
+        </div>
+
+        <div class="form-group">
+            <label>رقم الهاتف <span class="required">*</span></label>
+            <input type="tel" name="phone" class="form-input" placeholder="01xxxxxxxxx" required value="{{ form_data.phone|default:'' }}">
+        </div>
+
+        <div class="form-group">
+            <label>اسم المستخدم</label>
+            <input type="text" name="username" class="form-input" placeholder="اختياري - سيتم إنشاؤه تلقائياً إذا لم يُدخل" value="{{ form_data.username|default:'' }}">
+        </div>
+
+        <div class="form-group">
+            <label>البريد الإلكتروني</label>
+            <input type="email" name="email" class="form-input" placeholder="example@gmail.com" value="{{ form_data.email|default:'' }}">
+            <small style="color: #888; display: block; margin-top: 4px;">مطلوب إدخال البريد الإلكتروني </small>
+        </div>
+
+        <div class="form-group">
+            <label>التخصص</label>
+            <input type="hidden" name="specialty" id="specialty-id" value="{{ form_data.specialty_id|default:'' }}">
+            <div class="specialty-search-container">
+                <input type="text" class="specialty-search-input" id="specialty-search" placeholder="ابحث عن التخصص..." autocomplete="off">
+                <div class="specialty-dropdown" id="specialty-dropdown"></div>
+            </div>
+            <div id="selected-specialty"></div>
+        </div>
+
+        <div class="password-row">
+            <div class="form-group">
+                <label>كلمة المرور <span class="required">*</span></label>
+                <input type="password" name="password" class="form-input" placeholder="6 أحرف على الأقل" required minlength="6">
+            </div>
+            <div class="form-group">
+                <label>تأكيد كلمة المرور <span class="required">*</span></label>
+                <input type="password" name="password_confirm" class="form-input" placeholder="أعد كتابة كلمة المرور" required>
+            </div>
+        </div>
+
+        <button type="submit" class="submit-btn">✅ إنشاء الحساب</button>
+    </form>
+
+    <div class="login-link">
+        لديك حساب بالفعل؟ <a href="{% url 'login' %}">تسجيل الدخول</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Specialty data from server
+const allSpecialties = [
+    {% for s in specialties %}
+    { id: {{ s.id }}, name: "{{ s.name }}" },
+    {% endfor %}
+];
+
+const searchInput = document.getElementById('specialty-search');
+const dropdown = document.getElementById('specialty-dropdown');
+const hiddenInput = document.getElementById('specialty-id');
+const selectedDiv = document.getElementById('selected-specialty');
+
+function renderDropdown(filter) {
+    const filtered = filter
+        ? allSpecialties.filter(s => s.name.includes(filter))
+        : allSpecialties;
+
+    if (filtered.length === 0) {
+        dropdown.innerHTML = '<div style="padding: 10px; color: #888; text-align: center;">لا توجد نتائج</div>';
+    } else {
+        dropdown.innerHTML = filtered.map(s =>
+            `<div class="specialty-option" data-id="${s.id}" data-name="${s.name}">${s.name}</div>`
+        ).join('');
+    }
+    dropdown.style.display = 'block';
+
+    // bind clicks
+    dropdown.querySelectorAll('.specialty-option').forEach(opt => {
+        opt.addEventListener('click', function() {
+            selectSpecialty(this.dataset.id, this.dataset.name);
+        });
+    });
+}
+
+function selectSpecialty(id, name) {
+    hiddenInput.value = id;
+    searchInput.value = '';
+    dropdown.style.display = 'none';
+    selectedDiv.innerHTML = `
+        <div class="selected-specialty-tag">
+            ${name}
+            <button type="button" onclick="clearSpecialty()">✕</button>
+        </div>
+    `;
+}
+
+function clearSpecialty() {
+    hiddenInput.value = '';
+    selectedDiv.innerHTML = '';
+}
+
+searchInput.addEventListener('focus', function() {
+    renderDropdown(this.value);
+});
+
+searchInput.addEventListener('input', function() {
+    renderDropdown(this.value);
+});
+
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.specialty-search-container') && !e.target.closest('#selected-specialty')) {
+        dropdown.style.display = 'none';
+    }
+});
+
+// Pre-select specialty if form has data
+{% if form_data.specialty_id %}
+const preselectId = {{ form_data.specialty_id }};
+const preselect = allSpecialties.find(s => s.id === preselectId);
+if (preselect) selectSpecialty(preselect.id, preselect.name);
+{% endif %}
+</script>
+{% endblock %}

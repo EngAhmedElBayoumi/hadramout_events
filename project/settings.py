@@ -160,6 +160,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Custom User Model
 AUTH_USER_MODEL = 'accounts.User'
 
+AUTHENTICATION_BACKENDS = [
+    'accounts.backends.EmailOrUsernameBackend',
+]
+
 
 
 UNFOLD = {
@@ -237,6 +241,11 @@ UNFOLD = {
                         "title": _("Vendors"),
                         "icon": "store",
                         "link": reverse_lazy("admin:accounts_vendor_changelist"),
+                    },
+                    {
+                        "title": _("Doctor Registration QR"),
+                        "icon": "qr_code_2",
+                        "link": reverse_lazy("registration_qr"),
                     },
                 ],
             },
