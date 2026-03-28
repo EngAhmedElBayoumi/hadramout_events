@@ -7,36 +7,69 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-01 21:12+0200\n"
+"POT-Creation-Date: 2026-03-28 01:19+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
-#: .\accounts\admin.py:41
+#: .\accounts\admin.py:34
+msgid "{} Companies"
+msgstr "شركات {}"
+
+#: .\accounts\admin.py:34
+msgid "General (All Companies)"
+msgstr "عام (جميع الشركات)"
+
+#: .\accounts\admin.py:35 .\accounts\models.py:32
+msgid "Companies"
+msgstr "الشركات"
+
+#: .\accounts\admin.py:39
+msgid "{} Specialties"
+msgstr "تخصصات {}"
+
+#: .\accounts\admin.py:39
+msgid "General (All Specialties)"
+msgstr "عام (جميع التخصصات)"
+
+#: .\accounts\admin.py:40 .\accounts\models.py:24 .\accounts\models.py:33
+#: .\events\models.py:19
+msgid "Specialties"
+msgstr "التخصصات"
+
+#: .\accounts\admin.py:47 .\accounts\admin.py:54
+msgid "Doctor Profile"
+msgstr "الملف الشخصي للطبيب"
+
+#: .\accounts\admin.py:48 .\accounts\admin.py:55
+msgid "Doctor Profiles"
+msgstr "الملفات الشخصية للأطباء"
+
+#: .\accounts\admin.py:70
 msgid "Personal info"
 msgstr "المعلومات الشخصية"
 
-#: .\accounts\admin.py:42
+#: .\accounts\admin.py:71
 #, fuzzy
 #| msgid "User permissions"
 msgid "Permissions"
 msgstr "صلاحيات المستخدم"
 
-#: .\accounts\admin.py:43
+#: .\accounts\admin.py:72
 msgid "Important dates"
 msgstr "التواريخ المهمة"
 
-#: .\accounts\admin.py:75
+#: .\accounts\admin.py:117
 msgid "Account Created - Hadramout Events"
 msgstr "تم انشاء حسابك - فعاليات حضرموت"
 
-#: .\accounts\admin.py:77
+#: .\accounts\admin.py:119
 #, python-brace-format
 msgid ""
 "Welcome! Your account has been created.\n"
@@ -48,118 +81,164 @@ msgid ""
 "Password: {password}\n"
 msgstr ""
 
-#: .\accounts\admin.py:93
+#: .\accounts\admin.py:135
 #, python-brace-format
 msgid "Welcome email sent to {email}"
 msgstr "تم ارسال بريد الترحيب الى {email}"
 
-#: .\accounts\admin.py:95
+#: .\accounts\admin.py:137
 #, python-brace-format
 msgid "Failed to send welcome email: {error}"
 msgstr ""
 
-#: .\accounts\admin.py:116
+#: .\accounts\admin.py:158
 msgid "Session"
 msgstr "الحجز"
 
-#: .\accounts\admin.py:117
+#: .\accounts\admin.py:159
 #, fuzzy
 #| msgid "Reservations"
 msgid "Sessions"
 msgstr "الحجوزات"
 
-#: .\accounts\admin.py:135 .\accounts\admin.py:208
+#: .\accounts\admin.py:177 .\accounts\admin.py:321
 msgid "Basic Information"
 msgstr "المعلومات الاساسية"
 
-#: .\accounts\admin.py:137
+#: .\accounts\admin.py:179
 msgid "Personal Data"
 msgstr "المعلومات الشخصية"
 
-#: .\accounts\admin.py:138
+#: .\accounts\admin.py:180
 msgid "Professional Data"
 msgstr "المعلومات المهنية"
 
-#: .\accounts\admin.py:142
+#: .\accounts\admin.py:184
 msgid "Financials"
 msgstr "المعلومات المالية"
 
-#: .\accounts\admin.py:144
+#: .\accounts\admin.py:186
 #, fuzzy
 #| msgid "Summary"
 msgid "Balance Summary"
 msgstr "ملخص"
 
-#: .\accounts\admin.py:145
+#: .\accounts\admin.py:187
 #, fuzzy
 #| msgid "Change History"
 msgid "Vouchers History"
 msgstr "سجل التغييرات"
 
-#: .\accounts\admin.py:146
+#: .\accounts\admin.py:188
 #, fuzzy
 #| msgid "Change History"
 msgid "Purchases History"
 msgstr "سجل التغييرات"
 
-#: .\accounts\admin.py:150
+#: .\accounts\admin.py:192
 msgid "Attendance"
 msgstr "الحضور"
 
-#: .\accounts\admin.py:152
+#: .\accounts\admin.py:194
 #, fuzzy
 #| msgid "History"
 msgid "Sessions History"
 msgstr "سجل الحجوزات"
 
-#: .\accounts\admin.py:156
+#: .\accounts\admin.py:198
 msgid "Business Card"
 msgstr "بطاقة العمل"
 
-#: .\accounts\admin.py:158
+#: .\accounts\admin.py:200
 #, fuzzy
 #| msgid "Previous"
 msgid "Preview"
 msgstr "السابق"
 
-#: .\accounts\admin.py:183 .\events\models.py:36
+#: .\accounts\admin.py:225 .\events\models.py:36
 msgid "Current Balance"
 msgstr "الرصيد الحالي"
 
-#: .\accounts\admin.py:187
+#: .\accounts\admin.py:229
 msgid "Save the doctor first to see the card."
 msgstr "احفظ الطبيب اولا لترى البطاقة"
 
-#: .\accounts\admin.py:192
+#: .\accounts\admin.py:234
 #, fuzzy
 #| msgid "Image preview"
 msgid "Card Preview"
 msgstr "معاينة الصورة"
 
-#: .\accounts\admin.py:194
+#: .\accounts\admin.py:236
 msgid "Export Doctor Cards (PDF)"
 msgstr "استخراج بطاقات الاطباء (PDF)"
 
-#: .\accounts\admin.py:211
+#: .\accounts\admin.py:250
+msgid "Password (for new User)"
+msgstr "كلمة المرور"
+
+#: .\accounts\admin.py:267
+#, fuzzy
+#| msgid "Username and Password required for new cashier."
+msgid "Name and Password are required to create the account."
+msgstr "اسم المستخدم وكلمة المرور مطلوبان للكاشير الجديد."
+
+#: .\accounts\admin.py:272
+msgid ""
+"A user with a name that generates the username '{}' already exists. Please "
+"use a slightly different name."
+msgstr ""
+
+#: .\accounts\admin.py:276
+msgid "Cashier Password"
+msgstr "كلمة مرور الكاشير"
+
+#: .\accounts\admin.py:295
+#, fuzzy
+#| msgid "Username and Password required for new cashier."
+msgid "Name and Password required for new cashier."
+msgstr "اسم المستخدم وكلمة المرور مطلوبان للكاشير الجديد."
+
+#: .\accounts\admin.py:299
+#, fuzzy
+#| msgid "Username already exists."
+msgid "Username '{}' already exists."
+msgstr "اسم المستخدم موجود مسبقاً."
+
+#: .\accounts\admin.py:307
+msgid "Cashier"
+msgstr "كاشير"
+
+#: .\accounts\admin.py:308
+msgid "Cashiers"
+msgstr "كاشيرية"
+
+#: .\accounts\admin.py:323
+msgid ""
+"The Name field will also be used as the login username (spaces will be "
+"replaced by underscores)."
+msgstr ""
+"سيتم استخدام حقل الاسم أيضاً كاسم مستخدم لتسجيل الدخول (سيتم استبدال المسافات "
+"بشرطات سفلية _)."
+
+#: .\accounts\admin.py:325
 msgid "Access Control"
 msgstr "التحكم في الوصول"
 
-#: .\accounts\admin.py:213
-msgid ""
-"Vendor Admin has full access to dashboard and search. Vendor Cashier can "
-"only process transactions via QR code scan."
-msgstr "التاجر الادمن لديه صلاحية الوصول الكاملة الى لوحة التحكم والبحث. التاجر الكاشير يمكنه فقط معالجة المعاملات عبر مسح رمز الاستجابة السريعة."
+#: .\accounts\admin.py:327
+msgid "Control account activation and management fee settings."
+msgstr "التحكم في تفعيل الحساب وإعدادات رسوم الإدارة."
 
 #: .\accounts\models.py:7
 msgid "Admin"
 msgstr "الادارة"
 
-#: .\accounts\models.py:8 .\accounts\models.py:51 .\core\models.py:37
+#: .\accounts\models.py:8 .\accounts\models.py:53 .\core\models.py:37
 #: .\events\models.py:32
 msgid "Doctor"
 msgstr "الطبيب"
 
-#: .\accounts\models.py:9 .\accounts\models.py:88 .\core\models.py:21
+#: .\accounts\models.py:9 .\accounts\models.py:96 .\core\models.py:21
 #: .\core\models.py:36
 msgid "Vendor"
 msgstr "التاجر"
@@ -174,35 +253,32 @@ msgstr "النوع"
 msgid "Phone Number"
 msgstr "رقم الهاتف"
 
-#: .\accounts\models.py:20 .\accounts\models.py:30 .\accounts\models.py:42
-#: .\accounts\models.py:73 .\core\models.py:5
+#: .\accounts\models.py:20 .\accounts\models.py:30 .\accounts\models.py:44
+#: .\accounts\models.py:75 .\core\models.py:5
 #: .\env\Lib\site-packages\unfold\contrib\constance\templates\admin\constance\includes\results_list.html:19
 #: .\events\models.py:11
 msgid "Name"
 msgstr "الاسم"
 
-#: .\accounts\models.py:23 .\accounts\models.py:45
+#: .\accounts\models.py:23 .\accounts\models.py:47
 msgid "Specialty"
 msgstr "التخصص"
 
-#: .\accounts\models.py:24 .\events\models.py:19
-msgid "Specialties"
-msgstr "التخصصات"
-
-#: .\accounts\models.py:31 .\accounts\models.py:43 .\accounts\models.py:75
+#: .\accounts\models.py:31 .\accounts\models.py:45 .\accounts\models.py:77
 #: .\core\models.py:7
 msgid "Phone"
 msgstr "رقم الهاتف"
 
-#: .\accounts\models.py:34
+#: .\accounts\models.py:36 .\core\admin.py:10
 msgid "Delegate"
 msgstr "المندوب"
 
-#: .\accounts\models.py:35 .\events\models.py:18
+#: .\accounts\models.py:37 .\core\admin.py:11 .\events\models.py:18
+#: .\project\settings.py:290
 msgid "Delegates"
-msgstr "المندوبين"
+msgstr "المناديب"
 
-#: .\accounts\models.py:41 .\accounts\models.py:72
+#: .\accounts\models.py:43 .\accounts\models.py:74
 #: .\env\Lib\site-packages\unfold\contrib\guardian\templates\admin\guardian\model\obj_perms_manage_user.html:17
 #: .\env\Lib\site-packages\unfold\contrib\guardian\templates\unfold\guardian\group_form.html:33
 #: .\env\Lib\site-packages\unfold\contrib\guardian\templates\unfold\guardian\user_form.html:15
@@ -212,64 +288,78 @@ msgstr "المندوبين"
 msgid "User"
 msgstr "المستخدم"
 
-#: .\accounts\models.py:44 .\accounts\models.py:76 .\core\models.py:8
+#: .\accounts\models.py:46 .\accounts\models.py:78 .\core\models.py:8
 msgid "Email"
 msgstr "البريد الالكتروني"
 
-#: .\accounts\models.py:46
+#: .\accounts\models.py:48
 msgid "QR Code"
 msgstr "رمز الاستجابة السريعة"
 
-#: .\accounts\models.py:47 .\accounts\models.py:84 .\core\models.py:10
+#: .\accounts\models.py:49 .\accounts\models.py:92 .\core\models.py:10
 #: .\core\models.py:25 .\events\models.py:21 .\events\models.py:40
 msgid "Created At"
 msgstr "تاريخ الانشاء"
 
-#: .\accounts\models.py:48 .\accounts\models.py:85 .\core\models.py:11
+#: .\accounts\models.py:50 .\accounts\models.py:93 .\core\models.py:11
 #: .\events\models.py:22 .\events\models.py:41
 msgid "Updated At"
 msgstr "تاريخ التعديل"
 
-#: .\accounts\models.py:52 .\events\models.py:17 .\project\settings.py:232
+#: .\accounts\models.py:54 .\events\models.py:17 .\project\settings.py:236
 #: .\templates\admin\index.html:71
 msgid "Doctors"
 msgstr "الاطباء"
 
-#: .\accounts\models.py:69
+#: .\accounts\models.py:71
 msgid "Vendor Admin"
 msgstr "التاجر الادمن"
 
-#: .\accounts\models.py:70
+#: .\accounts\models.py:72
 msgid "Vendor Cashier"
 msgstr "التاجر الكاشير"
 
-#: .\accounts\models.py:74 .\core\models.py:6
+#: .\accounts\models.py:76 .\core\models.py:6
 msgid "Contact Person"
 msgstr "الشخص المسؤول"
 
-#: .\accounts\models.py:77 .\core\models.py:9
+#: .\accounts\models.py:79 .\core\models.py:9
 msgid "Address"
 msgstr "العنوان"
 
-#: .\accounts\models.py:78
+#: .\accounts\models.py:80
 msgid "Category"
 msgstr "التصنيف"
 
-#: .\accounts\models.py:80
+#: .\accounts\models.py:82
 msgid "Role"
 msgstr "الدور"
 
-#: .\accounts\models.py:81
+#: .\accounts\models.py:83
 msgid ""
 "Vendor Admin has full access, Cashier can only process transactions via QR "
 "scan"
-msgstr "التاجر الادمن لديه صلاحية الوصول الكاملة الى لوحة التحكم والبحث. التاجر الكاشير يمكنه فقط معالجة المعاملات عبر مسح رمز الاستجابة السريعة."
+msgstr ""
+"التاجر الادمن لديه صلاحية الوصول الكاملة الى لوحة التحكم والبحث. التاجر "
+"الكاشير يمكنه فقط معالجة المعاملات عبر مسح رمز الاستجابة السريعة."
 
-#: .\accounts\models.py:83
+#: .\accounts\models.py:87
+msgid "Parent Vendor"
+msgstr "التاجر الرئيسي"
+
+#: .\accounts\models.py:88
+msgid "If this is a cashier, specify the parent vendor it belongs to"
+msgstr "إذا كان هذا الكاشير تابعاً، حدد التاجر الرئيسي له"
+
+#: .\accounts\models.py:90
 msgid "Has Management Fee"
 msgstr "هل لديه رسوم ادارية"
 
-#: .\accounts\models.py:89 .\project\settings.py:237
+#: .\accounts\models.py:91 .\events\models.py:39
+msgid "Is Active"
+msgstr "نشط؟"
+
+#: .\accounts\models.py:97 .\project\settings.py:241
 msgid "Vendors"
 msgstr "الموردين"
 
@@ -282,8 +372,8 @@ msgid "Hadramout Admin"
 msgstr "ادارة حضرموت"
 
 #: .\core\admin_site.py:11 .\example\project\settings.py:219
-#: .\example\project\settings.py:222 .\project\settings.py:212
-#: .\project\settings.py:215
+#: .\example\project\settings.py:222 .\project\settings.py:216
+#: .\project\settings.py:219
 msgid "Dashboard"
 msgstr "لوحة التحكم"
 
@@ -311,13 +401,13 @@ msgstr "ملاحظات"
 msgid "Vendor Settlement"
 msgstr "تسوية التاجر"
 
-#: .\core\models.py:29 .\project\settings.py:271
+#: .\core\models.py:29 .\project\settings.py:280
 msgid "Vendor Settlements"
 msgstr "تسويات التجار"
 
-#: .\core\models.py:35 .\events\models.py:44
-msgid "Voucher"
-msgstr "القسيمة"
+#: .\core\models.py:35 .\events\models.py:45 .\project\settings.py:263
+msgid "Vouchers"
+msgstr "القسائم"
 
 #: .\core\models.py:38
 msgid "Created By"
@@ -359,7 +449,7 @@ msgstr "تسوية"
 msgid "Transaction"
 msgstr "عملية"
 
-#: .\core\models.py:59 .\project\settings.py:266
+#: .\core\models.py:59 .\project\settings.py:275
 #: .\templates\admin\index.html:35
 msgid "Transactions"
 msgstr "العمليات"
@@ -647,11 +737,11 @@ msgstr "التاريخ (بدون الوقت)"
 #: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1562
 #, python-format
 msgid ""
-"“%(value)s” value has an invalid format. It must be in YYYY-MM-DD "
-"HH:MM[:ss[.uuuuuu]][TZ] format."
+"“%(value)s” value has an invalid format. It must be in YYYY-MM-DD HH:MM[:ss[."
+"uuuuuu]][TZ] format."
 msgstr ""
-"القيمة “%(value)s” لها تنسيق غير صالح. يجب أن تكون بتنسيق YYYY-MM-DD "
-"HH:MM[:ss[.uuuuuu]][TZ]."
+"القيمة “%(value)s” لها تنسيق غير صالح. يجب أن تكون بتنسيق YYYY-MM-DD HH:MM[:"
+"ss[.uuuuuu]][TZ]."
 
 #: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1570
 #, python-format
@@ -678,11 +768,11 @@ msgstr "عدد عشري"
 #: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1864
 #, python-format
 msgid ""
-"“%(value)s” value has an invalid format. It must be in [DD] "
-"[[HH:]MM:]ss[.uuuuuu] format."
+"“%(value)s” value has an invalid format. It must be in [DD] [[HH:]MM:]ss[."
+"uuuuuu] format."
 msgstr ""
-"القيمة “%(value)s” لها تنسيق غير صالح. يجب أن تكون بتنسيق [DD] "
-"[[HH:]MM:]ss[.uuuuuu]."
+"القيمة “%(value)s” لها تنسيق غير صالح. يجب أن تكون بتنسيق [DD] [[HH:]MM:]ss[."
+"uuuuuu]."
 
 #: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1868
 msgid "Duration"
@@ -767,8 +857,8 @@ msgid ""
 "“%(value)s” value has an invalid format. It must be in HH:MM[:ss[.uuuuuu]] "
 "format."
 msgstr ""
-"القيمة “%(value)s” لها تنسيق غير صالح. يجب أن تكون بتنسيق "
-"HH:MM[:ss[.uuuuuu]]."
+"القيمة “%(value)s” لها تنسيق غير صالح. يجب أن تكون بتنسيق HH:MM[:ss[."
+"uuuuuu]]."
 
 #: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2530
 #, python-format
@@ -1048,13 +1138,11 @@ msgid "Unknown"
 msgstr "غير معروف"
 
 #: .\env\Lib\site-packages\django\forms\widgets.py:867
-#: .\env\Lib\site-packages\unfold\contrib\filters\admin\choice_filters.py:100
 #: .\env\Lib\site-packages\unfold\contrib\filters\admin\choice_filters.py:108
 msgid "Yes"
 msgstr "نعم"
 
 #: .\env\Lib\site-packages\django\forms\widgets.py:868
-#: .\env\Lib\site-packages\unfold\contrib\filters\admin\choice_filters.py:101
 #: .\env\Lib\site-packages\unfold\contrib\filters\admin\choice_filters.py:109
 msgid "No"
 msgstr "لا"
@@ -1544,8 +1632,8 @@ msgstr "لا يوجد %(verbose_name_plural)s متاح"
 #: .\env\Lib\site-packages\django\views\generic\dates.py:680
 #, python-format
 msgid ""
-"Future %(verbose_name_plural)s not available because "
-"%(class_name)s.allow_future is False."
+"Future %(verbose_name_plural)s not available because %(class_name)s."
+"allow_future is False."
 msgstr ""
 "%(verbose_name_plural)s المستقبلية غير متاحة لأن %(class_name)s.allow_future "
 "معطل."
@@ -2530,10 +2618,6 @@ msgstr "حذف %(model)s المحدد"
 msgid "Add row"
 msgstr "إضافة صف"
 
-#: .\env\Lib\site-packages\unfold\templatetags\unfold.py:705
-msgid "Welcome"
-msgstr "مرحباً"
-
 #: .\env\Lib\site-packages\unfold\templatetags\unfold_list.py:132
 msgid "Select all objects on this page for an action"
 msgstr "تحديد جميع الكائنات في هذه الصفحة لإجراء عملية"
@@ -2549,21 +2633,19 @@ msgstr "اختر العملة"
 
 #: .\events\models.py:8
 msgid "Cash"
-msgstr ""
+msgstr "نقدي"
 
 #: .\events\models.py:9
 msgid "Deferred"
-msgstr ""
+msgstr "آجل"
 
 #: .\events\models.py:13 .\events\models.py:34
 msgid "Company"
 msgstr "الشركة"
 
 #: .\events\models.py:14
-#, fuzzy
-#| msgid "payments"
 msgid "Payment Type"
-msgstr "المدفوعات"
+msgstr "طريقة الدفع"
 
 #: .\events\models.py:15
 msgid "Voucher Value"
@@ -2577,7 +2659,7 @@ msgstr "أيام صلاحية القسيمة"
 msgid "Event"
 msgstr "الندوة"
 
-#: .\events\models.py:26 .\project\settings.py:249
+#: .\events\models.py:26 .\project\settings.py:258
 msgid "Events"
 msgstr "الندوات"
 
@@ -2593,19 +2675,15 @@ msgstr "تاريخ الإصدار"
 msgid "Expiry Date"
 msgstr "تاريخ الانتهاء"
 
-#: .\events\models.py:39
-msgid "Is Active"
-msgstr "نشط؟"
+#: .\events\models.py:44
+msgid "Voucher"
+msgstr "القسيمة"
 
-#: .\events\models.py:45 .\project\settings.py:254
-msgid "Vouchers"
-msgstr "القسائم"
-
-#: .\example\project\settings.py:125 .\project\settings.py:136
+#: .\example\project\settings.py:125 .\project\settings.py:135
 msgid "English"
 msgstr "الإنجليزية"
 
-#: .\example\project\settings.py:126 .\project\settings.py:135
+#: .\example\project\settings.py:126 .\project\settings.py:134
 msgid "Arabic"
 msgstr "العربية"
 
@@ -2713,7 +2791,7 @@ msgstr "تخصيص المظهر"
 msgid "Instagram Images"
 msgstr "صور إنستغرام"
 
-#: .\example\project\settings.py:386 .\project\settings.py:227
+#: .\example\project\settings.py:386 .\project\settings.py:231
 msgid "Users"
 msgstr "المستخدمين"
 
@@ -2802,19 +2880,23 @@ msgstr "طلبات داخل المطعم"
 msgid "Revenue (30d)"
 msgstr "الإيرادات (30 يوماً)"
 
-#: .\project\settings.py:222
+#: .\project\settings.py:226
 msgid "Accounts"
 msgstr "الحسابات"
 
-#: .\project\settings.py:244
+#: .\project\settings.py:246
+msgid "Doctor Registration QR"
+msgstr ""
+
+#: .\project\settings.py:253
 msgid "Events Management"
 msgstr "إدارة الفعاليات"
 
-#: .\project\settings.py:261
+#: .\project\settings.py:270
 msgid "Transactions & Finance"
-msgstr "العمليات والمالية"
+msgstr "العمليات والماليات"
 
-#: .\project\settings.py:276
+#: .\project\settings.py:285
 msgid "Pharma Companies"
 msgstr "شركات الأدوية"
 
@@ -2855,6 +2937,42 @@ msgstr "الموردون المشاركون"
 #: .\templates\admin\index.html:98
 msgid "Top Vendors"
 msgstr "أفضل الموردين"
+
+#~ msgid "Username (for new User)"
+#~ msgstr "اسم المستخدم"
+
+#~ msgid ""
+#~ "You must either select an existing User or provide a Username and "
+#~ "Password to auto-create one."
+#~ msgstr ""
+#~ "يجب اختيار مستخدم مسجل أو كتابة اسم مستخدم وكلمة مرور لإنشاء حساب جديد "
+#~ "تلقائياً."
+
+#, fuzzy
+#~| msgid "%(model_name)s with this %(field_label)s already exists."
+#~ msgid "A user with this username already exists."
+#~ msgstr "%(model_name)s بهذا الـ %(field_label)s موجود بالفعل."
+
+#~ msgid "Cashier Username"
+#~ msgstr "اسم مستخدم الكاشير"
+
+#~ msgid "User Account"
+#~ msgstr "حساب المستخدم"
+
+#~ msgid ""
+#~ "To create a new linked Vendor User, explicitly set a Username and "
+#~ "Password here."
+#~ msgstr "لإنشاء مستخدم تاجر مرتبط، اكتب اسم المستخدم وكلمة المرور هنا."
+
+#~ msgid ""
+#~ "Vendor Admin has full access to dashboard and search. Vendor Cashier can "
+#~ "only process transactions via QR code scan."
+#~ msgstr ""
+#~ "التاجر الادمن لديه صلاحية الوصول الكاملة الى لوحة التحكم والبحث. التاجر "
+#~ "الكاشير يمكنه فقط معالجة المعاملات عبر مسح رمز الاستجابة السريعة."
+
+#~ msgid "Welcome"
+#~ msgstr "مرحباً"
 
 #~ msgid ""
 #~ "Items must be selected in order to perform actions on them. No items have "

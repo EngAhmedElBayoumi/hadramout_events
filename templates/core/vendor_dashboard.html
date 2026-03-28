@@ -3,89 +3,258 @@
 {% block title %}لوحة تحكم التاجر{% endblock %}
 
 {% block content %}
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
-    <h2>اهلاً, {{ vendor.name }}</h2>
+<style>
+    .dashboard-header {
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        margin-bottom: 20px; 
+    }
+    .header-actions {
+        display: flex; 
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    .kpi-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+    .kpi-card {
+        text-align: center; 
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 0 -10px; /* Slight negative margin to allow more space on mobile */
+        padding: 0 10px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 650px; /* Ensures table doesn't squash too much */
+    }
+    th, td {
+        padding: 12px 8px;
+        text-align: right;
+        font-size: 0.9rem;
+    }
+    @media (max-width: 768px) {
+        .dashboard-header {
+            flex-direction: column;
+            text-align: center;
+        }
+        .header-actions {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .header-actions .btn {
+            width: 100%;
+        }
+        .kpi-container {
+            grid-template-columns: 1fr;
+        }
+        .dashboard-btn {
+            font-size: 0.9rem !important;
+            padding: 12px 15px !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .dashboard-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        #dashboardSearch {
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+        #dashboardSearch:focus {
+            border-color: #800000;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(128,0,0,0.1);
+        }
+    }
+</style>
+
+<div class="dashboard-header" style="margin-bottom: 10px;">
+    <h2 style="font-weight: 700; color: #333;">أهلاً، {{ vendor.name }} 👋</h2>
+    <div class="header-actions" style="margin-top: 10px;">
+        <!-- Actions removed from here to be moved near search -->
+    </div>
+</div>
+
+<div class="actions-group" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; background: #fff; padding: 15px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+    <div style="position: relative; flex: 1;">
+        <input type="text" id="dashboardSearch" placeholder="ابحث في سجلاتك..." style="width: 100%; padding: 10px 40px 10px 15px; border: 1px solid #eee; border-radius: 10px; font-size: 0.95rem; background: #fdfdfd;">
+        <span style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #aaa;">🔍</span>
+    </div>
     <div style="display: flex; gap: 10px;">
-        <a href="{% url 'transaction_create' %}" class="btn" style="display: flex; align-items: center; gap: 5px;">➕ تسجيل معاملة</a>
+        <a href="{% url 'transaction_create' %}" class="btn dashboard-btn" style="background-color: #800000; flex: 1; border-radius: 10px; font-weight: bold;">
+            <span>➕</span> تسجيل معاملة
+        </a>
+        <a href="{% url 'cashier_create' %}" class="btn dashboard-btn" style="background-color: #444; flex: 1; border-radius: 10px; font-weight: bold;">
+            <span>👤</span> إضافة كاشير
+        </a>
     </div>
 </div>
 
 <!-- KPI Cards -->
-<div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 30px;">
-    <div class="card" style="flex: 1; min-width: 200px; text-align: center; border-top: 4px solid #007bff;">
+<div class="kpi-container">
+    <div class="card kpi-card" style="border-top: 4px solid #007bff;">
         <h4 style="color: #666; margin-bottom: 5px; font-size: 0.9rem;">إجمالي أرباح المبيعات</h4>
-        <p style="font-size: 1.8rem; font-weight: bold; color: #007bff; margin: 0;">{{ total_sales|floatformat:2 }} ج.م</p>
+        <p style="font-size: 1.6rem; font-weight: bold; color: #007bff; margin: 0;">{{ total_sales|floatformat:2 }} ج.م</p>
         <small style="color: #888;">{{ total_transactions }} معاملة</small>
     </div>
-    <div class="card" style="flex: 1; min-width: 200px; text-align: center; border-top: 4px solid #28a745;">
+    <div class="card kpi-card" style="border-top: 4px solid #28a745;">
         <h4 style="color: #666; margin-bottom: 5px; font-size: 0.9rem;">إجمالي ما تم استلامه</h4>
-        <p style="font-size: 1.8rem; font-weight: bold; color: #28a745; margin: 0;">{{ total_paid|floatformat:2 }} ج.م</p>
+        <p style="font-size: 1.6rem; font-weight: bold; color: #28a745; margin: 0;">{{ total_paid|floatformat:2 }} ج.م</p>
     </div>
-    <div class="card" style="flex: 1; min-width: 200px; text-align: center; border-top: 4px solid #dc3545;">
+    <div class="card kpi-card" style="border-top: 4px solid #dc3545;">
         <h4 style="color: #666; margin-bottom: 5px; font-size: 0.9rem;">الرصيد المتبقي (لدى المنصة)</h4>
-        <p style="font-size: 1.8rem; font-weight: bold; color: #dc3545; margin: 0;">{{ total_pending|floatformat:2 }} ج.م</p>
+        <p style="font-size: 1.6rem; font-weight: bold; color: #dc3545; margin: 0;">{{ total_pending|floatformat:2 }} ج.م</p>
     </div>
 </div>
 
-<div style="display: grid; grid-template-columns: 1fr; gap: 30px;">
+<div style="display: flex; flex-direction: column; gap: 20px;">
     <!-- Recent Transactions -->
-    <div>
-        <h3 style="border-bottom: 2px solid #800000; padding-bottom: 10px;">🛒 آخر المبيعات (معاملات الأطباء)</h3>
+
+    <!-- Recent Transactions -->
+    <section>
+        <h3 style="border-bottom: 2px solid #800000; padding-bottom: 10px; margin-bottom: 15px;">🛒 آخر المبيعات</h3>
         <div class="card" style="padding: 0; overflow: hidden;">
-            <table style="width: 100%; border-collapse: collapse;">
-                <thead>
-                    <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
-                        <th style="padding: 12px; text-align: right;">رقم الفاتورة</th>
-                        <th style="padding: 12px; text-align: right;">الطبيب</th>
-                        <th style="padding: 12px; text-align: right;">المبلغ</th>
-                        <th style="padding: 12px; text-align: right;">التاريخ</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for trx in recent_transactions %}
-                    <tr style="border-bottom: 1px solid #dee2e6;">
-                        <td style="padding: 12px; font-size: 0.75rem; color: #666;">{{ trx.invoice_number|truncatechars:12 }}</td>
-                        <td style="padding: 12px; font-weight: bold;">{{ trx.doctor.name }}</td>
-                        <td style="padding: 12px;">{{ trx.amount_spent|floatformat:2 }} ج.م</td>
-                        <td style="padding: 12px; font-size: 0.85rem; color: #666;">{{ trx.transaction_date|date:"Y-m-d" }}</td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="4" style="padding: 20px; text-align: center; color: #888;">لا توجد معاملات حديثة.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+                            <th>رقم الفاتورة</th>
+                            <th>الطبيب</th>
+                            <th>المبلغ</th>
+                            <th>بواسطة</th>
+                            <th>التاريخ والوقت</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for trx in recent_transactions %}
+                        <tr style="border-bottom: 1px solid #dee2e6;">
+                            <td style="font-size: 0.8rem; color: #666;">{{ trx.invoice_number|truncatechars:10 }}</td>
+                            <td style="font-weight: bold;">{{ trx.doctor.name }}</td>
+                            <td>{{ trx.amount_spent|floatformat:2 }} ج.م</td>
+                            <td>
+                                {% if trx.created_by.vendor_profile.role == 'CASHIER' %}
+                                    <span style="color: #666; font-size: 0.8rem;">كاشير: {{ trx.created_by.username }}</span>
+                                {% else %}
+                                    <span style="color: #007bff; font-size: 0.8rem;">البائع الرئيسي</span>
+                                {% endif %}
+                            </td>
+                            <td style="font-size: 0.8rem; color: #666;">{{ trx.transaction_date|date:"Y-m-d H:i" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" style="padding: 30px; text-align: center; color: #888;">لا توجد معاملات حديثة.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
+    </section>
+
+    <!-- Cashier Accounts -->
+    <section>
+        <h3 style="border-bottom: 2px solid #28a745; padding-bottom: 10px; margin-bottom: 15px;">👥 حسابات الكاشير</h3>
+        <div class="card" style="padding: 0; overflow: hidden;">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr style="background: #f1f8f1; border-bottom: 2px solid #c3e6cb;">
+                            <th>اسم المستخدم</th>
+                            <th>الاسم</th>
+                            <th>الهاتف</th>
+                            <th>تاريخ الإنشاء</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cashier in vendor.cashiers.all %}
+                        <tr style="border-bottom: 1px solid #dee2e6;">
+                            <td style="font-weight: bold;">{{ cashier.user.username }}</td>
+                            <td>{{ cashier.name }}</td>
+                            <td>{{ cashier.phone }}</td>
+                            <td style="font-size: 0.8rem; color: #666;">{{ cashier.created_at|date:"Y-m-d" }}</td>
+                            <td>
+                                <form action="{% url 'cashier_delete' cashier.id %}" method="post" style="display: inline;" onsubmit="return confirm('هل أنت متأكد من حذف هذا الحساب؟');">
+                                    {% csrf_token %}
+                                    <button type="submit" style="background: none; border: none; color: #dc3545; cursor: pointer; padding: 0; font-weight: bold;">🗑️ حذف</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" style="padding: 30px; text-align: center; color: #888;">لم تقم بإنشاء أي حسابات كاشير بعد.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
 
     <!-- Settlement History -->
-    <div>
-        <h3 style="border-bottom: 2px solid #28a745; padding-bottom: 10px;">💰 سجل المدفوعات المستلمة (التسويات)</h3>
+    <section>
+        <h3 style="border-bottom: 2px solid #6c757d; padding-bottom: 10px; margin-bottom: 15px;">💰 سجل المدفوعات</h3>
         <div class="card" style="padding: 0; overflow: hidden;">
-            <table style="width: 100%; border-collapse: collapse;">
-                <thead>
-                    <tr style="background: #f1f8f1; border-bottom: 2px solid #c3e6cb;">
-                        <th style="padding: 12px; text-align: right;">المبلغ المستلم</th>
-                        <th style="padding: 12px; text-align: right;">تاريخ الاستلام</th>
-                        <th style="padding: 12px; text-align: right;">ملاحظات</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for settlement in settlements %}
-                    <tr style="border-bottom: 1px solid #dee2e6;">
-                        <td style="padding: 12px; font-weight: bold; color: #28a745;">{{ settlement.amount_settled|floatformat:2 }} ج.م</td>
-                        <td style="padding: 12px;">{{ settlement.settlement_date }}</td>
-                        <td style="padding: 12px; color: #666; font-size: 0.9rem;">{{ settlement.notes|default:"-" }}</td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="3" style="padding: 20px; text-align: center; color: #888;">لم يتم استلام أي دفعات بعد.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+                            <th>المبلغ المستلم</th>
+                            <th>تاريخ الاستلام</th>
+                            <th>ملاحظات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for settlement in settlements %}
+                        <tr style="border-bottom: 1px solid #dee2e6;">
+                            <td style="font-weight: bold; color: #28a745;">{{ settlement.amount_settled|floatformat:2 }} ج.م</td>
+                            <td>{{ settlement.settlement_date|date:"Y-m-d" }}</td>
+                            <td style="color: #666; font-size: 0.85rem;">{{ settlement.notes|default:"-" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3" style="padding: 30px; text-align: center; color: #888;">لم يتم استلام أي دفعات بعد.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
+    </section>
 </div>
+
+<script>
+    document.getElementById('dashboardSearch').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let tables = document.querySelectorAll('table');
+        
+        tables.forEach(table => {
+            let trs = table.querySelectorAll('tbody tr');
+            trs.forEach(tr => {
+                let text = tr.textContent.toLowerCase();
+                tr.style.display = text.includes(filter) ? '' : 'none';
+            });
+        });
+    });
+</script>
 {% endblock %}

@@ -6,13 +6,14 @@ from django.core.mail import send_mail
 from .models import User, Doctor, Vendor, Specialty, Delegate
 from .utils import generate_doctor_card_pdf
 from .forms import UserCreationForm
-from events.models import Voucher, Event
+from events.models import Voucher, Event, VoucherTransfer
 from core.models import Transaction
-from unfold.admin import ModelAdmin, TabularInline
+from unfold.admin import ModelAdmin, TabularInline, StackedInline
 from unfold.decorators import action
 from django.utils.translation import gettext_lazy as _
 from django.template.response import TemplateResponse
 from django.conf import settings
+from unfold.widgets import UnfoldAdminPasswordInput
 # import user
 
 
@@ -24,7 +25,35 @@ class SpecialtyAdmin(ModelAdmin):
 
 @admin.register(Delegate)
 class DelegateAdmin(ModelAdmin):
+    list_display = ('name', 'phone', 'get_companies_count', 'get_specialties_count')
     search_fields = ('name', 'phone')
+    filter_horizontal = ('companies', 'specialties')
+
+    def get_companies_count(self, obj):
+        count = obj.companies.count()
+        return _("{} Companies").format(count) if count > 0 else _("General (All Companies)")
+    get_companies_count.short_description = _("Companies")
+
+    def get_specialties_count(self, obj):
+        count = obj.specialties.count()
+        return _("{} Specialties").format(count) if count > 0 else _("General (All Specialties)")
+    get_specialties_count.short_description = _("Specialties")
+
+class DoctorProfileInline(StackedInline):
+    model = Doctor
+    extra = 1
+    max_num = 1
+    can_delete = False
+    verbose_name = _("Doctor Profile")
+    verbose_name_plural = _("Doctor Profiles")
+    tab = True
+    model = Doctor
+    extra = 1
+    max_num = 1
+    can_delete = False
+    verbose_name = _("Doctor Profile")
+    verbose_name_plural = _("Doctor Profiles")
+    tab = True
 
 from django.urls import reverse
 from django.utils.html import format_html
@@ -49,6 +78,19 @@ class CustomUserAdmin(UserAdmin, ModelAdmin):
             'fields': ('username', 'password1', 'password2', 'email', 'phone', 'type'),
         }),
     )
+    
+    inlines = [DoctorProfileInline]
+
+    def get_inline_instances(self, request, obj=None):
+        inline_instances = []
+        for inline_class in self.inlines:
+            inline = inline_class(self.model, self.admin_site)
+            if obj:
+                if isinstance(inline, DoctorProfileInline) and obj.type == 'DOCTOR':
+                    inline_instances.append(inline)
+            else:
+                inline_instances.append(inline)
+        return inline_instances
     
     # Alternatively, use exclude to remove usable_password if it appears
     # exclude = ('usable_password',)
@@ -118,9 +160,20 @@ class EventInline(TabularInline):
     extra = 0
     tab = True
 
+class VoucherTransferInline(TabularInline):
+    model = VoucherTransfer
+    fk_name = 'from_doctor'
+    extra = 0
+    can_delete = False
+    readonly_fields = ('to_doctor', 'voucher', 'transfer_date')
+    fields = ('to_doctor', 'voucher', 'transfer_date')
+    verbose_name = "تحويل صادر"
+    verbose_name_plural = "سجل التحويلات الصادرة"
+    tab = True
+
 @admin.register(Doctor)
 class DoctorAdmin(ModelAdmin):
-    list_display = ('name', 'phone', 'specialty')
+    list_display = ('name', 'phone', 'specialty', 'get_current_balance')
     list_filter = ('specialty',)
     search_fields = ('name', 'phone', 'email')
     autocomplete_fields = ('user', 'specialty')
@@ -128,7 +181,7 @@ class DoctorAdmin(ModelAdmin):
     
     readonly_fields = ('get_current_balance', 'card_preview_tab')
     
-    inlines = [VoucherInline, TransactionInline, EventInline]
+    inlines = [VoucherInline, TransactionInline, EventInline, VoucherTransferInline]
     
     tab_groups = (
         (
@@ -143,6 +196,7 @@ class DoctorAdmin(ModelAdmin):
             [
                 (_("Balance Summary"), ("get_current_balance",)),
                 (_("Vouchers History"), ("VoucherInline",)),
+                (_("Transfers History"), ("VoucherTransferInline",)),
                 (_("Purchases History"), ("TransactionInline",)),
             ],
         ),
@@ -198,18 +252,149 @@ class DoctorAdmin(ModelAdmin):
         response['Content-Disposition'] = 'attachment; filename="doctor_cards.pdf"'
         return response
 
+from django import forms
+from django.contrib.auth import get_user_model
+
+User = getattr(settings, 'AUTH_USER_MODEL', 'accounts.User')
+UserObject = get_user_model()
+
+class VendorAdminForm(forms.ModelForm):
+    vendor_password = forms.CharField(label=_('Password (for new User)'), widget=UnfoldAdminPasswordInput, required=False)
+
+    class Meta:
+        model = Vendor
+        fields = ('name', 'contact_person', 'phone', 'email', 'address', 'category', 'role', 'has_management_fee', 'is_active')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk and getattr(self.instance, 'user', None):
+            self.fields['vendor_password'].disabled = True
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if not self.instance.pk:
+            name = cleaned_data.get('name')
+            v_pass = cleaned_data.get('vendor_password')
+            if not name or not v_pass:
+                raise forms.ValidationError(_("Name and Password are required to create the account."))
+            
+            # Derived username
+            generated_username = name.strip().replace(' ', '_')
+            if UserObject.objects.filter(username=generated_username).exists():
+                raise forms.ValidationError(_("A user with a name that generates the username '{}' already exists. Please use a slightly different name.").format(generated_username))
+        return cleaned_data
+
+class CashierInlineForm(forms.ModelForm):
+    cashier_password = forms.CharField(label=_("Cashier Password"), widget=UnfoldAdminPasswordInput, required=False)
+
+    class Meta:
+        model = Vendor
+        fields = ('name', 'contact_person', 'phone', 'is_active')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk and getattr(self.instance, 'user', None):
+            self.fields['cashier_password'].disabled = True
+            self.fields['contact_person'].required = False
+            self.fields['phone'].required = False
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if not self.instance.pk:
+            name = cleaned_data.get('name')
+            c_pass = cleaned_data.get('cashier_password')
+            if not name or not c_pass:
+                raise forms.ValidationError(_("Name and Password required for new cashier."))
+            
+            generated_username = name.strip().replace(' ', '_')
+            if UserObject.objects.filter(username=generated_username).exists():
+                raise forms.ValidationError(_("Username '{}' already exists.").format(generated_username))
+        return cleaned_data
+
+class CashierInline(StackedInline):
+    model = Vendor
+    fk_name = 'parent_vendor'
+    form = CashierInlineForm
+    extra = 1
+    verbose_name = _('Cashier')
+    verbose_name_plural = _('Cashiers')
+    fields = ('name', 'contact_person', 'phone', 'cashier_password', 'is_active')
+
 @admin.register(Vendor)
 class VendorAdmin(ModelAdmin):
-    list_display = ('name', 'contact_person', 'phone', 'category', 'role', 'has_management_fee')
-    list_filter = ('category', 'role')
+    form = VendorAdminForm
+    list_display = ('name', 'contact_person', 'phone', 'category', 'is_active', 'has_management_fee')
+    list_filter = ('category', 'is_active', 'has_management_fee')
     search_fields = ('name', 'contact_person')
-    autocomplete_fields = ('user',)
+    autocomplete_fields = ('parent_vendor',)
+    inlines = [CashierInline]
+
     fieldsets = (
         (_('Basic Information'), {
-            'fields': ('user', 'name', 'contact_person', 'phone', 'email', 'address', 'category')
+            'fields': ('name', 'vendor_password', 'contact_person', 'phone', 'email', 'address', 'category'),
+            'description': _('The Name field will also be used as the login username (spaces will be replaced by underscores).')
         }),
         (_('Access Control'), {
-            'fields': ('role', 'has_management_fee'),
-            'description': _('Vendor Admin has full access to dashboard and search. Vendor Cashier can only process transactions via QR code scan.')
+            'fields': ('is_active', 'has_management_fee'),
+            'description': _('Control account activation and management fee settings.')
         }),
     )
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(role='ADMIN')
+
+    def save_model(self, request, obj, form, change):
+        if not change:  # Creating new Vendor
+            if not obj.user_id:
+                generated_username = obj.name.strip().replace(' ', '_')
+                user = UserObject.objects.create_user(
+                    username=generated_username,
+                    password=form.cleaned_data['vendor_password'],
+                    email=obj.email,
+                    phone=obj.phone,
+                    type='VENDOR',
+                    is_active=obj.is_active
+                )
+                obj.user = user
+            obj.role = 'ADMIN'
+        else:  # Updating existing Vendor
+            if obj.user:
+                obj.user.is_active = obj.is_active
+                obj.user.save()
+        super().save_model(request, obj, form, change)
+
+    def save_formset(self, request, form, formset, change):
+        if formset.model == Vendor:
+            instances = formset.save(commit=False)
+            for instance in instances:
+                if not getattr(instance, 'user_id', None):
+                    for f in formset.forms:
+                        if f.instance == instance:
+                            c_pass = f.cleaned_data.get('cashier_password')
+                            generated_username = instance.name.strip().replace(' ', '_')
+                            user = UserObject.objects.create_user(
+                                username=generated_username,
+                                password=c_pass,
+                                type='VENDOR',
+                                first_name=instance.name,
+                                is_active=instance.is_active
+                            )
+                            instance.user = user
+                            instance.role = 'CASHIER'
+                            if not instance.email:
+                                instance.email = f"{generated_username}@hadramoutevents.com"
+                            if not getattr(instance, 'category', None):
+                                instance.category = getattr(instance.parent_vendor, 'category', 'Cashier')
+                            break
+                else:
+                    # Update cashier user active status
+                    if instance.user:
+                        instance.user.is_active = instance.is_active
+                        instance.user.save()
+                instance.save()
+            formset.save_m2m()
+            for obj in formset.deleted_objects:
+                obj.delete()
+        else:
+            super().save_formset(request, form, formset, change)

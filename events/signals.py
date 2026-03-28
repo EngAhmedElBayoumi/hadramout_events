@@ -56,13 +56,15 @@ def send_voucher_notification(sender, instance, created, **kwargs):
 شكراً لاستخدامكم نظام حضرموت ميت غمر.
         """
 
+        import logging
+        logger = logging.getLogger(__name__)
         try:
             send_mail(
                 subject,
                 message,
                 settings.DEFAULT_FROM_EMAIL,
                 [doctor.email],
-                fail_silently=True,
+                fail_silently=False,
             )
-        except Exception:
-            pass
+        except Exception as e:
+            logger.error(f"Failed to send voucher notification email to {doctor.email}: {str(e)}")

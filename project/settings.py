@@ -33,8 +33,7 @@ SECRET_KEY = 'django-insecure-xdsfg(g@)offflh#gga$9kq0369i^&_2ox+4c+4xsl@&z=p18&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -161,7 +160,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'accounts.User'
 
 AUTHENTICATION_BACKENDS = [
-    'accounts.backends.EmailOrUsernameBackend',
+    'accounts.backends.EmailOrUsernameModelBackend',
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 
@@ -285,6 +285,11 @@ UNFOLD = {
                         "title": _("Pharma Companies"),
                         "icon": "business",
                         "link": reverse_lazy("admin:core_pharmaceuticalcompany_changelist"),
+                    },
+                    {
+                        "title": _("Delegates"),
+                        "icon": "hail",
+                        "link": reverse_lazy("admin:accounts_delegate_changelist"),
                     },
                 ],
             },

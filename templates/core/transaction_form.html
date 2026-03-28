@@ -1,680 +1,614 @@
 {% extends "base.html" %}
-{% load i18n %}
 
-{% block title %}تسجيل معاملة جديدة{% endblock %}
+{% block title %}تسجيل معاملة{% endblock %}
 
 {% block content %}
-<div style="max-width: 700px; margin: 0 auto;" {% if is_cashier %}data-is-cashier="true"{% endif %}>
-    <h2 style="margin-bottom: 20px;">تسجيل معاملة جديدة</h2>
-    
-    <div class="card">
-        <!-- Search / QR Scan Section -->
-        <div id="search-section">
-            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                <!-- QR Scan Button -->
-                <button type="button" class="btn" onclick="startQRScan()" style="background: #28a745; display: flex; align-items: center; gap: 5px; white-space: nowrap;">
-                    📷 مسح QR Code
-                </button>
-            </div>
+<style>
+/* CSS styles for layout, loader, floating invoice, etc. */
+.main-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+.form-section {
+    flex: 1 1 300px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+.qr-section {
+    flex: 1 1 300px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#reader { width: 100%; max-width: 400px; margin: 0 auto; }
+#doctor-info {
+    margin-top: 20px;
+    padding: 15px;
+    background: #e9ecef;
+    border-radius: 5px;
+    display: none;
+    width: 100%;
+}
+.scan-btn {
+    background-color: var(--primary-color); color: white; border: none;
+    padding: 10px 20px; border-radius: 5px; cursor: pointer;
+    font-size: 16px; margin-bottom: 15px; width: 100%; max-width: 400px;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.scan-btn:hover { background-color: #600000; }
 
-            <!-- QR Scanner Container (hidden by default) -->
-            <div id="qr-scanner-container" style="display: none; margin-bottom: 20px;">
-                <div style="background: #000; border-radius: 12px; overflow: hidden; position: relative; border: 2px solid #28a745;">
-                    <!-- The div where html5-qrcode will render -->
-                    <div id="qr-reader" style="width: 100%;"></div>
-                </div>
-                <button type="button" onclick="stopQRScan()" class="btn" style="width: 100%; margin-top: 10px; background: #dc3545;">إيقاف الكاميرا</button>
-            </div>
+/* Loader Overlay */
+#loader-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.7); z-index: 9999;
+    display: none; align-items: center; justify-content: center;
+    flex-direction: column; color: white;
+}
+.spinner {
+    width: 50px; height: 50px;
+    border: 5px solid rgba(255,255,255,0.3);
+    border-radius: 50%; border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+    margin-bottom: 20px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 
-            <div id="search-section-manual" style="margin-bottom: 15px;">
-                <label style="font-weight: bold; display: block; margin-bottom: 8px;">أو ابحث عن الطبيب</label>
-                <div style="display: flex; gap: 10px;">
-                    <input type="text" id="doctor-search" class="form-control" placeholder="ادخل اسم الطبيب أو رقم الهاتف" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px;" onkeyup="if(event.key==='Enter') searchDoctor()">
-                    <button type="button" class="btn" onclick="searchDoctor()">بحث</button>
-                </div>
+/* OTP Popup */
+#otp-popup {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5); z-index: 1000;
+    display: none; align-items: center; justify-content: center;
+}
+.otp-content {
+    background: white; padding: 30px; border-radius: 10px;
+    text-align: center; max-width: 400px; width: 90%;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+.otp-input {
+    width: 60%; padding: 10px; font-size: 24px; text-align: center;
+    letter-spacing: 5px; margin: 20px 0; border: 2px solid #ccc; border-radius: 5px;
+}
+.otp-btn {
+    background: var(--primary-color); color: white; border: none; padding: 10px 20px;
+    border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px;
+}
+.otp-btn:hover { background: #600000; }
+
+/* Submitting State for OTP Button */
+.otp-btn.submitting {
+    background: #6c757d; cursor: not-allowed; opacity: 0.8;
+}
+
+/* Success Invoice Popup */
+#invoice-popup {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8); z-index: 2000;
+    display: none; align-items: center; justify-content: center;
+}
+.invoice-content {
+    background: white; padding: 40px; border-radius: 15px;
+    width: 90%; max-width: 500px; text-align: center;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3); position: relative;
+    animation: slideDown 0.5s ease-out;
+}
+@keyframes slideDown {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+.success-icon {
+    width: 80px; height: 80px; background: #28a745; color: white;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 40px; margin: 0 auto 20px; box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+}
+.invoice-details { text-align: right; margin-top: 20px; border-top: 2px dashed #eee; padding-top: 20px; }
+.invoice-row { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 1.1rem; }
+.invoice-total {
+    font-size: 1.4rem; font-weight: bold; color: #dc3545;
+    border-top: 2px solid #eee; padding-top: 15px; margin-top: 15px;
+}
+.print-btn {
+    background: #007bff; color: white; border: none; padding: 12px 25px;
+    border-radius: 5px; font-size: 1.1rem; cursor: pointer; margin-top: 20px; flex: 1;
+}
+.new-trans-btn {
+    background: #6c757d; color: white; border: none; padding: 12px 25px;
+    border-radius: 5px; font-size: 1.1rem; cursor: pointer; margin-top: 20px; flex: 1;
+}
+.btn-group { display: flex; gap: 10px; margin-top: 20px; }
+</style>
+
+<!-- Full Screen Loader -->
+<div id="loader-overlay">
+    <div class="spinner"></div>
+    <h3 id="loader-text">جاري معالجة المعاملة...</h3>
+    <p>يرجى الانتظار وعدم إغلاق الصفحة</p>
+</div>
+
+<!-- OTP Popup -->
+<div id="otp-popup">
+    <div class="otp-content">
+        <h3 style="color: #333; margin-bottom: 10px;">🔒 التحقق الأمني مطلوب</h3>
+        <p style="color: #666; font-size: 0.9rem;">
+            تم إرسال رمز تحقق (OTP) إلى البريد الإلكتروني الخاص بالطبيب <br> 
+            <b id="display-email"></b> <br>
+            <span style="color: #d9534f; font-weight: bold; display: block; margin-top: 5px;">⚠️ الرمز صالح لمدة 10 دقائق فقط.</span>
+        </p>
+        <input type="text" id="otp_code_input" class="otp-input" placeholder="000000" maxlength="6" autocomplete="off">
+        <button id="verify_otp_btn" class="otp-btn" onclick="verifyOTP()">تأكيد وإتمام العملية</button>
+        <p id="otp-error" style="color: red; margin-top: 10px; display: none;"></p>
+        
+        <div style="margin-top: 15px;">
+            <button id="resend-otp-link" style="background: none; border: none; color: #007bff; text-decoration: underline; cursor: pointer; font-size: 0.9rem;" onclick="resendOTP()">إعادة إرسال رمز جديد</button>
+        </div>
+        
+        <button style="background: none; border: none; color: #666; text-decoration: underline; margin-top: 10px; cursor: pointer; font-size: 0.8rem;" onclick="closeOTPPopup()">إلغاء العملية</button>
+    </div>
+</div>
+
+<!-- Success Invoice Popup -->
+<div id="invoice-popup">
+    <div class="invoice-content">
+        <div class="success-icon">✓</div>
+        <h2 style="color: #28a745; margin-bottom: 5px;">تمت العملية بنجاح!</h2>
+        <p style="color: #666; margin-bottom: 20px;">شكراً لك، تم الخصم من رصيد الطبيب.</p>
+        
+        <div class="invoice-details" id="print-area">
+            <h4 style="text-align: center; margin-bottom: 20px; color: #333;">إيصال معاملة</h4>
+            <div class="invoice-row">
+                <span style="color: #666;">رقم الفاتورة:</span>
+                <strong id="inv-number"></strong>
             </div>
-            <div id="search-results" style="margin-top: 10px; border: 1px solid #ddd; border-radius: 5px; display: none; max-height: 250px; overflow-y: auto;"></div>
+            <div class="invoice-row">
+                <span style="color: #666;">التاريخ:</span>
+                <strong id="inv-date"></strong>
+            </div>
+            <div class="invoice-row">
+                <span style="color: #666;">التاجر:</span>
+                <strong id="inv-vendor"></strong>
+            </div>
+            <div class="invoice-row">
+                <span style="color: #666;">الطبيب:</span>
+                <strong id="inv-doctor"></strong>
+            </div>
+            <div class="invoice-row" style="margin-top: 15px;">
+                <span style="color: #666;">قيمة المشتريات:</span>
+                <strong id="inv-amount"></strong>
+            </div>
+            {% if has_management_fee %}
+            <div class="invoice-row">
+                <span style="color: #666;">رسوم إدارية (25%):</span>
+                <strong id="inv-fee"></strong>
+            </div>
+            {% endif %}
+            <div class="invoice-row invoice-total">
+                <span>الإجمالي المخصوم:</span>
+                <span id="inv-total"></span>
+            </div>
         </div>
 
-        <!-- Transaction Form (shown after selecting doctor) -->
-        <form method="post" id="transaction-form" style="display: none;">
+        <div class="btn-group">
+            <button class="print-btn" onclick="printInvoice()">🖨️ طباعة الفاتورة</button>
+            <button class="new-trans-btn" onclick="window.location.reload()">+ معاملة جديدة</button>
+        </div>
+    </div>
+</div>
+
+<h2 style="margin-bottom: 20px;">تسجيل معاملة جديدة</h2>
+
+<!-- Cashier Warning Info -->
+{% if is_cashier %}
+<div class="alert alert-info" style="margin-bottom: 20px; font-weight: bold;">
+    👤 مرحباً يا {{ request.user.first_name|default:request.user.username }} (كاشير). الإجراءات تسجل باسمك تحت البائع: {{ vendor.name }}.
+</div>
+{% endif %}
+
+<div id="error-message" class="alert alert-danger" style="display: none; margin-bottom: 20px;"></div>
+
+<div class="main-container">
+    <div class="qr-section">
+        {% if not is_cashier %}
+        <div style="margin-bottom: 20px; width: 100%; border-bottom: 2px dashed #eee; padding-bottom: 15px;">
+            <h4 style="margin-bottom: 10px; color: #333;">أو البحث اليدوي (للبائع الرئيسي فقط)</h4>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="manual-doc-search" class="form-control" placeholder="ابحث بالاسم، الهاتف، أو المعرف..." style="flex: 1; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+                <button class="btn" onclick="manualSearch()">🔍 بحث</button>
+            </div>
+            <div id="search-results" style="margin-top: 10px; max-height: 200px; overflow-y: auto;"></div>
+        </div>
+        {% endif %}
+        
+        <h3 style="margin-bottom: 15px;">مسح الـ QR Code</h3>
+        <button id="camera-btn" class="scan-btn" onclick="startQRScanner()">
+            📷 تشغيل الكاميرا للمسح
+        </button>
+        <div id="reader"></div>
+
+        <div id="doctor-info" class="card">
+            <h4 style="color: #28a745; margin-bottom: 15px;">بـيـانـات الـطـبـيـب</h4>
+            <p><strong>الاسم:</strong> <span id="doc-name">{% if prefill_doctor %}{{ prefill_doctor.name }}{% endif %}</span></p>
+            <p><strong>الهاتف:</strong> <span id="doc-phone">{% if prefill_doctor %}{{ prefill_doctor.phone }}{% endif %}</span></p>
+            <p style="font-size: 1.2rem; color: #dc3545; font-weight: bold; margin-top: 10px; padding-top: 10px; border-top: 1px solid #ccc;">
+                <strong>الرصيد المتاح:</strong> <span id="doc-balance">{% if prefill_doctor %}{{ prefill_doctor.balance }}{% else %}0.00{% endif %}</span> ج.م
+            </p>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <h3>تفاصيل المعاملة</h3>
+        <!-- Note: We don't use a standard form submit to prevent page reload -->
+        <form id="transaction-form" onsubmit="event.preventDefault(); submitTransaction();">
             {% csrf_token %}
-            <input type="hidden" name="doctor_id" id="doctor_id">
+            <input type="hidden" name="doctor_id" id="doctor_id" value="{% if prefill_doctor %}{{ prefill_doctor.id }}{% endif %}">
             
-            <!-- Doctor Info -->
-            <div id="doctor-info" style="background: #d4edda; border: 1px solid #c3e6cb; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <strong style="font-size: 1.1rem;" id="doc-name"></strong>
-                        <br><span style="color: #666;" id="doc-phone"></span>
-                        <br><small style="color: #888;" id="doc-specialty"></small>
-                    </div>
-                    <div style="text-align: left;">
-                        <small style="color: #666;">الرصيد المتاح</small>
-                        <br><span style="font-size: 1.5rem; font-weight: bold; color: #28a745;" id="doc-balance"></span>
-                        <span style="color: #28a745;"> ج.م</span>
-                    </div>
-                </div>
-                <button type="button" onclick="changeDoctor()" style="margin-top: 10px; background: none; border: 1px solid #800000; color: #800000; padding: 5px 15px; border-radius: 5px; cursor: pointer; font-size: 0.85rem;">تغيير الطبيب</button>
+            <div style="margin-bottom: 15px;">
+                <label for="amount" style="display: block; margin-bottom: 5px; font-weight: bold;">المبلغ المطلوب (ج.م):</label>
+                <input type="number" id="amount" name="amount" step="0.01" min="1" class="form-control" required style="width: 100%; padding: 10px; font-size: 1.2rem; border-radius: 5px; border: 1px solid #ccc;" oninput="calculateTotal()">
             </div>
 
-            <div style="margin-bottom: 15px;">
-                <label style="font-weight: bold; display: block; margin-bottom: 5px;">مبلغ المعاملة (ج.م)</label>
-                <input type="number" name="amount" id="amount-input" class="form-control" required min="1" step="0.01" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 1.1rem;" oninput="updateDeductionPreview()">
-                <!-- Deduction Preview -->
-                <div id="deduction-preview" style="margin-top: 8px; padding: 10px; background: #f8f9fa; border-radius: 5px; display: none;">
-                    <div style="display: flex; justify-content: space-between; color: #666;">
-                        <span>المبلغ:</span><span id="preview-amount">0</span>
-                    </div>
-                    <div id="preview-fee-row" style="display: flex; justify-content: space-between; color: #dc3545;">
-                        <span>عمولة الإدارة (25%):</span><span id="preview-fee">0</span>
-                    </div>
-                    <hr style="margin: 5px 0; border-color: #ddd;">
-                    <div style="display: flex; justify-content: space-between; font-weight: bold;">
-                        <span>إجمالي الخصم من القسيمة:</span><span id="preview-total">0</span>
-                    </div>
-                </div>
+            {% if has_management_fee %}
+            <div style="margin-bottom: 15px; padding: 10px; background: #fff3cd; border: 1px solid #ffeeba; border-radius: 5px;">
+                <p style="margin: 0; color: #856404; font-size: 0.9rem;">سيتم إضافة 25% رسوم إدارية تلقائياً لإجمالي الخصم.</p>
+                <p style="margin: 5px 0 0 0; font-weight: bold;">الإجمالي المتوقع خصمه: <span id="expected_total">0.00</span> ج.م</p>
             </div>
+            {% endif %}
 
             <div style="margin-bottom: 20px;">
-                <label style="font-weight: bold; display: block; margin-bottom: 5px;">وصف المشتريات (اختياري)</label>
-                <textarea name="description" id="description-input" class="form-control" rows="3" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;" placeholder="مثال: مواد غذائية، مشروبات..."></textarea>
+                <label for="description" style="display: block; margin-bottom: 5px; font-weight: bold;">وصف المعاملة (اختياري):</label>
+                <textarea id="description" name="description" class="form-control" rows="3" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" placeholder="مثال: خصم على أدوية، وجبة غداء، الخ..."></textarea>
             </div>
 
-            <button type="submit" id="submit-btn" class="btn" style="width: 100%; padding: 12px; font-size: 1.1rem;">✅ إتمام المعاملة</button>
+            <button type="submit" id="submit-btn" class="btn" style="width: 100%; font-size: 1.2rem; padding: 15px; {% if not prefill_doctor %}opacity: 0.5; cursor: not-allowed;{% endif %}" {% if not prefill_doctor %}disabled{% endif %}>
+                إتمام المعاملة
+            </button>
         </form>
     </div>
 </div>
 
-<!-- OTP Verification Modal -->
-<div id="otp-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 9999; align-items: center; justify-content: center;">
-    <div style="background: white; border-radius: 15px; padding: 30px; max-width: 450px; width: 90%; margin: auto; position: relative; top: 50%; transform: translateY(-50%); text-align: center;">
-        <div style="font-size: 3.5rem; margin-bottom: 10px;">🔐</div>
-        <h3 style="color: #800000; margin-bottom: 10px;">رمز التحقق</h3>
-        <p style="color: #666; margin-bottom: 5px;">تم إرسال رمز التحقق إلى بريد الطبيب الإلكتروني</p>
-        <p id="otp-email-display" style="color: #333; font-weight: bold; margin-bottom: 20px; direction: ltr;"></p>
-        
-        <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 20px;" id="otp-inputs">
-            <input type="text" maxlength="1" class="otp-digit" data-index="0" style="width: 50px; height: 55px; text-align: center; font-size: 1.5rem; font-weight: bold; border: 2px solid #ddd; border-radius: 10px; outline: none;" oninput="onOtpInput(this)" onkeydown="onOtpKeyDown(event, this)">
-            <input type="text" maxlength="1" class="otp-digit" data-index="1" style="width: 50px; height: 55px; text-align: center; font-size: 1.5rem; font-weight: bold; border: 2px solid #ddd; border-radius: 10px; outline: none;" oninput="onOtpInput(this)" onkeydown="onOtpKeyDown(event, this)">
-            <input type="text" maxlength="1" class="otp-digit" data-index="2" style="width: 50px; height: 55px; text-align: center; font-size: 1.5rem; font-weight: bold; border: 2px solid #ddd; border-radius: 10px; outline: none;" oninput="onOtpInput(this)" onkeydown="onOtpKeyDown(event, this)">
-            <input type="text" maxlength="1" class="otp-digit" data-index="3" style="width: 50px; height: 55px; text-align: center; font-size: 1.5rem; font-weight: bold; border: 2px solid #ddd; border-radius: 10px; outline: none;" oninput="onOtpInput(this)" onkeydown="onOtpKeyDown(event, this)">
-            <input type="text" maxlength="1" class="otp-digit" data-index="4" style="width: 50px; height: 55px; text-align: center; font-size: 1.5rem; font-weight: bold; border: 2px solid #ddd; border-radius: 10px; outline: none;" oninput="onOtpInput(this)" onkeydown="onOtpKeyDown(event, this)">
-            <input type="text" maxlength="1" class="otp-digit" data-index="5" style="width: 50px; height: 55px; text-align: center; font-size: 1.5rem; font-weight: bold; border: 2px solid #ddd; border-radius: 10px; outline: none;" oninput="onOtpInput(this)" onkeydown="onOtpKeyDown(event, this)">
-        </div>
-
-        <p id="otp-timer" style="color: #888; margin-bottom: 15px; font-size: 0.9rem;"></p>
-        <p id="otp-error" style="color: #dc3545; margin-bottom: 15px; display: none; font-weight: bold;"></p>
-
-        <button id="verify-otp-btn" onclick="verifyOTP()" class="btn" style="width: 100%; padding: 12px; font-size: 1.1rem; margin-bottom: 10px;">✅ تأكيد</button>
-        <button id="resend-otp-btn" onclick="resendOTP()" style="width: 100%; padding: 10px; background: none; border: 1px solid #800000; color: #800000; border-radius: 8px; cursor: pointer; font-size: 0.95rem;" disabled>إعادة إرسال الرمز</button>
-        <button onclick="cancelOTP()" style="width: 100%; padding: 10px; margin-top: 8px; background: none; border: 1px solid #dc3545; color: #dc3545; border-radius: 8px; cursor: pointer; font-size: 0.9rem;">إلغاء العملية</button>
-    </div>
-</div>
-
-<!-- Invoice Print Modal (Hidden) -->
-<div id="invoice-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 9999; align-items: center; justify-content: center;">
-    <div style="background: white; border-radius: 12px; padding: 30px; max-width: 500px; width: 90%; margin: auto; position: relative; top: 50%; transform: translateY(-50%);">
-        <div id="invoice-content">
-            <div style="text-align: center; border-bottom: 2px dashed #800000; padding-bottom: 15px; margin-bottom: 15px;">
-                <h2 style="color: #800000; margin: 0;">🏛️ قرية حضرموت</h2>
-                <p style="color: #888; margin: 5px 0;">فاتورة مشتريات</p>
-            </div>
-            <div style="margin-bottom: 15px;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                    <span style="color: #666;">رقم الفاتورة:</span>
-                    <span id="inv-number" style="font-weight: bold; font-size: 0.8rem;"></span>
-                </div>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                    <span style="color: #666;">التاريخ:</span>
-                    <span id="inv-date"></span>
-                </div>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                    <span style="color: #666;">الطبيب:</span>
-                    <span id="inv-doctor" style="font-weight: bold;"></span>
-                </div>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                    <span style="color: #666;">التاجر:</span>
-                    <span id="inv-vendor" style="font-weight: bold;"></span>
-                </div>
-            </div>
-            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                    <span>المبلغ:</span>
-                    <span id="inv-amount"></span>
-                </div>
-                <div id="inv-fee-row" style="display: flex; justify-content: space-between; margin-bottom: 8px; color: #dc3545;">
-                    <span>عمولة الإدارة (25%):</span>
-                    <span id="inv-fee"></span>
-                </div>
-                <hr style="border-color: #ddd;">
-                <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 1.1rem;">
-                    <span>إجمالي الخصم:</span>
-                    <span id="inv-total" style="color: #800000;"></span>
-                </div>
-            </div>
-            <div id="inv-desc-section" style="margin-bottom: 15px;">
-                <span style="color: #666;">الأصناف: </span><span id="inv-desc"></span>
-            </div>
-            <div style="text-align: center; border-top: 2px dashed #ddd; padding-top: 15px; color: #888; font-size: 0.85rem;">
-                <p>شكراً لتعاملكم معنا 🙏</p>
-            </div>
-        </div>
-        <div style="display: flex; gap: 10px; margin-top: 20px;" id="invoice-buttons">
-            <button onclick="printInvoice()" class="btn" style="flex: 1; padding: 12px;">🖨️ طباعة الفاتورة</button>
-            <button onclick="closeInvoice()" class="btn" style="flex: 1; padding: 12px; background: #6c757d;">إغلاق</button>
-        </div>
-    </div>
-</div>
-
-<!-- Error Popup Modal -->
-<div id="error-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 10000; align-items: center; justify-content: center;">
-    <div style="background: white; border-radius: 15px; padding: 25px; max-width: 450px; width: 90%; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); transform: scale(0.9); transition: transform 0.2s ease-out;">
-        <div style="font-size: 3.5rem; margin-bottom: 15px;">⚠️</div>
-        <h3 style="color: #800000; margin-bottom: 15px; font-size: 1.4rem;">تنبيه</h3>
-        <p id="error-message" style="color: #333; line-height: 1.6; margin-bottom: 25px; font-size: 1.1rem;"></p>
-        <button onclick="hideError()" class="btn" style="width: 100%; padding: 12px; font-size: 1.1rem; background: #600000;">حسناً</button>
-    </div>
-</div>
-
-{% endblock %}
-
-{% block scripts %}
-<!-- QR Scanner Library -->
-<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 <script>
-let html5QrCode = null;
-let currentTransactionToken = null;
-let otpTimerInterval = null;
+    const hasManagementFee = {{ has_management_fee|yesno:"true,false" }};
+    let html5QrcodeScanner = null;
+    let currentTransactionToken = null; // Store token for OTP
 
-// Django URL references (i18n-aware)
-const URLS = {
-    doctorLookup: '{% url "doctor_lookup" %}',
-    verifyOtp: '{% url "verify_otp" %}',
-    resendOtp: '{% url "resend_otp" %}',
-};
+    // If pre-filled from URL
+    window.onload = function() {
+        if(document.getElementById('doctor_id').value) {
+            document.getElementById('doctor-info').style.display = 'block';
+            document.getElementById('submit-btn').disabled = false;
+            document.getElementById('submit-btn').style.opacity = '1';
+            document.getElementById('submit-btn').style.cursor = 'pointer';
+        }
+    };
 
-// ========== QR SCANNING ==========
-function startQRScan() {
-    const container = document.getElementById('qr-scanner-container');
-    container.style.display = 'block';
-    
-    html5QrCode = new Html5Qrcode("qr-reader");
-    
-    const config = { fps: 10, qrbox: { width: 250, height: 250 } };
-
-    html5QrCode.start(
-        { facingMode: "environment" },
-        config,
-        (decodedText) => {
-            console.log("QR Decoded:", decodedText);
-            stopQRScan();
-            
-            let doctorId = null;
-            let qrCode = null;
-            
-            try {
-                if (decodedText.includes('doctor_id=')) {
-                    const url = new URL(decodedText);
-                    doctorId = url.searchParams.get('doctor_id');
-                } else if (decodedText.includes('/scan/')) {
-                    const match = decodedText.match(/\/scan\/([^\/]+)/);
-                    if (match) {
-                        qrCode = match[1];
-                    }
-                } else if (!isNaN(decodedText)) {
-                    doctorId = decodedText;
-                }
-            } catch (e) {
-                if (!isNaN(decodedText)) doctorId = decodedText;
-            }
-
-            const lookupQuery = doctorId || qrCode;
-
-            if (lookupQuery) {
-                document.getElementById('search-results').style.display = 'block';
-                document.getElementById('search-results').innerHTML = '<div style="padding:15px; text-align:center;">🔍 جاري جلب بيانات الطبيب...</div>';
-                
-                fetch(`${URLS.doctorLookup}?q=${lookupQuery}`)
-                .then(r => r.json())
-                .then(data => {
-                    if (data.results && data.results.length > 0) {
-                        selectDoctor(data.results[0]);
-                    } else {
-                        showError("لم يتم العثور على الطبيب بهذا الكود");
-                        document.getElementById('search-results').style.display = 'none';
-                    }
-                })
-                .catch(err => {
-                    console.error("Lookup error:", err);
-                    showError("خطأ في الاتصال بالخادم");
-                });
-            } else {
-                showError("كود QR غير صالح");
-            }
-        },
-        (errorMessage) => { /* scanning... */ }
-    ).catch(err => {
-        console.error("Camera error:", err);
-        showError("خطأ في الكاميرا: " + err);
-        container.style.display = 'none';
-    });
-}
-
-function stopQRScan() {
-    if (html5QrCode) {
-        html5QrCode.stop().then(() => {
-            html5QrCode.clear();
-            document.getElementById('qr-scanner-container').style.display = 'none';
-        }).catch(err => console.error(err));
+    function calculateTotal() {
+        const amountInput = document.getElementById('amount').value;
+        const totalSpan = document.getElementById('expected_total');
+        if(amountInput && hasManagementFee && totalSpan) {
+            const amt = parseFloat(amountInput);
+            const fee = amt * 0.25;
+            totalSpan.textContent = (amt + fee).toFixed(2);
+        } else if (totalSpan) {
+            totalSpan.textContent = "0.00";
+        }
     }
-}
 
-// ========== DOCTOR SEARCH ==========
-function searchDoctor() {
-    const query = document.getElementById('doctor-search').value;
-    if (query.length < 2) return;
-
-    fetch(`${URLS.doctorLookup}?q=${query}`)
-    .then(response => response.json())
-    .then(data => {
-        const resultsDiv = document.getElementById('search-results');
-        resultsDiv.innerHTML = '';
-        resultsDiv.style.display = 'block';
+    function startQRScanner() {
+        const btn = document.getElementById('camera-btn');
+        btn.style.display = 'none';
         
-        if (data.results.length === 0) {
-            resultsDiv.innerHTML = '<div style="padding: 15px; text-align: center; color: #888;">لا توجد نتائج</div>';
+        html5QrcodeScanner = new Html5QrcodeScanner(
+            "reader", 
+            { fps: 10, qrbox: {width: 250, height: 250} },
+            false
+        );
+        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+    }
+
+    function onScanSuccess(decodedText, decodedResult) {
+        if(html5QrcodeScanner) {
+            html5QrcodeScanner.clear();
+            document.getElementById('camera-btn').style.display = 'flex';
+        }
+        
+        let doctorId = decodedText.trim();
+        
+        // Handle full URL scanning (e.g. http://127.0.0.1:5000/scan/A1B2C3D4/)
+        if(doctorId.includes('/scan/')) {
+            const parts = doctorId.split('/scan/');
+            if (parts.length > 1) {
+                // Extract the code from after /scan/ and remove any trailing slash
+                doctorId = parts[1].split('/')[0];
+            }
+        }
+        // Handle legacy doctor_id query param
+        else if(doctorId.includes('doctor_id=')) {
+            const urlParams = new URLSearchParams(doctorId.split('?')[1]);
+            doctorId = urlParams.get('doctor_id');
+        }
+
+        if(!doctorId) {
+            alert('رمز QR غير صالح أو فارغ.');
             return;
         }
 
-        data.results.forEach(doc => {
-            const div = document.createElement('div');
-            div.style.cssText = 'padding: 12px 15px; cursor: pointer; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;';
-            div.onmouseover = function() { this.style.backgroundColor = '#f0f0f0'; };
-            div.onmouseout = function() { this.style.backgroundColor = 'white'; };
-            div.innerHTML = `
-                <div>
-                    <strong>${doc.name}</strong>
-                    <br><small style="color:#888;">${doc.phone} - ${doc.specialty}</small>
-                </div>
-                <div style="text-align: left;">
-                    <span style="font-weight: bold; color: ${doc.balance > 0 ? '#28a745' : '#dc3545'};">${doc.balance.toFixed(2)} ج.م</span>
-                </div>
-            `;
-            div.onclick = function() { selectDoctor(doc); };
-            resultsDiv.appendChild(div);
-        });
-    });
-}
+        fetchDoctorInfo(doctorId);
+    }
 
-// ========== SELECT DOCTOR ==========
-function selectDoctor(doc) {
-    document.getElementById('search-results').style.display = 'none';
-    document.getElementById('search-section').style.display = 'none';
-    document.getElementById('transaction-form').style.display = 'block';
-    document.getElementById('doctor_id').value = doc.id;
-    document.getElementById('doc-name').innerText = doc.name;
-    document.getElementById('doc-phone').innerText = doc.phone || '';
-    document.getElementById('doc-specialty').innerText = doc.specialty || '';
-    document.getElementById('doc-balance').innerText = doc.balance.toFixed(2);
-}
+    function onScanFailure(error) {
+        // Handle scan failure silently
+    }
 
-function changeDoctor() {
-    document.getElementById('search-section').style.display = 'block';
-    document.getElementById('transaction-form').style.display = 'none';
-    document.getElementById('doctor-search').value = '';
-    document.getElementById('amount-input').value = '';
-    document.getElementById('description-input').value = '';
-    document.getElementById('deduction-preview').style.display = 'none';
-}
-
-const hasManagementFee = {% if has_management_fee %}true{% else %}false{% endif %};
-
-// ========== DEDUCTION PREVIEW ==========
-function updateDeductionPreview() {
-    const amount = parseFloat(document.getElementById('amount-input').value) || 0;
-    const preview = document.getElementById('deduction-preview');
-    const feeRow = document.getElementById('preview-fee-row');
-    
-    if (amount > 0) {
-        preview.style.display = 'block';
-        const fee = hasManagementFee ? (amount * 0.25) : 0;
-        const total = amount + fee;
-        
-        document.getElementById('preview-amount').innerText = amount.toFixed(2) + ' ج.م';
-        
-        if (hasManagementFee) {
-            feeRow.style.display = 'flex';
-            document.getElementById('preview-fee').innerText = fee.toFixed(2) + ' ج.م';
-        } else {
-            feeRow.style.display = 'none';
+    function manualSearch() {
+        const query = document.getElementById('manual-doc-search').value;
+        if(query.length < 2) {
+            alert("يرجى إدخال حرفين أو رقمين على الأقل للبحث");
+            return;
         }
         
-        document.getElementById('preview-total').innerText = total.toFixed(2) + ' ج.م';
-    } else {
-        preview.style.display = 'none';
+        document.getElementById('search-results').innerHTML = '<p style="color: #666;">جاري البحث...</p>';
+        
+        fetch(`/api/doctor-lookup/?q=${query}`)
+            .then(res => res.json())
+            .then(data => {
+                const resultsDiv = document.getElementById('search-results');
+                resultsDiv.innerHTML = '';
+                if(data.results && data.results.length > 0) {
+                    data.results.forEach(doc => {
+                        const div = document.createElement('div');
+                        div.style.padding = '10px';
+                        div.style.borderBottom = '1px solid #eee';
+                        div.style.cursor = 'pointer';
+                        div.style.background = '#f8f9fa';
+                        div.style.marginBottom = '5px';
+                        div.style.borderRadius = '5px';
+                        div.innerHTML = `<strong>${doc.name}</strong> - ${doc.phone} <br> <small style="color: #666;">الرصيد: ${doc.balance.toFixed(2)} ج.م</small>`;
+                        div.onclick = function() {
+                            document.getElementById('doctor_id').value = doc.id;
+                            document.getElementById('doc-name').textContent = doc.name;
+                            document.getElementById('doc-phone').textContent = doc.phone;
+                            document.getElementById('doc-balance').textContent = doc.balance.toFixed(2);
+                            document.getElementById('doctor-info').style.display = 'block';
+                            
+                            document.getElementById('submit-btn').disabled = false;
+                            document.getElementById('submit-btn').style.opacity = '1';
+                            document.getElementById('submit-btn').style.cursor = 'pointer';
+                            
+                            resultsDiv.innerHTML = '';
+                            document.getElementById('manual-doc-search').value = '';
+                        };
+                        resultsDiv.appendChild(div);
+                    });
+                } else {
+                    resultsDiv.innerHTML = '<p style="color: red;">لم يتم العثور على أطباء.</p>';
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                document.getElementById('search-results').innerHTML = '<p style="color: red;">خطأ في الاتصال بالسيرفر.</p>';
+            });
     }
-}
 
-// ========== OTP INPUT HANDLING ==========
-function onOtpInput(el) {
-    const val = el.value;
-    if (val.length === 1) {
-        const idx = parseInt(el.getAttribute('data-index'));
-        const next = document.querySelector(`.otp-digit[data-index="${idx + 1}"]`);
-        if (next) next.focus();
-        el.style.borderColor = '#800000';
+    function fetchDoctorInfo(doctorId) {
+        fetch(`/api/doctor-lookup/?q=${doctorId}`)
+            .then(res => res.json())
+            .then(data => {
+                if(data.results && data.results.length > 0) {
+                    const doc = data.results[0];
+                    document.getElementById('doctor_id').value = doc.id;
+                    document.getElementById('doc-name').textContent = doc.name;
+                    document.getElementById('doc-phone').textContent = doc.phone;
+                    document.getElementById('doc-balance').textContent = doc.balance.toFixed(2);
+                    document.getElementById('doctor-info').style.display = 'block';
+                    
+                    document.getElementById('submit-btn').disabled = false;
+                    document.getElementById('submit-btn').style.opacity = '1';
+                    document.getElementById('submit-btn').style.cursor = 'pointer';
+                } else {
+                    alert('لم يتم العثور على الطبيب.');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('حدث خطأ أثناء البحث عن الطبيب.');
+            });
     }
-    
-    // Auto-verify if all 6 digits are entered
-    const allDigits = document.querySelectorAll('.otp-digit');
-    let code = '';
-    allDigits.forEach(d => code += d.value);
-    if (code.length === 6) {
-        verifyOTP();
-    }
-}
 
-function onOtpKeyDown(event, el) {
-    if (event.key === 'Backspace' && el.value === '') {
-        const idx = parseInt(el.getAttribute('data-index'));
-        const prev = document.querySelector(`.otp-digit[data-index="${idx - 1}"]`);
-        if (prev) {
-            prev.focus();
-            prev.value = '';
-            prev.style.borderColor = '#ddd';
+    function showError(msg) {
+        const errDiv = document.getElementById('error-message');
+        errDiv.textContent = msg;
+        errDiv.style.display = 'block';
+        window.scrollTo(0,0);
+    }
+
+    function hideError() {
+        document.getElementById('error-message').style.display = 'none';
+    }
+
+    function showLoader(text) {
+        document.getElementById('loader-text').textContent = text;
+        document.getElementById('loader-overlay').style.display = 'flex';
+    }
+
+    function hideLoader() {
+        document.getElementById('loader-overlay').style.display = 'none';
+    }
+
+    // Step 1: Submit transaction form to send OTP
+    function submitTransaction(isResend = false) {
+        hideError();
+        const doctorId = document.getElementById('doctor_id').value;
+        const amount = document.getElementById('amount').value;
+        const description = document.getElementById('description').value;
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        if(!doctorId) {
+            showError("يرجى مسح رمز الـ QR الخاص بالطبيب أولاً.");
+            return;
         }
-    }
-}
-
-function getOtpCode() {
-    const allDigits = document.querySelectorAll('.otp-digit');
-    let code = '';
-    allDigits.forEach(d => code += d.value);
-    return code;
-}
-
-function clearOtpInputs() {
-    const allDigits = document.querySelectorAll('.otp-digit');
-    allDigits.forEach(d => { d.value = ''; d.style.borderColor = '#ddd'; });
-    if (allDigits.length > 0) allDigits[0].focus();
-}
-
-// ========== OTP TIMER ==========
-function startOtpTimer(seconds) {
-    const timerEl = document.getElementById('otp-timer');
-    const resendBtn = document.getElementById('resend-otp-btn');
-    resendBtn.disabled = true;
-    
-    let remaining = seconds;
-    
-    function updateTimer() {
-        const mins = Math.floor(remaining / 60);
-        const secs = remaining % 60;
-        timerEl.innerText = `صلاحية الرمز: ${mins}:${secs.toString().padStart(2, '0')}`;
-        
-        if (remaining <= 0) {
-            clearInterval(otpTimerInterval);
-            timerEl.innerText = 'انتهت صلاحية الرمز';
-            timerEl.style.color = '#dc3545';
-            resendBtn.disabled = false;
+        if(!amount || amount <= 0) {
+            showError("يرجى إدخال مبلغ صحيح.");
+            return;
         }
-        remaining--;
-    }
-    
-    updateTimer();
-    otpTimerInterval = setInterval(updateTimer, 1000);
-}
 
-// ========== FORM SUBMISSION (Step 1: Generate OTP) ==========
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('transaction-form');
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const submitBtn = document.getElementById('submit-btn');
-        submitBtn.disabled = true;
-        submitBtn.innerText = '⏳ جاري إرسال رمز التحقق...';
+        if (!isResend) {
+            showLoader("جاري التحضير وإرسال رمز التحقق (OTP) للطبيب...");
+        }
 
-        const formData = new FormData(form);
-        
-        fetch(form.action || window.location.href, {
+        const formData = new FormData();
+        formData.append('doctor_id', doctorId);
+        formData.append('amount', amount);
+        formData.append('description', description);
+
+        // Uses SendOTPView from core/views.py
+        fetch("{% url 'send_otp' %}", {
             method: 'POST',
             body: formData,
             headers: {
-                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': csrfToken,
+                'X-Requested-With': 'XMLHttpRequest'
             }
         })
-        .then(r => r.json())
-        .then(data => {
-            if (data.success && data.otp_required) {
-                // Show OTP modal
-                currentTransactionToken = data.transaction_token;
-                document.getElementById('otp-email-display').innerText = data.doctor_email;
+        .then(response => response.json().then(data => ({status: response.status, body: data})))
+        .then(result => {
+            hideLoader();
+            if(result.status === 200 && result.body.success) {
+                // OTP sent successfully, show popup
+                currentTransactionToken = result.body.transaction_token;
+                document.getElementById('display-email').textContent = result.body.doctor_email;
+                document.getElementById('otp_code_input').value = ''; // clear previous
                 document.getElementById('otp-error').style.display = 'none';
-                document.getElementById('otp-modal').style.display = 'block';
-                clearOtpInputs();
-                startOtpTimer(300); // 5 minutes
-                
-                submitBtn.disabled = false;
-                submitBtn.innerText = '✅ إتمام المعاملة';
-            } else if (data.success && data.invoice) {
-                // Direct invoice (shouldn't happen now, but just in case)
-                showInvoice(data.invoice);
+                document.getElementById('otp-popup').style.display = 'flex';
+                document.getElementById('otp_code_input').focus();
             } else {
-                showError(data.error);
-                submitBtn.disabled = false;
-                submitBtn.innerText = '✅ إتمام المعاملة';
+                showError(result.body.error || "حدث خطأ غير متوقع.");
             }
         })
         .catch(err => {
-            showError('حدث خطأ في الاتصال بالخادم، يرجى المحاولة مرة أخرى');
-            submitBtn.disabled = false;
-            submitBtn.innerText = '✅ إتمام المعاملة';
+            hideLoader();
+            showError("خطأ في الاتصال بالسيرفر.");
+            console.error(err);
         });
-    });
-
-    // Check for pre-filled doctor (from QR scan redirect)
-    {% if prefill_doctor %}
-    selectDoctor({
-        id: {{ prefill_doctor.id }},
-        name: "{{ prefill_doctor.name }}",
-        phone: "{{ prefill_doctor.phone }}",
-        specialty: "",
-        balance: {{ prefill_doctor.balance }}
-    });
-    {% endif %}
-});
-
-// ========== OTP VERIFICATION (Step 2) ==========
-function verifyOTP() {
-    const code = getOtpCode();
-    if (code.length !== 6) {
-        document.getElementById('otp-error').innerText = 'يرجى إدخال الرمز المكون من 6 أرقام';
-        document.getElementById('otp-error').style.display = 'block';
-        return;
     }
 
-    const verifyBtn = document.getElementById('verify-otp-btn');
-    verifyBtn.disabled = true;
-    verifyBtn.innerText = '⏳ جاري التحقق...';
-    document.getElementById('otp-error').style.display = 'none';
+    function closeOTPPopup() {
+        document.getElementById('otp-popup').style.display = 'none';
+        currentTransactionToken = null;
+    }
 
-    const formData = new FormData();
-    formData.append('transaction_token', currentTransactionToken);
-    formData.append('otp_code', code);
-    formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+    function resendOTP() {
+        const link = document.getElementById('resend-otp-link');
+        const errorP = document.getElementById('otp-error');
+        
+        link.textContent = "جاري الإرسال...";
+        link.style.pointerEvents = 'none';
+        errorP.style.display = 'none';
 
-    fetch(URLS.verifyOtp, {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest',
+        submitTransaction(true); // Call submitTransaction again to get new OTP
+        
+        // Reset link after a few seconds
+        setTimeout(() => {
+            link.textContent = "إعادة إرسال رمز جديد";
+            link.style.pointerEvents = 'auto';
+        }, 3000);
+    }
+
+    // Step 2: Verify OTP and complete transaction
+    function verifyOTP() {
+        const otpCode = document.getElementById('otp_code_input').value;
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const errorP = document.getElementById('otp-error');
+        const verifyBtn = document.getElementById('verify_otp_btn');
+
+        if(otpCode.length !== 6) {
+            errorP.textContent = "الرمز يجب أن يكون 6 أرقام.";
+            errorP.style.display = 'block';
+            return;
         }
-    })
-    .then(r => r.json())
-    .then(data => {
-        if (data.success && data.invoice) {
-            // Close OTP modal and show invoice
-            document.getElementById('otp-modal').style.display = 'none';
-            clearInterval(otpTimerInterval);
-            showInvoice(data.invoice);
-        } else {
-            document.getElementById('otp-error').innerText = data.error;
-            document.getElementById('otp-error').style.display = 'block';
-            clearOtpInputs();
+
+        errorP.style.display = 'none';
+        
+        // Change button state
+        verifyBtn.classList.add('submitting');
+        verifyBtn.textContent = 'جاري التأكيد والخصم...';
+        verifyBtn.disabled = true;
+
+        const formData = new FormData();
+        formData.append('transaction_token', currentTransactionToken);
+        formData.append('otp_code', otpCode);
+        // We reuse transaction_create for POSTing the OTP validation
+        fetch("{% url 'transaction_create' %}", {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': csrfToken,
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json().then(data => ({status: response.status, body: data})))
+        .then(result => {
+             // Reset button state
+             verifyBtn.classList.remove('submitting');
+             verifyBtn.textContent = 'تأكيد وإتمام العملية';
+             verifyBtn.disabled = false;
+
+            if(result.status === 200 && result.body.success) {
+                // Success! Close OTP popup and show Invoice
+                closeOTPPopup();
+                showInvoice(result.body.invoice);
+            } else {
+                errorP.textContent = result.body.error || "حدث خطأ غير متوقع.";
+                errorP.style.display = 'block';
+            }
+        })
+        .catch(err => {
+            verifyBtn.classList.remove('submitting');
+            verifyBtn.textContent = 'تأكيد وإتمام العملية';
             verifyBtn.disabled = false;
-            verifyBtn.innerText = '✅ تأكيد';
-        }
-    })
-    .catch(err => {
-        document.getElementById('otp-error').innerText = 'حدث خطأ في الاتصال بالخادم';
-        document.getElementById('otp-error').style.display = 'block';
-        verifyBtn.disabled = false;
-        verifyBtn.innerText = '✅ تأكيد';
-    });
-}
-
-// ========== RESEND OTP ==========
-function resendOTP() {
-    const resendBtn = document.getElementById('resend-otp-btn');
-    resendBtn.disabled = true;
-    resendBtn.innerText = '⏳ جاري الإرسال...';
-
-    const formData = new FormData();
-    formData.append('transaction_token', currentTransactionToken);
-    formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
-
-    fetch(URLS.resendOtp, {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-        }
-    })
-    .then(r => r.json())
-    .then(data => {
-        if (data.success) {
-            document.getElementById('otp-error').style.display = 'none';
-            clearOtpInputs();
-            startOtpTimer(300);
-            resendBtn.innerText = 'إعادة إرسال الرمز';
-        } else {
-            document.getElementById('otp-error').innerText = data.error;
-            document.getElementById('otp-error').style.display = 'block';
-            resendBtn.disabled = false;
-            resendBtn.innerText = 'إعادة إرسال الرمز';
-        }
-    })
-    .catch(err => {
-        resendBtn.disabled = false;
-        resendBtn.innerText = 'إعادة إرسال الرمز';
-    });
-}
-
-// ========== CANCEL OTP ==========
-function cancelOTP() {
-    document.getElementById('otp-modal').style.display = 'none';
-    clearInterval(otpTimerInterval);
-    currentTransactionToken = null;
-    clearOtpInputs();
-}
-
-// ========== INVOICE ==========
-function showInvoice(inv) {
-    document.getElementById('inv-number').innerText = inv.invoice_number;
-    document.getElementById('inv-date').innerText = inv.date;
-    document.getElementById('inv-doctor').innerText = inv.doctor_name;
-    document.getElementById('inv-vendor').innerText = inv.vendor_name;
-    document.getElementById('inv-amount').innerText = inv.amount_spent.toFixed(2) + ' ج.م';
-    
-    if (inv.management_fee > 0) {
-        document.getElementById('inv-fee-row').style.display = 'flex';
-        document.getElementById('inv-fee').innerText = inv.management_fee.toFixed(2) + ' ج.م';
-    } else {
-        document.getElementById('inv-fee-row').style.display = 'none';
+            
+            errorP.textContent = "خطأ في الاتصال بالسيرفر.";
+            errorP.style.display = 'block';
+            console.error(err);
+        });
     }
-    
-    document.getElementById('inv-total').innerText = inv.total_deducted.toFixed(2) + ' ج.م';
-    
-    if (inv.description) {
-        document.getElementById('inv-desc').innerText = inv.description;
-        document.getElementById('inv-desc-section').style.display = 'block';
-    } else {
-        document.getElementById('inv-desc-section').style.display = 'none';
-    }
-    
-    document.getElementById('invoice-modal').style.display = 'block';
-}
 
-function printInvoice() {
-    const content = document.getElementById('invoice-content').innerHTML;
-    const printWindow = window.open('', '_blank');
-    printWindow.document.write(`
-        <!DOCTYPE html>
-        <html lang="ar" dir="rtl">
-        <head>
-            <meta charset="UTF-8">
-            <title>فاتورة</title>
-            <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-            <style>
-                body { font-family: 'Cairo', sans-serif; padding: 20px; max-width: 400px; margin: 0 auto; }
-                hr { border-color: #ddd; }
-            </style>
-        </head>
-        <body>${content}</body>
-        </html>
-    `);
-    printWindow.document.close();
-    printWindow.focus();
-    setTimeout(() => { printWindow.print(); printWindow.close(); }, 500);
-}
-
-// ========== ERROR MODAL ==========
-function showError(msg) {
-    const modal = document.getElementById('error-modal');
-    document.getElementById('error-message').innerText = msg;
-    modal.style.display = 'flex';
-    setTimeout(() => {
-        modal.querySelector('div').style.transform = 'scale(1)';
-    }, 10);
-}
-
-function hideError() {
-    const modal = document.getElementById('error-modal');
-    modal.querySelector('div').style.transform = 'scale(0.9)';
-    setTimeout(() => {
-        modal.style.display = 'none';
-    }, 200);
-}
-
-function closeInvoice() {
-    document.getElementById('invoice-modal').style.display = 'none';
-    window.location.href = '/vendor/dashboard/';
-}
-</script>
-{% endblock %}
-
-// ========== CASHIER MODE ==========
-// Check if user is a Vendor Cashier and disable search functionality
-document.addEventListener('DOMContentLoaded', function() {
-    // Check if there's a data attribute indicating cashier mode
-    const isCashier = document.body.getAttribute('data-is-cashier') === 'true';
-    
-    if (isCashier) {
-        // Hide the manual search section
-        const searchManualDiv = document.getElementById('search-section-manual');
-        if (searchManualDiv) {
-            searchManualDiv.style.display = 'none';
+    function showInvoice(inv) {
+        document.getElementById('inv-number').textContent = inv.invoice_number;
+        document.getElementById('inv-date').textContent = inv.date;
+        document.getElementById('inv-vendor').textContent = inv.vendor_name;
+        document.getElementById('inv-doctor').textContent = inv.doctor_name;
+        document.getElementById('inv-amount').textContent = inv.amount_spent.toFixed(2) + ' ج.م';
+        
+        if(document.getElementById('inv-fee')) {
+            document.getElementById('inv-fee').textContent = inv.management_fee.toFixed(2) + ' ج.م';
         }
         
-        // Update the search section to show QR-only mode message
-        const searchSection = document.getElementById('search-section');
-        if (searchSection) {
-            const message = document.createElement('div');
-            message.style.cssText = 'background: #fff3cd; border: 1px solid #ffc107; color: #856404; padding: 12px; border-radius: 5px; margin-bottom: 15px;';
-            message.innerHTML = '📱 <strong>وضع الكاشير:</strong> يمكنك فقط معالجة المعاملات عبر مسح رمز QR للطبيب';
-            searchSection.insertBefore(message, searchSection.firstChild);
-        }
+        document.getElementById('inv-total').textContent = inv.total_deducted.toFixed(2) + ' ج.م';
+
+        document.getElementById('invoice-popup').style.display = 'flex';
     }
-});
+
+    function printInvoice() {
+        const printContents = document.getElementById('print-area').innerHTML;
+        const originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = `
+            <div style="width: 80mm; font-family: sans-serif; padding: 10px; margin: 0 auto;">
+                ${printContents}
+                <hr style="border: 1px dashed #ccc; margin-top: 20px;">
+                <p style="text-align: center; font-size: 12px; color: #666;">تمت بنجاح<br>قرية حضرموت</p>
+            </div>
+        `;
+
+        window.print();
+        document.body.innerHTML = originalContents;
+        window.location.reload(); // Reload to reset JS states
+    }
+</script>
+{% endblock %}

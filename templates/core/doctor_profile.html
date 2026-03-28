@@ -3,7 +3,59 @@
 {% block title %}ملف الطبيب - {{ doctor.name }}{% endblock %}
 
 {% block content %}
-<div style="max-width: 800px; margin: 0 auto;">
+<style>
+    .stats-container {
+        display: flex; 
+        gap: 15px; 
+        flex-wrap: wrap; 
+        margin-bottom: 25px;
+    }
+    .stat-card {
+        flex: 1; 
+        min-width: 140px; 
+        text-align: center;
+        padding: 15px;
+        overflow: hidden;
+    }
+    .voucher-card {
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center;
+        padding: 15px;
+        margin-bottom: 15px;
+        gap: 15px;
+        overflow: hidden;
+    }
+    .voucher-left {
+        flex: 1;
+    }
+    .voucher-right {
+        text-align: left;
+    }
+    @media (max-width: 600px) {
+        .voucher-card {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .voucher-right {
+            text-align: right;
+            width: 100%;
+            margin-top: 10px;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+        .stat-card {
+            min-width: 100%;
+        }
+    }
+    
+    .table-responsive {
+        width: 100%;
+        overflow-x: auto;
+    }
+</style>
+
+<div style="max-width: 800px; margin: 0 auto; padding: 0 10px; box-sizing: border-box;">
     <!-- Doctor Header Card with QR Code -->
     <div class="card" style="text-align: center; margin-bottom: 20px; position: relative;">
         <h2 style="margin-bottom: 5px;">{{ doctor.name }}</h2>
@@ -18,16 +70,16 @@
     </div>
 
     <!-- Balance Summary Cards -->
-    <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 25px;">
-        <div class="card" style="flex: 1; min-width: 150px; text-align: center; border-top: 4px solid #28a745;">
+    <div class="stats-container">
+        <div class="card stat-card" style="border-top: 4px solid #28a745;">
             <h4 style="color: #666; margin-bottom: 5px; font-size: 0.9rem;">الرصيد الحالي</h4>
             <p style="font-size: 1.8rem; font-weight: bold; color: #28a745; margin: 0;">{{ total_balance|floatformat:2 }} ج.م</p>
         </div>
-        <div class="card" style="flex: 1; min-width: 150px; text-align: center; border-top: 4px solid #007bff;">
+        <div class="card stat-card" style="border-top: 4px solid #007bff;">
             <h4 style="color: #666; margin-bottom: 5px; font-size: 0.9rem;">قسائم نشطة</h4>
             <p style="font-size: 1.8rem; font-weight: bold; color: #007bff; margin: 0;">{{ active_vouchers_count }}</p>
         </div>
-        <div class="card" style="flex: 1; min-width: 150px; text-align: center; border-top: 4px solid #dc3545;">
+        <div class="card stat-card" style="border-top: 4px solid #dc3545;">
             <h4 style="color: #666; margin-bottom: 5px; font-size: 0.9rem;">إجمالي المصروف</h4>
             <p style="font-size: 1.8rem; font-weight: bold; color: #dc3545; margin: 0;">{{ total_spent|floatformat:2 }} ج.م</p>
         </div>
@@ -37,26 +89,28 @@
     <div style="margin-bottom: 30px;">
         <h3 style="border-bottom: 2px solid #800000; padding-bottom: 10px;">🎟️ القسائم (Vouchers)</h3>
         {% for voucher in vouchers %}
-        <div class="card" style="border-right: 5px solid {% if voucher.is_active %}#28a745{% else %}#dc3545{% endif %}; display: flex; justify-content: space-between; align-items: center;">
-            <div>
-                <strong>{{ voucher.event.name }}</strong>
-                <br>
-                <small style="color: #888;">ينتهي في: {{ voucher.expiry_date }}</small>
-                <br>
+        <div class="card voucher-card" style="border-right: 5px solid {% if voucher.is_active %}#28a745{% else %}#dc3545{% endif %};">
+            <div class="voucher-left">
+                <strong style="font-size: 1.1rem; display: block; margin-bottom: 5px;">{{ voucher.event.name }}</strong>
+                <small style="color: #888; display: block; margin-bottom: 8px;">ينتهي في: {{ voucher.expiry_date }}</small>
                 {% if voucher.is_active %}
-                    <span style="background: #d4edda; color: #155724; padding: 2px 8px; border-radius: 10px; font-size: 0.75rem;">نشطة</span>
+                    <span style="background: #d4edda; color: #155724; padding: 3px 10px; border-radius: 12px; font-size: 0.8rem; display: inline-block;">نشطة</span>
+                    {% if request.user.type == 'DOCTOR' and request.user.doctor_profile == doctor %}
+                    <button type="button" onclick="openTransferModal({{ voucher.id }})" style="display: inline-block; font-size: 0.8rem; margin-top: 10px; cursor: pointer; border: 1px solid #17a2b8; background: transparent; color: #17a2b8; border-radius: 6px; padding: 4px 12px; transition: all 0.2s ease;">
+                        🔃 تحويل القسيمة
+                    </button>
+                    {% endif %}
                 {% else %}
-                    <span style="background: #f8d7da; color: #721c24; padding: 2px 8px; border-radius: 10px; font-size: 0.75rem;">منتهية</span>
+                    <span style="background: #f8d7da; color: #721c24; padding: 3px 10px; border-radius: 12px; font-size: 0.8rem; display: inline-block;">منتهية</span>
                 {% endif %}
             </div>
-            <div style="text-align: left;">
-                <span style="font-size: 1.2rem; font-weight: bold;">{{ voucher.current_balance|floatformat:2 }} ج.م</span>
-                <br>
-                <small style="color: #888;">من أصل {{ voucher.initial_value|floatformat:2 }}</small>
+            <div class="voucher-right">
+                <span style="font-size: 1.4rem; font-weight: bold; display: block; margin-bottom: 2px;">{{ voucher.current_balance|floatformat:2 }} ج.م</span>
+                <small style="color: #888; display: block; margin-bottom: 8px;">من أصل {{ voucher.initial_value|floatformat:2 }}</small>
                 <!-- Progress bar -->
-                <div style="width: 120px; height: 6px; background: #eee; border-radius: 3px; margin-top: 5px;">
+                <div style="display: inline-block; width: 100%; max-width: 150px; height: 8px; background: #eee; border-radius: 4px; margin-top: 5px; margin-bottom: 5px;">
                     {% widthratio voucher.current_balance voucher.initial_value 100 as pct %}
-                    <div style="width: {% widthratio voucher.current_balance voucher.initial_value 100 %}%; height: 100%; background: {% if voucher.is_active %}#28a745{% else %}#dc3545{% endif %}; border-radius: 3px;"></div>
+                    <div style="width: {% widthratio voucher.current_balance voucher.initial_value 100 %}%; height: 100%; background: {% if voucher.is_active %}#28a745{% else %}#dc3545{% endif %}; border-radius: 4px;"></div>
                 </div>
             </div>
         </div>
@@ -65,36 +119,89 @@
         {% endfor %}
     </div>
 
+    <!-- Transfer History Section -->
+    <div style="margin-bottom: 30px;">
+        <h3 style="border-bottom: 2px solid #800000; padding-bottom: 10px;">🔄 سجل التحويلات الصادرة</h3>
+        <div class="card" style="padding: 0; overflow: hidden;">
+            <div class="table-responsive">
+                <table style="width: 100%; border-collapse: collapse; min-width: 500px;">
+                    <thead>
+                        <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+                            <th style="padding: 12px; text-align: right;">تم التحويل إلى</th>
+                            <th style="padding: 12px; text-align: right;">القسيمة (الفعالية)</th>
+                            <th style="padding: 12px; text-align: right;">الرصيد المحول</th>
+                            <th style="padding: 12px; text-align: right;">التاريخ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for transfer in transfers_made %}
+                        <tr style="border-bottom: 1px solid #dee2e6;">
+                            <td style="padding: 12px; font-weight: bold; color: #007bff;">د. {{ transfer.to_doctor.name }}</td>
+                            <td style="padding: 12px;">{{ transfer.voucher.event.name }}</td>
+                            <td style="padding: 12px;">{{ transfer.voucher.current_balance|floatformat:2 }} ج.م</td>
+                            <td style="padding: 12px; font-size: 0.85rem; color: #666;">{{ transfer.transfer_date|date:"Y-m-d H:i" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" style="padding: 20px; text-align: center; color: #888;">لم تقم بأي تحويلات حتى الآن.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <!-- Transactions Section -->
     <div>
         <h3 style="border-bottom: 2px solid #800000; padding-bottom: 10px;">📄 سجل المعاملات</h3>
         <div class="card" style="padding: 0; overflow: hidden;">
-            <table style="width: 100%; border-collapse: collapse;">
-                <thead>
-                    <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
-                        <th style="padding: 12px; text-align: right;">التاجر</th>
-                        <th style="padding: 12px; text-align: right;">المبلغ</th>
-                        <th style="padding: 12px; text-align: right;">العمولة</th>
-                        <th style="padding: 12px; text-align: right;">الإجمالي</th>
-                        <th style="padding: 12px; text-align: right;">التاريخ</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for trx in transactions %}
-                    <tr style="border-bottom: 1px solid #dee2e6;">
-                        <td style="padding: 12px;">{{ trx.vendor.name }}</td>
-                        <td style="padding: 12px;">{{ trx.amount_spent|floatformat:2 }} ج.م</td>
-                        <td style="padding: 12px; color: #dc3545;">{{ trx.management_fee_amount|floatformat:2 }} ج.م</td>
-                        <td style="padding: 12px; font-weight: bold;">{{ trx.total_deducted|floatformat:2 }} ج.م</td>
-                        <td style="padding: 12px; font-size: 0.85rem; color: #666;">{{ trx.transaction_date|date:"Y-m-d H:i" }}</td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="5" style="padding: 20px; text-align: center; color: #888;">لا توجد معاملات.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table style="width: 100%; border-collapse: collapse; min-width: 500px;">
+                    <thead>
+                        <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+                            <th style="padding: 12px; text-align: right;">التاجر</th>
+                            <th style="padding: 12px; text-align: right;">المبلغ</th>
+                            <th style="padding: 12px; text-align: right;">العمولة</th>
+                            <th style="padding: 12px; text-align: right;">الإجمالي</th>
+                            <th style="padding: 12px; text-align: right;">التاريخ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for trx in transactions %}
+                        <tr style="border-bottom: 1px solid #dee2e6;">
+                            <td style="padding: 12px;">{{ trx.vendor.name }}</td>
+                            <td style="padding: 12px;">{{ trx.amount_spent|floatformat:2 }} ج.م</td>
+                            <td style="padding: 12px; color: #dc3545;">{{ trx.management_fee_amount|floatformat:2 }} ج.م</td>
+                            <td style="padding: 12px; font-weight: bold;">{{ trx.total_deducted|floatformat:2 }} ج.م</td>
+                            <td style="padding: 12px; font-size: 0.85rem; color: #666;">{{ trx.transaction_date|date:"Y-m-d H:i" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" style="padding: 20px; text-align: center; color: #888;">لا توجد معاملات.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transfer Voucher Modal -->
+    <div id="transferModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 20px; border-radius: 8px; width: 90%; max-width: 400px; text-align: center;">
+            <h4 style="margin-top: 0; border-bottom: 2px solid #800000; padding-bottom: 10px;">تحويل القسيمة</h4>
+            <form id="transferForm" method="post" action="">
+                {% csrf_token %}
+                <div style="margin-bottom: 20px; text-align: right;">
+                    <label for="target_search" style="display: block; margin-bottom: 5px; font-weight: bold; color: #555;">الطبيب المستلم:</label>
+                    <input type="text" id="target_search" name="target_search" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;" placeholder="رقم الموبايل أو كود الطبيب">
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: space-between;">
+                    <button type="button" onclick="closeTransferModal()" style="padding: 10px; flex: 1; border: none; background: #6c757d; color: white; border-radius: 4px; cursor: pointer;">الغاء</button>
+                    <button type="submit" style="padding: 10px; flex: 1; border: none; background: #800000; color: white; border-radius: 4px; cursor: pointer;">تأكيد التحويل</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -115,5 +222,17 @@ document.addEventListener('DOMContentLoaded', function() {
         colorLight: "#ffffff",
     });
 });
+
+function openTransferModal(voucherId) {
+    const modal = document.getElementById('transferModal');
+    const form = document.getElementById('transferForm');
+    const baseUrl = "{% url 'voucher_transfer' 0 %}";
+    form.action = baseUrl.replace('0', voucherId);
+    modal.style.display = 'flex';
+}
+
+function closeTransferModal() {
+    document.getElementById('transferModal').style.display = 'none';
+}
 </script>
 {% endblock %}

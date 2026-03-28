@@ -29,6 +29,8 @@ class Specialty(models.Model):
 class Delegate(models.Model):
     name = models.CharField(_('Name'), max_length=255)
     phone = models.CharField(_('Phone'), max_length=20, unique=True)
+    companies = models.ManyToManyField('core.PharmaceuticalCompany', blank=True, related_name='delegates', verbose_name=_('Companies'))
+    specialties = models.ManyToManyField('accounts.Specialty', blank=True, related_name='delegates', verbose_name=_('Specialties'))
 
     class Meta:
         verbose_name = _('Delegate')
@@ -41,7 +43,7 @@ class Doctor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='doctor_profile', verbose_name=_('User'))
     name = models.CharField(_('Name'), max_length=255)
     phone = models.CharField(_('Phone'), max_length=20, unique=True)
-    email = models.EmailField(_('Email'), unique=True, blank=True, null=True)
+    email = models.EmailField(_('Email'), unique=True)
     specialty = models.ForeignKey(Specialty, on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_('Specialty'))
     qr_code = models.CharField(_('QR Code'), max_length=255, blank=True, null=True) # URL or path
     created_at = models.DateTimeField(_('Created At'), auto_now_add=True)
@@ -80,7 +82,13 @@ class Vendor(models.Model):
         _('Role'), max_length=20, choices=VendorRoles.choices, default=VendorRoles.ADMIN,
         help_text=_('Vendor Admin has full access, Cashier can only process transactions via QR scan')
     )
+    parent_vendor = models.ForeignKey(
+        'self', on_delete=models.CASCADE, null=True, blank=True, 
+        related_name='cashiers', verbose_name=_('Parent Vendor'),
+        help_text=_('If this is a cashier, specify the parent vendor it belongs to')
+    )
     has_management_fee = models.BooleanField(_('Has Management Fee'), default=True)
+    is_active = models.BooleanField(_('Is Active'), default=True)
     created_at = models.DateTimeField(_('Created At'), auto_now_add=True)
     updated_at = models.DateTimeField(_('Updated At'), auto_now=True)
 

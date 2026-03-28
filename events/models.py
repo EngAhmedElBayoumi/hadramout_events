@@ -37,6 +37,7 @@ class Voucher(models.Model):
     issue_date = models.DateField(_('Issue Date'), auto_now_add=True)
     expiry_date = models.DateField(_('Expiry Date'))
     is_active = models.BooleanField(_('Is Active'), default=True)
+    notes = models.TextField(_('Notes'), blank=True, null=True)
     created_at = models.DateTimeField(_('Created At'), auto_now_add=True)
     updated_at = models.DateTimeField(_('Updated At'), auto_now=True)
 
@@ -58,3 +59,16 @@ class Voucher(models.Model):
                  # Default expiry for custom vouchers if no event is specified
                  self.expiry_date = timezone.now().date() + timedelta(days=90)
         super().save(*args, **kwargs)
+
+class VoucherTransfer(models.Model):
+    from_doctor = models.ForeignKey('accounts.Doctor', on_delete=models.CASCADE, related_name='transfers_made', verbose_name=_('From Doctor'))
+    to_doctor = models.ForeignKey('accounts.Doctor', on_delete=models.CASCADE, related_name='transfers_received', verbose_name=_('To Doctor'))
+    voucher = models.ForeignKey(Voucher, on_delete=models.CASCADE, related_name='transfers', verbose_name=_('Voucher'))
+    transfer_date = models.DateTimeField(_('Transfer Date'), auto_now_add=True)
+
+    class Meta:
+        verbose_name = _('Voucher Transfer')
+        verbose_name_plural = _('Voucher Transfers')
+
+    def __str__(self):
+        return f"{self.from_doctor.name} -> {self.to_doctor.name}"
